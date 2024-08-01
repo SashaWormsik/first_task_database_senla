@@ -159,9 +159,9 @@ SELECT name,
 FROM 
 	(SELECT f.name AS name,
 	 	RANK() OVER (ORDER BY SUM (
-		    CASE 
-				WHEN memid = 0 
-		    	THEN slots * f.guestcost
+		    CASE
+				WHEN memid = 0
+				THEN slots * f.guestcost
 				ELSE slots * membercost
 			END) 
 		DESC) AS rank
@@ -174,19 +174,19 @@ ORDER BY rank
 -- Classify facilities by value
 SELECT name, 
     CASE 
-	    WHEN temp=1 THEN 'high'
+		WHEN temp=1 THEN 'high'
 		WHEN temp=2 THEN 'average'
 		ELSE 'low'
 	END revenue
 FROM 
-	(SELECT f.name AS name, NTILE(3) OVER (
-		ORDER BY SUM(
-	       CASE 
-				WHEN memid = 0 
-				THEN slots * f.guestcost 
-				ELSE slots * membercost
-		   END) 
-	   DESC) AS temp
+	(SELECT f.name AS name, NTILE(3) OVER
+	 	(ORDER BY SUM
+		 	(CASE
+			 	WHEN memid = 0
+			 	THEN slots * f.guestcost
+			 	ELSE slots * membercost
+			 END)
+		 DESC) AS temp
     FROM cd.bookings b
     JOIN cd.facilities f ON b.facid = f.facid
 	GROUP BY f.name) AS tabtemp
@@ -194,12 +194,12 @@ ORDER BY temp, name
 
 -- Calculate the payback time for each facility
 SELECT 	f.name AS name, 
-	f.initialoutlay/((SUM(
-    	CASE
-			WHEN memid = 0 
-			THEN slots * f.guestcost
-			ELSE slots * membercost
-		END)/3) - f.monthlymaintenance) AS months
+	f.initialoutlay/((SUM
+					  (CASE
+					   	WHEN memid = 0
+					   	THEN slots * f.guestcost
+					   	ELSE slots * membercost
+					   END)/3) - f.monthlymaintenance) AS months
 FROM cd.bookings b
 JOIN cd.facilities f ON b.facid = f.facid
 GROUP BY f.facid
@@ -212,10 +212,10 @@ SELECT date,
 		 	AVG(rdata.rev) OVER (ORDER BY datetem.date ROWS 14 PRECEDING) AS revenue
 		FROM 
 			(SELECT CAST(GENERATE_SERIES(timestamp '2012-07-15', '2012-08-31','1 day') AS date)AS date) AS datetem
-		LEFT OUTER JOIN	(
-			SELECT CAST(b.starttime AS date) AS date,
-				SUM (
-					CASE
+		LEFT OUTER JOIN
+		 	(SELECT CAST(b.starttime AS date) AS date,
+				SUM 
+			 		(CASE
 						WHEN memid = 0 
 						THEN slots * f.guestcost
 						ELSE slots * membercost
