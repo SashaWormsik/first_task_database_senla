@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="8" author="charviakouski">
+        <createTable tableName="feedback">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="create_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="character varying(500)"/>
+            <column name="addressee_id" type="bigint">
+                <constraints nullable="false"
+                             foreignKeyName="fk_addressee_id"
+                             references="user_info(id)"/>
+            </column>
+            <column name="sender_id" type="bigint">
+                <constraints nullable="false"
+                             foreignKeyName="fk_sender_id"
+                             references="user_info(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog> 
