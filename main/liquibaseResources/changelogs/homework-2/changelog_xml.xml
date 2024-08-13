@@ -5,16 +5,15 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
-    <include file="./changelogs/homework-2/xml/01.create-role-tabel.xml"/>
-    <include file="./changelogs/homework-2/xml/02.create-category-tabel.xml"/>
-    <include file="./changelogs/homework-2/xml/03.create-response_status-tabel.xml"/>
-    <include file="./changelogs/homework-2/xml/04.create-task_status-tabel.xml"/>
-    <include file="./changelogs/homework-2/xml/05.create-user_info-tabel.xml"/>
-    <include file="./changelogs/homework-2/xml/06.create-credential-tabel.xml"/>
-    <include file="./changelogs/homework-2/xml/07.create-task-tabel.xml"/>
-    <include file="./changelogs/homework-2/xml/08.create-feedback-tabel.xml"/>
-    <include file="./changelogs/homework-2/xml/09.create-response-tabel.xml"/>
-    <include file="./changelogs/homework-2/xml/10.create-task_category-tabel.xml"/>
+    <include file="./changelogs/homework-2/xml/01.create-role-table.xml"/>
+    <include file="./changelogs/homework-2/xml/02.create-category-table.xml"/>
+    <include file="./changelogs/homework-2/xml/03.create-response_status-table.xml"/>
+    <include file="./changelogs/homework-2/xml/04.create-task_status-table.xml"/>
+    <include file="./changelogs/homework-2/xml/05.create-user_info-table.xml"/>
+    <include file="./changelogs/homework-2/xml/06.create-credential-table.xml"/>
+    <include file="./changelogs/homework-2/xml/07.create-task-table.xml"/>
+    <include file="./changelogs/homework-2/xml/08.create-feedback-table.xml"/>
+    <include file="./changelogs/homework-2/xml/09.create-response-table.xml"/>
+    <include file="./changelogs/homework-2/xml/10.create-task_category-table.xml"/>
 	<include file="./changelogs/homework-2/xml/11.create-index.xml"/>
-
 </databaseChangeLog> 

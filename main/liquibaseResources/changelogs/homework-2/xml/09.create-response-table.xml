@@ -10,7 +10,7 @@
             <column name="id" type="bigserial">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="suggested_price" type="numeric"/>
+            <column name="suggested_price" type="numeric(10, 2)"/>
             <column name="suggested_date" type="date"/>
             <column name="create_date" type="date">
                 <constraints nullable="false"/>

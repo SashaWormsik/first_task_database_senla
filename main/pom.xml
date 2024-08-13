@@ -46,7 +46,8 @@
                     <execution>
                         <phase>package</phase>
                         <configuration>
-                            <propertyFile>liquibaseResources/liquibase.properties</propertyFile>
+                            <propertyFile>liquibase.properties</propertyFile>
+                            <searchPath>main/liquibaseResources</searchPath>
                         </configuration>
                         <goals>
                             <goal>update</goal>
