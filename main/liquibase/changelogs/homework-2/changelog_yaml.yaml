@@ -19,3 +19,5 @@ databaseChangeLog:
       file: ./changelogs/homework-2/yaml/09.create-response-table.yaml
   - include:
       file: ./changelogs/homework-2/yaml/10.create-task_category-table.yaml
+  - include:
+      file: ./changelogs/homework-2/yaml/11.create-index.yaml
