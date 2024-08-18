@@ -1,4 +1,4 @@
-package org.charviakouski.freelanceExchange;
+package org.charviakouski.freelanceExchange.util;
 
 import org.charviakouski.freelanceExchange.annotation.Component;
 

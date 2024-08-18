@@ -12,7 +12,9 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toSet;
 
 public class ApplicationContext {
 
@@ -45,7 +47,7 @@ public class ApplicationContext {
 
     @SneakyThrows
     private void initializeContext(String packagePath) {
-        Set<Class<?>> classes = findClasses(packagePath);
+        Set<Class<?>> classes = findAllClassesUsingClassLoader(packagePath);
         for (Class<?> clazz : classes) {
             if (clazz.isAnnotationPresent(Component.class)) {
                 Constructor<?> constructor = clazz.getConstructor();
@@ -55,21 +57,27 @@ public class ApplicationContext {
         }
     }
 
-    private Set<Class<?>> findClasses(String packagePath) {
-        InputStream stream = ClassLoader.getSystemClassLoader().
-                getResourceAsStream(packagePath.replaceAll("[.]", "/"));
+    private Set<Class<?>> findAllClassesUsingClassLoader(String packageName) {
+        InputStream stream = ClassLoader.getSystemClassLoader()
+                .getResourceAsStream(packageName.replaceAll("[.]", "/"));
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        Set<Class<?>> classes = reader.lines()
+        Set<String> lines = reader.lines().collect(toSet());
+        Set<Class<?>> directClass = lines.stream()
                 .filter(line -> line.endsWith(".class"))
-                .map(line -> getClass(line, packagePath))
-                .collect(Collectors.toSet());
-        return classes;
+                .map(line -> getClass(line, packageName))
+                .collect(toSet());
+        Set<Class<?>> subPackagesClasses = lines.stream()
+                .filter(line -> !line.endsWith(".class"))
+                .flatMap(subPack -> {
+                    String subPackName = packageName + "." + subPack;
+                    return findAllClassesUsingClassLoader(subPackName).stream();
+                }).collect(toSet());
+        return Stream.concat(directClass.stream(), subPackagesClasses.stream()).collect(toSet());
     }
 
     @SneakyThrows
-    private Class<?> getClass(String className, String packageName) {
+    private static Class<?> getClass(String className, String packageName) {
         return Class.forName(packageName + "."
                 + className.substring(0, className.lastIndexOf('.')));
-
     }
 }

@@ -1,5 +1,6 @@
-package org.charviakouski.freelanceExchange;
+package org.charviakouski.freelanceExchange.controller;
 
+import org.charviakouski.freelanceExchange.service.UserService;
 import org.charviakouski.freelanceExchange.annotation.Autowired;
 import org.charviakouski.freelanceExchange.annotation.Component;
 
