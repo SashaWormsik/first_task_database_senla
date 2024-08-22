@@ -1,83 +1,65 @@
 package org.charviakouski.freelanceExchange;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
-import org.charviakouski.freelanceExchange.annotation.Autowired;
 import org.charviakouski.freelanceExchange.annotation.Component;
+import org.charviakouski.freelanceExchange.processorImpl.InjectDependencyInFieldProcessor;
+import org.charviakouski.freelanceExchange.processorImpl.InjectDependencyIntoConstructorProcessor;
+import org.charviakouski.freelanceExchange.processorImpl.InjectDependencyIntoSetterProcessor;
+import org.charviakouski.freelanceExchange.processorImpl.InjectValueInFieldProcessor;
+import org.reflections.Reflections;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toSet;
+import java.util.*;
 
 public class ApplicationContext {
+    private List<Processor> processors = Arrays.asList(
+            new InjectDependencyIntoConstructorProcessor(),
+            new InjectDependencyIntoSetterProcessor(),
+            new InjectDependencyInFieldProcessor(),
+            new InjectValueInFieldProcessor());
 
-    public Map<Class<?>, Object> objectMap = new HashMap<>();
-
-    public ApplicationContext(String packagePath) {
-        initializeContext(packagePath);
-    }
-
-    @lombok.SneakyThrows
-    public <T> T getInstance(Class<T> clazz) {
-        T object = (T) objectMap.get(clazz);
-        Field[] declaredFields = clazz.getDeclaredFields();
-        injectAnnotatedField(object, declaredFields);
-        return object;
-    }
+    private Set<Class<?>> classes;
+    @Getter
+    private Map<Class<?>, Object> beanMap = new HashMap<>();
+    private Reflections scanner;
 
     @SneakyThrows
-    private <T> void injectAnnotatedField(T object, Field[] declaredFields) {
-        for (Field field : declaredFields) {
-            if (field.isAnnotationPresent(Autowired.class)) {
-                field.setAccessible(true);
-                Class<?> fieldType = field.getType();
-                Object innerObject = objectMap.get(fieldType);
-                field.set(object, innerObject);
-                injectAnnotatedField(innerObject, fieldType.getDeclaredFields());
-            }
-        }
+    public ApplicationContext(Class<?> application) {
+        scanner = new Reflections(application.getPackage().getName());
+        classes = scanner.getTypesAnnotatedWith(Component.class);
+        createContext();
     }
 
-    @SneakyThrows
-    private void initializeContext(String packagePath) {
-        Set<Class<?>> classes = findAllClassesUsingClassLoader(packagePath);
+    public <T> T getBean(Class<T> type) {
+        T t = (T) beanMap.get(type);
+        return t;
+    }
+
+    public void createBean(Class<?> clazz) {
+        processors.forEach(processor -> processor.process(resolveImpl(clazz), this));
+    }
+
+    private <T> void createContext() {
         for (Class<?> clazz : classes) {
-            if (clazz.isAnnotationPresent(Component.class)) {
-                Constructor<?> constructor = clazz.getConstructor();
-                Object newInstance = constructor.newInstance();
-                objectMap.put(clazz, newInstance);
-            }
+            createBean(clazz);
         }
     }
 
-    private Set<Class<?>> findAllClassesUsingClassLoader(String packageName) {
-        InputStream stream = ClassLoader.getSystemClassLoader()
-                .getResourceAsStream(packageName.replaceAll("[.]", "/"));
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        Set<String> lines = reader.lines().collect(toSet());
-        Set<Class<?>> directClass = lines.stream()
-                .filter(line -> line.endsWith(".class"))
-                .map(line -> getClass(line, packageName))
-                .collect(toSet());
-        Set<Class<?>> subPackagesClasses = lines.stream()
-                .filter(line -> !line.endsWith(".class"))
-                .flatMap(subPack -> {
-                    String subPackName = packageName + "." + subPack;
-                    return findAllClassesUsingClassLoader(subPackName).stream();
-                }).collect(toSet());
-        return Stream.concat(directClass.stream(), subPackagesClasses.stream()).collect(toSet());
-    }
-
     @SneakyThrows
-    private static Class<?> getClass(String className, String packageName) {
-        return Class.forName(packageName + "."
-                + className.substring(0, className.lastIndexOf('.')));
+    private <T> Class<T> resolveImpl(Class<T> type) {
+        if (type.isInterface()) {
+            Set<Class<? extends T>> set = scanner.getSubTypesOf(type);
+            if (set.size() != 1) {
+                throw new IllegalArgumentException(type + " --- has 0 or more than 1 implementation");
+            }
+            return (Class<T>) set.iterator().next();
+        }
+        return type;
     }
 }
+
+
+
+
+
+
