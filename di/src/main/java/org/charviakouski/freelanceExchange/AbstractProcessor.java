@@ -1,15 +1,21 @@
 package org.charviakouski.freelanceExchange;
 
+import java.util.Arrays;
+
 public abstract class AbstractProcessor implements Processor {
 
-    protected void putInContext(Object bean, ApplicationContext context) {
+    protected void putInContext(Object bean, BeanFactory factory) {
         Class<?>[] interfaces = bean.getClass().getInterfaces();
         if (interfaces.length == 0) {
-            context.getBeanMap().put(bean.getClass(), bean);
+            factory.getBeanMap().put(bean.getClass(), bean);
         } else {
-            for (Class<?> anInterface : interfaces) {
-                context.getBeanMap().put(anInterface, bean);
-            }
+            Arrays.stream(interfaces)
+                    .forEach(anInterface -> factory.getBeanMap().put(anInterface, bean));
         }
+
+    }
+
+    protected boolean beanIsPresent(Class<?> type, BeanFactory factory) {
+        return factory.getBeanMap().containsKey(type);
     }
 }

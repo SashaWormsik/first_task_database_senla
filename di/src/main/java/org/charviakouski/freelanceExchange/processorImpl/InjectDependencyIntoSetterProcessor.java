@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.processorImpl;
 
 import lombok.SneakyThrows;
 import org.charviakouski.freelanceExchange.AbstractProcessor;
-import org.charviakouski.freelanceExchange.ApplicationContext;
+import org.charviakouski.freelanceExchange.BeanFactory;
 import org.charviakouski.freelanceExchange.annotation.Autowired;
 
 import java.lang.reflect.Method;
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public class InjectDependencyIntoSetterProcessor extends AbstractProcessor {
     @SneakyThrows
     @Override
-    public void process(Class<?> type, ApplicationContext context) {
-        if (context.getBeanMap().containsKey(type)) {
+    public void process(Class<?> type, BeanFactory factory) {
+        if (factory.getBeanMap().containsKey(type)) {
             return;
         }
         Set<Method> annotationMethods = Arrays.stream(type.getDeclaredMethods())
@@ -28,12 +28,12 @@ public class InjectDependencyIntoSetterProcessor extends AbstractProcessor {
         for (Method method : annotationMethods) {
             Parameter parameter = method.getParameters()[0];
             Class<?> parameterType = parameter.getType();
-            if (!context.getBeanMap().containsKey(parameterType)) { // todo
-                context.createBean(parameterType);
+            if (!factory.getBeanMap().containsKey(parameterType)) {
+                factory.createBean(parameterType);  // TODO
             }
-            Object object = context.getBean(parameterType);
+            Object object = factory.getBean(parameterType);
             method.invoke(bean, object);
         }
-        putInContext(bean, context);
+        putInContext(bean, factory);
     }
 }

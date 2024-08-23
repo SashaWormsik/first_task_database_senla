@@ -40,7 +40,6 @@
             <version>1.7.32</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
@@ -51,6 +50,13 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
@@ -66,7 +72,7 @@
                         <phase>package</phase>
                         <configuration>
                             <propertyFile>liquibase.properties</propertyFile>
-                            <searchPath>main/liquibase</searchPath>
+                            <searchPath>main/src/main/liquibase</searchPath>
                         </configuration>
                         <goals>
                             <goal>update</goal>
