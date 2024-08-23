@@ -29,7 +29,7 @@ public class InjectDependencyIntoSetterProcessor extends AbstractProcessor {
             Parameter parameter = method.getParameters()[0];
             Class<?> parameterType = parameter.getType();
             if (!factory.getBeanMap().containsKey(parameterType)) {
-                factory.createBean(parameterType);  // TODO
+                factory.createBean(parameterType);
             }
             Object object = factory.getBean(parameterType);
             method.invoke(bean, object);

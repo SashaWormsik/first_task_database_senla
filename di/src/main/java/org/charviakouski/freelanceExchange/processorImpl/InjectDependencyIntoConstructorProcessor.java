@@ -27,7 +27,7 @@ public class InjectDependencyIntoConstructorProcessor extends AbstractProcessor 
             for (int i = 0; i < parameters.length; i++) {
                 Class<?> parameterType = parameters[i].getType();
                 if (!factory.getBeanMap().containsKey(parameterType)) {
-                    factory.createBean(parameterType);  // TODO
+                    factory.createBean(parameterType);
                 }
                 Object object = factory.getBean(parameterType);
                 args[i] = object;

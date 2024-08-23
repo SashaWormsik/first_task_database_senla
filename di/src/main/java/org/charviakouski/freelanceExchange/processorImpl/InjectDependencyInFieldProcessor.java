@@ -32,7 +32,7 @@ public class InjectDependencyInFieldProcessor extends AbstractProcessor {
     private void createObject(Field annotationField, Object object, BeanFactory factory) {
         Class<?> fieldType = annotationField.getType();
         if (!factory.getBeanMap().containsKey(fieldType)) {
-            factory.createBean(fieldType);   // TODO
+            factory.createBean(fieldType);
         }
         Object injectObject = factory.getBean(fieldType);
         annotationField.setAccessible(true);
