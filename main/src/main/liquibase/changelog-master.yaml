@@ -1,3 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: ./changelogs/homework-2/changelog_yaml.yaml
