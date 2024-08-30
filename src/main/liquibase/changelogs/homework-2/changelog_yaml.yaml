@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - include:
+      file: ./changelogs/homework-2/yaml/01.create-role-table.yaml
+  - include:
+      file: ./changelogs/homework-2/yaml/02.create-category-table.yaml
+  - include:
+      file: ./changelogs/homework-2/yaml/03.create-response_status-table.yaml
+  - include:
+      file: ./changelogs/homework-2/yaml/04.create-task_status-table.yaml
+  - include:
+      file: ./changelogs/homework-2/yaml/05.create-user_info-table.yaml
+  - include:
+      file: ./changelogs/homework-2/yaml/06.create-credential-table.yaml
+  - include:
+      file: ./changelogs/homework-2/yaml/07.create-task-table.yaml
+  - include:
+      file: ./changelogs/homework-2/yaml/08.create-feedback-table.yaml
+  - include:
+      file: ./changelogs/homework-2/yaml/09.create-response-table.yaml
+  - include:
+      file: ./changelogs/homework-2/yaml/10.create-task_category-table.yaml
+  - include:
+      file: ./changelogs/homework-2/yaml/11.create-index.yaml

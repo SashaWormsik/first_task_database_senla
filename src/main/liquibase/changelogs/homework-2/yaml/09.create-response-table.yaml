@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 9
+      author: charviakouski
+      changes:
+        - createTable:
+            tableName: response
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: suggested_price
+                  type: numeric(10, 2)
+              - column:
+                  name: suggested_date
+                  type: date
+              - column:
+                  name: create_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: task_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_task_id
+                    referencedTableName: task
+                    referencedColumnNames: id
+              - column:
+                  name: executor_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_executor_id
+                    referencedTableName: user_info
+                    referencedColumnNames: id
+              - column:
+                  name: response_status_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_response_status_id
+                    referencedTableName: response_status
+                    referencedColumnNames: id
