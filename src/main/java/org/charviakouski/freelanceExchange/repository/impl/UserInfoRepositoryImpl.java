@@ -5,6 +5,7 @@ import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserInfoRepositoryImpl implements UserInfoRepository {
@@ -14,18 +15,18 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
     }
 
     @Override
-    public UserInfo getById(UserInfo userInfo) {
+    public Optional<UserInfo> getById(UserInfo userInfo) {
         return null;
     }
 
     @Override
-    public boolean insert(UserInfo userInfo) {
-        return false;
+    public UserInfo insert(UserInfo userInfo) {
+        return null;
     }
 
     @Override
-    public boolean update(UserInfo userInfo) {
-        return false;
+    public UserInfo update(UserInfo newUserInfo, UserInfo oldUserInfo) {
+        return null;
     }
 
     @Override

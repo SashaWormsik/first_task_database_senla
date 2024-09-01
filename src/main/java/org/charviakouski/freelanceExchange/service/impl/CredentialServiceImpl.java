@@ -1,7 +1,6 @@
 package org.charviakouski.freelanceExchange.service.impl;
 
 import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
-import org.charviakouski.freelanceExchange.model.entity.Credential;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.CredentialRepository;
 import org.charviakouski.freelanceExchange.service.CredentialService;
@@ -15,7 +14,7 @@ public class CredentialServiceImpl implements CredentialService {
     @Autowired
     private CredentialRepository credentialRepository;
     @Autowired
-    EntityMapper entityMapper;
+    private EntityMapper entityMapper;
 
     @Override
     public List<CredentialDto> getAll() {
@@ -25,25 +24,21 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public CredentialDto getById(CredentialDto credentialDto) {
-        credentialRepository.getById(entityMapper.fromDtoToEntity(credentialDto, Credential.class));
         return null;
     }
 
     @Override
-    public boolean insert(CredentialDto credentialDto) {
-        credentialRepository.insert(entityMapper.fromDtoToEntity(credentialDto, Credential.class));
-        return false;
+    public CredentialDto insert(CredentialDto credentialDto) {
+        return null;
     }
 
     @Override
-    public boolean update(CredentialDto credentialDto) {
-        credentialRepository.update(entityMapper.fromDtoToEntity(credentialDto, Credential.class));
-        return false;
+    public CredentialDto update(CredentialDto credentialDto) {
+        return null;
     }
 
     @Override
     public boolean delete(CredentialDto credentialDto) {
-        credentialRepository.delete(entityMapper.fromDtoToEntity(credentialDto, Credential.class));
         return false;
     }
 }

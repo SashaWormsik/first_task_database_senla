@@ -18,7 +18,7 @@ public class Task {
     private BigDecimal price;
     private Date deadline;
     private Date createDate;
-    private UserInfo customerId;
-    private TaskStatus statusId;
+    private UserInfo customer;
+    private TaskStatus status;
     private List<Category> categories;
 }

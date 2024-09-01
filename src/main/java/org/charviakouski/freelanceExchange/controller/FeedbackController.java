@@ -23,14 +23,14 @@ public class FeedbackController {
         return null;
     }
 
-    public boolean insert(String jsonFeedback) {
+    public String insert(String jsonFeedback) {
         feedbackService.insert(entityMapper.fromJsonToDto(jsonFeedback, FeedBackDto.class));
-        return false;
+        return null;
     }
 
-    public boolean update(String jsonFeedback) {
+    public String update(String jsonFeedback) {
         feedbackService.update(entityMapper.fromJsonToDto(jsonFeedback, FeedBackDto.class));
-        return false;
+        return null;
     }
 
     public boolean delete(String jsonFeedback) {

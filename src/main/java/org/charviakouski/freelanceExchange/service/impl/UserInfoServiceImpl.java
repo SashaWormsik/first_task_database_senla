@@ -27,13 +27,13 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public boolean insert(UserInfoDto userInfoDto) {
-        return false;
+    public UserInfoDto insert(UserInfoDto userInfoDto) {
+        return null;
     }
 
     @Override
-    public boolean update(UserInfoDto userInfoDto) {
-        return false;
+    public UserInfoDto update(UserInfoDto userInfoDto) {
+        return null;
     }
 
     @Override

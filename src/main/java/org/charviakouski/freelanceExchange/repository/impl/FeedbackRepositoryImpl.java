@@ -5,6 +5,7 @@ import org.charviakouski.freelanceExchange.repository.FeedbackRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class FeedbackRepositoryImpl implements FeedbackRepository {
@@ -14,18 +15,18 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
     }
 
     @Override
-    public Feedback getById(Feedback feedback) {
+    public Optional<Feedback> getById(Feedback feedback) {
         return null;
     }
 
     @Override
-    public boolean insert(Feedback feedback) {
-        return false;
+    public Feedback insert(Feedback feedback) {
+        return null;
     }
 
     @Override
-    public boolean update(Feedback feedback) {
-        return false;
+    public Feedback update(Feedback newFeedback, Feedback oldFeedback) {
+        return null;
     }
 
     @Override

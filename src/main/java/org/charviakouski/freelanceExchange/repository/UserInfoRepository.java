@@ -1,18 +1,18 @@
 package org.charviakouski.freelanceExchange.repository;
 
-import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserInfoRepository {
     List<UserInfo> getAll();
 
-    UserInfo getById(UserInfo userInfo);
+    Optional<UserInfo> getById(UserInfo userInfo);
 
-    boolean insert(UserInfo userInfo);
+    UserInfo insert(UserInfo userInfo);
 
-    boolean update(UserInfo userInfo);
+    UserInfo update(UserInfo newUserInfo, UserInfo oldUserInfo);
 
     boolean delete(UserInfo userInfo);
 }

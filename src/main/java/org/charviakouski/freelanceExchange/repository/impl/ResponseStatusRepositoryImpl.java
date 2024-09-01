@@ -5,6 +5,7 @@ import org.charviakouski.freelanceExchange.repository.ResponseStatusRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ResponseStatusRepositoryImpl implements ResponseStatusRepository {
@@ -14,18 +15,18 @@ public class ResponseStatusRepositoryImpl implements ResponseStatusRepository {
     }
 
     @Override
-    public ResponseStatus getById(ResponseStatus responseStatus) {
+    public Optional<ResponseStatus> getById(ResponseStatus responseStatus) {
         return null;
     }
 
     @Override
-    public boolean insert(ResponseStatus responseStatus) {
-        return false;
+    public ResponseStatus insert(ResponseStatus responseStatus) {
+        return null;
     }
 
     @Override
-    public boolean update(ResponseStatus responseStatus) {
-        return false;
+    public ResponseStatus update(ResponseStatus newResponseStatus, ResponseStatus oldResponseStatus) {
+        return null;
     }
 
     @Override

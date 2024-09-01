@@ -27,13 +27,13 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public boolean insert(ResponseDto responseDto) {
-        return false;
+    public ResponseDto insert(ResponseDto responseDto) {
+        return null;
     }
 
     @Override
-    public boolean update(ResponseDto responseDto) {
-        return false;
+    public ResponseDto update(ResponseDto responseDto) {
+        return null;
     }
 
     @Override

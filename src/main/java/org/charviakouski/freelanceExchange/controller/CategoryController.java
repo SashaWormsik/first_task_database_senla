@@ -1,5 +1,6 @@
 package org.charviakouski.freelanceExchange.controller;
 
+import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.CategoryService;
@@ -14,23 +15,27 @@ public class CategoryController {
     private EntityMapper entityMapper;
 
     public String getAll() {
-        return entityMapper.fromDtoToJson(categoryService.getAll());
+        categoryService.getAll();
+        return null;
     }
 
-    public String getById(String jsonCategoryId) {
-        return entityMapper.fromDtoToJson(categoryService.getById(entityMapper.fromJsonToDto(jsonCategoryId, CategoryDto.class)));
+    public String getById(String jsonCategoryId) throws ServiceException {
+        categoryService.getById(entityMapper.fromJsonToDto(jsonCategoryId, CategoryDto.class));
+        return null;
     }
 
-
-    public boolean insert(String jsonCategory) {
-        return categoryService.insert(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
+    public String insert(String jsonCategory) throws ServiceException {
+        categoryService.insert(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
+        return null;
     }
 
-    public boolean update(String jsonCategory) {
-        return categoryService.update(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
+    public String update(String jsonCategory) throws ServiceException {
+        categoryService.update(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
+        return null;
     }
 
     public boolean delete(String jsonCategory) {
-        return categoryService.delete(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
+        categoryService.delete(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
+        return false;
     }
 }

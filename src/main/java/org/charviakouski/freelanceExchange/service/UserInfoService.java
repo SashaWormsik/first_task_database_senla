@@ -1,6 +1,5 @@
 package org.charviakouski.freelanceExchange.service;
 
-import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 
 import java.util.List;
@@ -10,9 +9,9 @@ public interface UserInfoService {
 
     UserInfoDto getById(UserInfoDto userInfoDto);
 
-    boolean insert(UserInfoDto userInfoDto);
+    UserInfoDto insert(UserInfoDto userInfoDto);
 
-    boolean update(UserInfoDto userInfoDto);
+    UserInfoDto update(UserInfoDto userInfoDto);
 
     boolean delete(UserInfoDto userInfoDto);
 }

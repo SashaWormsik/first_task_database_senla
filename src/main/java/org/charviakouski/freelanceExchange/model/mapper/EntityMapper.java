@@ -2,8 +2,6 @@ package org.charviakouski.freelanceExchange.model.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
-import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.modelmapper.ModelMapper;
 
 public class EntityMapper {

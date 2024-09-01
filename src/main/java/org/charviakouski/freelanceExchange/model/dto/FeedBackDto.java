@@ -13,6 +13,6 @@ public class FeedBackDto {
     private Integer id;
     private Date createDate;
     private String content;
-    private UserInfoDto addresseeId;
-    private UserInfoDto senderId;
+    private UserInfoDto addressee;
+    private UserInfoDto sender;
 }

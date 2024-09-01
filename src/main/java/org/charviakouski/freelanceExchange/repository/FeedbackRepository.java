@@ -3,15 +3,16 @@ package org.charviakouski.freelanceExchange.repository;
 import org.charviakouski.freelanceExchange.model.entity.Feedback;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FeedbackRepository {
     List<Feedback> getAll();
 
-    Feedback getById(Feedback feedback);
+    Optional<Feedback> getById(Feedback feedback);
 
-    boolean insert(Feedback feedback);
+    Feedback insert(Feedback feedback);
 
-    boolean update(Feedback feedback);
+    Feedback update(Feedback oldFeedback, Feedback newFeedback);
 
     boolean delete(Feedback feedback);
 }

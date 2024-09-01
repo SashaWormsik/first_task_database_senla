@@ -18,7 +18,7 @@ public class TaskDto {
     private BigDecimal price;
     private Date deadline;
     private Date createDate;
-    private UserInfoDto customerId;
-    private TaskStatusDto statusId;
+    private UserInfoDto customer;
+    private TaskStatusDto status;
     private List<CategoryDto> categories;
 }

@@ -1,6 +1,5 @@
 package org.charviakouski.freelanceExchange.service;
 
-import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
 import org.charviakouski.freelanceExchange.model.dto.ResponseDto;
 
 import java.util.List;
@@ -10,9 +9,9 @@ public interface ResponseService {
 
     ResponseDto getById(ResponseDto responseDto);
 
-    boolean insert(ResponseDto responseDto);
+    ResponseDto insert(ResponseDto responseDto);
 
-    boolean update(ResponseDto responseDto);
+    ResponseDto update(ResponseDto responseDto);
 
     boolean delete(ResponseDto responseDto);
 }

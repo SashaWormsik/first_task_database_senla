@@ -16,5 +16,5 @@ public class Credential {
     private Date createDate;
     private boolean active;
     private String token;
-    private Role roleId;
+    private Role role;
 }

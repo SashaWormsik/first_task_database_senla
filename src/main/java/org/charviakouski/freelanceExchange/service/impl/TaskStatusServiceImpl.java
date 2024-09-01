@@ -27,13 +27,13 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     }
 
     @Override
-    public boolean insert(TaskStatusDto taskStatusDto) {
-        return false;
+    public TaskStatusDto insert(TaskStatusDto taskStatusDto) {
+        return null;
     }
 
     @Override
-    public boolean update(TaskStatusDto taskStatusDto) {
-        return false;
+    public TaskStatusDto update(TaskStatusDto taskStatusDto) {
+        return null;
     }
 
     @Override

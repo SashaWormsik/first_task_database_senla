@@ -5,6 +5,7 @@ import org.charviakouski.freelanceExchange.repository.TaskStatusRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class TaskStatusRepositoryImpl implements TaskStatusRepository {
@@ -14,18 +15,18 @@ public class TaskStatusRepositoryImpl implements TaskStatusRepository {
     }
 
     @Override
-    public TaskStatus getById(TaskStatus taskStatus) {
+    public Optional<TaskStatus> getById(TaskStatus taskStatus) {
         return null;
     }
 
     @Override
-    public boolean insert(TaskStatus taskStatus) {
-        return false;
+    public TaskStatus insert(TaskStatus taskStatus) {
+        return null;
     }
 
     @Override
-    public boolean update(TaskStatus taskStatus) {
-        return false;
+    public TaskStatus update(TaskStatus newTaskStatus, TaskStatus oldTaskStatus) {
+        return null;
     }
 
     @Override

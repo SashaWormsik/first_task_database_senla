@@ -27,13 +27,13 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public boolean insert(FeedBackDto feedBackDto) {
-        return false;
+    public FeedBackDto insert(FeedBackDto feedBackDto) {
+        return null;
     }
 
     @Override
-    public boolean update(FeedBackDto feedBackDto) {
-        return false;
+    public FeedBackDto update(FeedBackDto feedBackDto) {
+        return null;
     }
 
     @Override

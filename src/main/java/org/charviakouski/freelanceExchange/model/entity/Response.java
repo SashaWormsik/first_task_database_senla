@@ -15,7 +15,7 @@ public class Response {
     private BigDecimal suggestedPrice;
     private Date suggestedDate;
     private Date createDate;
-    private Task taskId;
-    private UserInfo executorId;
-    private ResponseStatus responseStatusId;
+    private Task task;
+    private UserInfo executor;
+    private ResponseStatus responseStatus;
 }

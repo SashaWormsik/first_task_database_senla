@@ -9,9 +9,9 @@ public interface FeedbackService {
 
     FeedBackDto getById(FeedBackDto feedBackDto);
 
-    boolean insert(FeedBackDto feedBackDto);
+    FeedBackDto insert(FeedBackDto feedBackDto);
 
-    boolean update(FeedBackDto feedBackDto);
+    FeedBackDto update(FeedBackDto feedBackDto);
 
     boolean delete(FeedBackDto feedBackDto);
 }

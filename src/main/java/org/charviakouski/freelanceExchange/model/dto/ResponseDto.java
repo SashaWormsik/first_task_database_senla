@@ -15,7 +15,7 @@ public class ResponseDto {
     private BigDecimal suggestedPrice;
     private Date suggestedDate;
     private Date createDate;
-    private TaskDto taskId;
-    private UserInfoDto executorId;
-    private ResponseStatusDto responseStatusId;
+    private TaskDto task;
+    private UserInfoDto executor;
+    private ResponseStatusDto responseStatus;
 }

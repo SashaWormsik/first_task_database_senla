@@ -23,14 +23,14 @@ public class CredentialController {
         return null;
     }
 
-    public boolean insert(String jsonCredential) {
+    public String insert(String jsonCredential) {
         credentialService.insert(entityMapper.fromJsonToDto(jsonCredential, CredentialDto.class));
-        return false;
+        return null;
     }
 
-    public boolean update(String jsonCredential) {
+    public String update(String jsonCredential) {
         credentialService.update(entityMapper.fromJsonToDto(jsonCredential, CredentialDto.class));
-        return false;
+        return null;
     }
 
     public boolean delete(String jsonCredential) {

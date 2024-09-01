@@ -23,14 +23,14 @@ public class ResponseStatusController {
         return null;
     }
 
-    public boolean insert(String jsonResponseStatus) {
+    public String insert(String jsonResponseStatus) {
         responseStatusService.insert(entityMapper.fromJsonToDto(jsonResponseStatus, ResponseStatusDto.class));
-        return false;
+        return null;
     }
 
-    public boolean update(String jsonResponseStatus) {
+    public String update(String jsonResponseStatus) {
         responseStatusService.update(entityMapper.fromJsonToDto(jsonResponseStatus, ResponseStatusDto.class));
-        return false;
+        return null;
     }
 
     public boolean delete(String jsonResponseStatus) {

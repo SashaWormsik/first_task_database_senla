@@ -1,18 +1,18 @@
 package org.charviakouski.freelanceExchange.repository;
 
-import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.model.entity.Credential;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CredentialRepository {
     List<Credential> getAll();
 
-    Credential getById(Credential credential);
+    Optional<Credential> getById(Credential credential);
 
-    boolean insert(Credential credential);
+    Credential insert(Credential credential);
 
-    boolean update(Credential credential);
+    Credential update(Credential newCredential, Credential oldCredential);
 
     boolean delete(Credential credential);
 }

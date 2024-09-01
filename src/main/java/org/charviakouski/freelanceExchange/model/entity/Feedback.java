@@ -13,6 +13,6 @@ public class Feedback {
     private Integer id;
     private Date createDate;
     private String content;
-    private UserInfo addresseeId;
-    private UserInfo senderId;
+    private UserInfo addressee;
+    private UserInfo sender;
 }

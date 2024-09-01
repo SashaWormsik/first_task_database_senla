@@ -1,18 +1,18 @@
 package org.charviakouski.freelanceExchange.repository;
 
-import org.charviakouski.freelanceExchange.model.entity.ResponseStatus;
 import org.charviakouski.freelanceExchange.model.entity.Role;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RoleRepository {
     List<Role> getAll();
 
-    Role getById(Role role);
+    Optional<Role> getById(Role role);
 
-    boolean insert(Role role);
+    Role insert(Role role);
 
-    boolean update(Role role);
+    Role update(Role newRole, Role oldRole);
 
     boolean delete(Role role);
 }

@@ -9,9 +9,9 @@ public interface CredentialService {
 
     CredentialDto getById(CredentialDto credentialDto);
 
+    CredentialDto insert(CredentialDto credentialDto);
+
+    CredentialDto update(CredentialDto credentialDto);
+
     boolean delete(CredentialDto credentialDto);
-
-    boolean insert(CredentialDto credentialDto);
-
-    boolean update(CredentialDto credentialDto);
 }

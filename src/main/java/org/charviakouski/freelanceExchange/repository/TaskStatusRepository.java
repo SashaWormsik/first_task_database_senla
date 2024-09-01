@@ -1,18 +1,18 @@
 package org.charviakouski.freelanceExchange.repository;
 
-import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.charviakouski.freelanceExchange.model.entity.TaskStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskStatusRepository {
     List<TaskStatus> getAll();
 
-    TaskStatus getById(TaskStatus taskStatus);
+    Optional<TaskStatus> getById(TaskStatus taskStatus);
 
-    boolean insert(TaskStatus taskStatus);
+    TaskStatus insert(TaskStatus taskStatus);
 
-    boolean update(TaskStatus taskStatus);
+    TaskStatus update(TaskStatus newTaskStatus, TaskStatus oldTaskStatus);
 
     boolean delete(TaskStatus taskStatus);
 }

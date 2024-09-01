@@ -27,13 +27,13 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
     }
 
     @Override
-    public boolean insert(ResponseStatusDto responseStatusDto) {
-        return false;
+    public ResponseStatusDto insert(ResponseStatusDto responseStatusDto) {
+        return null;
     }
 
     @Override
-    public boolean update(ResponseStatusDto responseStatusDto) {
-        return false;
+    public ResponseStatusDto update(ResponseStatusDto responseStatusDto) {
+        return null;
     }
 
     @Override

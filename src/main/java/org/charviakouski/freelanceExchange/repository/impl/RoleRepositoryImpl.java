@@ -5,6 +5,7 @@ import org.charviakouski.freelanceExchange.repository.RoleRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class RoleRepositoryImpl implements RoleRepository {
@@ -14,18 +15,18 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
-    public Role getById(Role role) {
+    public Optional<Role> getById(Role role) {
         return null;
     }
 
     @Override
-    public boolean insert(Role role) {
-        return false;
+    public Role insert(Role role) {
+        return null;
     }
 
     @Override
-    public boolean update(Role role) {
-        return false;
+    public Role update(Role newRole, Role oldRole) {
+        return null;
     }
 
     @Override

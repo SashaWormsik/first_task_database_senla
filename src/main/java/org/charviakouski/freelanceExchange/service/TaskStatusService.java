@@ -1,6 +1,5 @@
 package org.charviakouski.freelanceExchange.service;
 
-import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
 import org.charviakouski.freelanceExchange.model.dto.TaskStatusDto;
 
 import java.util.List;
@@ -10,9 +9,9 @@ public interface TaskStatusService {
 
     TaskStatusDto getById(TaskStatusDto taskStatusDto);
 
-    boolean insert(TaskStatusDto taskStatusDto);
+    TaskStatusDto insert(TaskStatusDto taskStatusDto);
 
-    boolean update(TaskStatusDto taskStatusDto);
+    TaskStatusDto update(TaskStatusDto taskStatusDto);
 
     boolean delete(TaskStatusDto taskStatusDto);
 }

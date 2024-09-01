@@ -1,6 +1,5 @@
 package org.charviakouski.freelanceExchange.service;
 
-import org.charviakouski.freelanceExchange.model.dto.ResponseDto;
 import org.charviakouski.freelanceExchange.model.dto.ResponseStatusDto;
 
 import java.util.List;
@@ -10,9 +9,9 @@ public interface ResponseStatusService {
 
     ResponseStatusDto getById(ResponseStatusDto responseStatusDto);
 
-    boolean insert(ResponseStatusDto responseStatusDto);
+    ResponseStatusDto insert(ResponseStatusDto responseStatusDto);
 
-    boolean update(ResponseStatusDto responseStatusDto);
+    ResponseStatusDto update(ResponseStatusDto responseStatusDto);
 
     boolean delete(ResponseStatusDto responseStatusDto);
 }

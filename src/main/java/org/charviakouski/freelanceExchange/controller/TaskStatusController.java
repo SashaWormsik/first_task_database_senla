@@ -23,14 +23,14 @@ public class TaskStatusController {
         return null;
     }
 
-    public boolean insert(String jsonTaskStatus) {
+    public String insert(String jsonTaskStatus) {
         taskStatusService.insert(entityMapper.fromJsonToDto(jsonTaskStatus, TaskStatusDto.class));
-        return false;
+        return null;
     }
 
-    public boolean update(String jsonTaskStatus) {
+    public String update(String jsonTaskStatus) {
         taskStatusService.update(entityMapper.fromJsonToDto(jsonTaskStatus, TaskStatusDto.class));
-        return false;
+        return null;
     }
 
     public boolean delete(String jsonTaskStatus) {

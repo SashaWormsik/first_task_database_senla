@@ -23,14 +23,14 @@ public class RoleController {
         return null;
     }
 
-    public boolean insert(String jsonRole) {
+    public String insert(String jsonRole) {
         roleService.insert(entityMapper.fromJsonToDto(jsonRole, RoleDto.class));
-        return false;
+        return null;
     }
 
-    public boolean update(String jsonRole) {
+    public String update(String jsonRole) {
         roleService.update(entityMapper.fromJsonToDto(jsonRole, RoleDto.class));
-        return false;
+        return null;
     }
 
     public boolean delete(String jsonRole) {

@@ -5,6 +5,7 @@ import org.charviakouski.freelanceExchange.repository.ResponseRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ResponseRepositoryImpl implements ResponseRepository {
@@ -14,18 +15,18 @@ public class ResponseRepositoryImpl implements ResponseRepository {
     }
 
     @Override
-    public Response getById(Response response) {
+    public Optional<Response> getById(Response response) {
         return null;
     }
 
     @Override
-    public boolean insert(Response response) {
-        return false;
+    public Response insert(Response response) {
+        return null;
     }
 
     @Override
-    public boolean update(Response response) {
-        return false;
+    public Response update(Response newResponse, Response oldResponse) {
+        return null;
     }
 
     @Override

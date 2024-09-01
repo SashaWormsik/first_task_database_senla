@@ -1,5 +1,8 @@
 package org.charviakouski.freelanceExchange.controller;
 
+import lombok.SneakyThrows;
+import org.charviakouski.freelanceExchange.exception.ControllerException;
+import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.TaskService;
@@ -17,16 +20,32 @@ public class TaskController {
         return entityMapper.fromDtoToJson(taskService.getAll());
     }
 
+    @SneakyThrows
     public String getById(String jsonTaskId) {
-        return entityMapper.fromDtoToJson(taskService.getById(entityMapper.fromJsonToDto(jsonTaskId, TaskDto.class)));
+        try {
+            TaskDto taskDto = taskService.getById(entityMapper.fromJsonToDto(jsonTaskId, TaskDto.class));
+            return entityMapper.fromDtoToJson(taskDto);
+        } catch (ServiceException e) {
+            throw new ControllerException("Не удалось найти объект \n" + e.getMessage());
+        }
     }
 
-    public boolean insert(String jsonTask) {
-        return taskService.insert(entityMapper.fromJsonToDto(jsonTask, TaskDto.class));
+    public String insert(String jsonTask) throws ControllerException {
+        try {
+            TaskDto taskDto = taskService.insert(entityMapper.fromJsonToDto(jsonTask, TaskDto.class));
+            return entityMapper.fromDtoToJson(taskDto);
+        } catch (ServiceException e) {
+            throw new ControllerException("Не удалось вставить объект \n" + e.getMessage());
+        }
     }
 
-    public boolean update(String jsonTask) {
-        return taskService.update(entityMapper.fromJsonToDto(jsonTask, TaskDto.class));
+    public String update(String jsonTask) throws ControllerException {
+        try {
+            TaskDto taskDto = taskService.update(entityMapper.fromJsonToDto(jsonTask, TaskDto.class));
+            return entityMapper.fromDtoToJson(taskDto);
+        } catch (ServiceException e) {
+            throw new ControllerException("Не удалось обновить объект\n" + e.getMessage());
+        }
     }
 
     public boolean delete(String jsonTask) {

@@ -1,5 +1,6 @@
 package org.charviakouski.freelanceExchange.service.impl;
 
+import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
 import org.charviakouski.freelanceExchange.model.entity.Task;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -16,7 +18,7 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TaskRepository taskRepository;
     @Autowired
-    EntityMapper entityMapper;
+    private EntityMapper entityMapper;
 
     @Override
     public List<TaskDto> getAll() {
@@ -26,21 +28,32 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto getById(TaskDto taskDto) {
+    public TaskDto getById(TaskDto taskDto) throws ServiceException {
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        return entityMapper.fromEntityToDto(taskRepository.getById(task), TaskDto.class);
+        Optional<Task> optionalTask = taskRepository.getById(task);
+        if (!optionalTask.isPresent()) {
+            throw new ServiceException("Объект не существует!!!");
+        }
+        return entityMapper.fromEntityToDto(optionalTask.get(), TaskDto.class);
     }
 
     @Override
-    public boolean insert(TaskDto taskDto) {
+    public TaskDto insert(TaskDto taskDto) throws ServiceException {
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        return taskRepository.insert(task);
+        if (taskRepository.getById(task).isPresent()) {
+            throw new ServiceException("Уже есть такой объект");
+        }
+        return entityMapper.fromEntityToDto(taskRepository.insert(task), TaskDto.class);
     }
 
     @Override
-    public boolean update(TaskDto taskDto) {
+    public TaskDto update(TaskDto taskDto) throws ServiceException {
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        return taskRepository.update(task);
+        Optional<Task> optionalTask = taskRepository.getById(task);
+        if (!optionalTask.isPresent()) {
+            throw new ServiceException("Объект отсутствует, а значит обновить невозможно");
+        }
+        return entityMapper.fromEntityToDto(taskRepository.update(task, optionalTask.get()), TaskDto.class);
     }
 
     @Override

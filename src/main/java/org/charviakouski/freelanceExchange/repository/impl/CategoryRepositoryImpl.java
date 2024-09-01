@@ -4,44 +4,35 @@ import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.charviakouski.freelanceExchange.repository.CategoryRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CategoryRepositoryImpl implements CategoryRepository {
-    private final List<Category> categories = new ArrayList<>();
-
-    {
-        categories.add(new Category(1, "IT"));
-        categories.add(new Category(2, "UX/UI design"));
-        categories.add(new Category(3, "construction"));
-        categories.add(new Category(4, "architecture"));
-    }
 
     @Override
     public List<Category> getAll() {
-        return categories;
+        return null;
     }
 
     @Override
-    public Category getById(Category category) {
-        return categories.stream().filter(cat -> cat.getId().equals(category.getId())).findAny().orElse(null);
+    public Optional<Category> getById(Category category) {
+        return null;
     }
 
     @Override
-    public boolean insert(Category category) {
-        return categories.add(category);
+    public Category insert(Category category) {
+        return null;
     }
 
     @Override
-    public boolean update(Category category) {
-        categories.removeIf(category1 -> category1.getId().equals(category.getId()));
-        return categories.add(category);
+    public Category update(Category newCategory, Category oldCategory) {
+        return null;
     }
 
     @Override
     public boolean delete(Category category) {
-        return categories.removeIf(category1 -> category1.getId().equals(category.getId()));
+        return false;
 
     }
 }

@@ -1,7 +1,7 @@
 package org.charviakouski.freelanceExchange.service.impl;
 
+import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
-import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.CategoryRepository;
 import org.charviakouski.freelanceExchange.service.CategoryService;
@@ -16,7 +16,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
-    EntityMapper entityMapper;
+    private EntityMapper entityMapper;
 
 
     @Override
@@ -27,27 +27,23 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getById(CategoryDto categoryDto) {
-        Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
-        return entityMapper.fromEntityToDto(categoryRepository.getById(category), CategoryDto.class);
+    public CategoryDto getById(CategoryDto categoryDto) throws ServiceException {
+        return null;
 
     }
 
     @Override
-    public boolean insert(CategoryDto categoryDto) {
-        Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
-        return categoryRepository.insert(category);
+    public CategoryDto insert(CategoryDto categoryDto) throws ServiceException {
+        return null;
     }
 
     @Override
-    public boolean update(CategoryDto categoryDto) {
-        Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
-        return categoryRepository.update(category);
+    public CategoryDto update(CategoryDto categoryDto) throws ServiceException {
+        return null;
     }
 
     @Override
     public boolean delete(CategoryDto categoryDto) {
-        Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
-        return categoryRepository.delete(category);
+        return false;
     }
 }

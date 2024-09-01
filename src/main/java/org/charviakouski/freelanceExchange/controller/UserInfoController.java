@@ -23,14 +23,14 @@ public class UserInfoController {
         return null;
     }
 
-    public boolean insert(String jsonUserInfo) {
+    public String insert(String jsonUserInfo) {
         userInfoService.insert(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
-        return false;
+        return null;
     }
 
-    public boolean update(String jsonUserInfo) {
+    public String update(String jsonUserInfo) {
         userInfoService.update(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
-        return false;
+        return null;
     }
 
     public boolean delete(String jsonUserInfo) {

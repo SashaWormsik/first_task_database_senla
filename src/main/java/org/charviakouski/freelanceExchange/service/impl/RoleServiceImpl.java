@@ -1,7 +1,6 @@
 package org.charviakouski.freelanceExchange.service.impl;
 
 import org.charviakouski.freelanceExchange.model.dto.RoleDto;
-import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.RoleRepository;
 import org.charviakouski.freelanceExchange.service.RoleService;
@@ -28,13 +27,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public boolean insert(RoleDto roleDto) {
-        return false;
+    public RoleDto insert(RoleDto roleDto) {
+        return null;
     }
 
     @Override
-    public boolean update(RoleDto roleDto) {
-        return false;
+    public RoleDto update(RoleDto roleDto) {
+        return null;
     }
 
     @Override
