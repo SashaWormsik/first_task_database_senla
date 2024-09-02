@@ -1,0 +1,17 @@
+package org.charviakouski.freelanceExchange.service;
+
+import org.charviakouski.freelanceExchange.model.dto.RoleDto;
+
+import java.util.List;
+
+public interface RoleService {
+    List<RoleDto> getAll();
+
+    RoleDto getById(RoleDto roleDto);
+
+    RoleDto insert(RoleDto roleDto);
+
+    RoleDto update(RoleDto roleDto);
+
+    boolean delete(RoleDto roleDto);
+}
