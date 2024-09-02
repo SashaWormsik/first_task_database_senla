@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskStatusDto {
-    private Integer id;
+    private Long id;
     private String status;
 }

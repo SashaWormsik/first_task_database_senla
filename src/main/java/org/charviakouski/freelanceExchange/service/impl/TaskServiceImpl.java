@@ -28,7 +28,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto getById(TaskDto taskDto) throws ServiceException {
+    public TaskDto getById(TaskDto taskDto) {
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
         Optional<Task> optionalTask = taskRepository.getById(task);
         if (!optionalTask.isPresent()) {
@@ -38,7 +38,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto insert(TaskDto taskDto) throws ServiceException {
+    public TaskDto insert(TaskDto taskDto) {
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
         if (taskRepository.getById(task).isPresent()) {
             throw new ServiceException("Уже есть такой объект");
@@ -47,7 +47,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto update(TaskDto taskDto) throws ServiceException {
+    public TaskDto update(TaskDto taskDto) {
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
         Optional<Task> optionalTask = taskRepository.getById(task);
         if (!optionalTask.isPresent()) {

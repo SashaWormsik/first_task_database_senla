@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Task {
-    private Integer id;
+    private Long id;
     private String title;
     private String description;
     private BigDecimal price;

@@ -1,6 +1,6 @@
 package org.charviakouski.freelanceExchange.exception;
 
-public class RepositoryException extends Exception {
+public class RepositoryException extends RuntimeException {
 
     public RepositoryException(String message) {
         super(message);

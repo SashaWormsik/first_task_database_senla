@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeedBackDto {
-    private Integer id;
+    private Long id;
     private Date createDate;
     private String content;
     private UserInfoDto addressee;

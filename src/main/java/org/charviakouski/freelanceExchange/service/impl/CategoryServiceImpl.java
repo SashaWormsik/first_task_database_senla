@@ -1,6 +1,5 @@
 package org.charviakouski.freelanceExchange.service.impl;
 
-import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.CategoryRepository;
@@ -27,18 +26,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getById(CategoryDto categoryDto) throws ServiceException {
+    public CategoryDto getById(CategoryDto categoryDto) {
         return null;
 
     }
 
     @Override
-    public CategoryDto insert(CategoryDto categoryDto) throws ServiceException {
+    public CategoryDto insert(CategoryDto categoryDto) {
         return null;
     }
 
     @Override
-    public CategoryDto update(CategoryDto categoryDto) throws ServiceException {
+    public CategoryDto update(CategoryDto categoryDto) {
         return null;
     }
 

@@ -16,25 +16,25 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     {
         Task task1 = new Task();
-        task1.setId(1);
+        task1.setId(1L);
         task1.setTitle("Task 1");
         task1.setDescription("Task 1");
         task1.setPrice(new BigDecimal(100));
         task1.setCreateDate(new Date());
         task1.setDeadline(new Date());
-        task1.setStatus(new TaskStatus(1, "Выполнено"));
-        task1.setCategories(Arrays.asList(new Category(1, "Ux/Ui"), new Category(2, "IT")));
-        task1.setCustomer(new UserInfo(1, "ИВан", "Попов", "developer", 12, null));
+        task1.setStatus(new TaskStatus(1L, "Выполнено"));
+        task1.setCategories(Arrays.asList(new Category(1L, "Ux/Ui"), new Category(2L, "IT")));
+        task1.setCustomer(new UserInfo(1L, "ИВан", "Попов", "developer", 12, null));
         Task task2 = new Task();
-        task2.setId(2);
+        task2.setId(2L);
         task2.setTitle("Task 2");
         task2.setDescription("Task 2");
         task2.setPrice(new BigDecimal(500));
         task2.setCreateDate(new Date());
         task2.setDeadline(new Date());
-        task2.setStatus(new TaskStatus(2, "Просрочено"));
-        task2.setCategories(Arrays.asList(new Category(3, "architecture"), new Category(4, "construction")));
-        task2.setCustomer(new UserInfo(1, "POMA", "РОМАНОВ", "constructor", 5, null));
+        task2.setStatus(new TaskStatus(2L, "Просрочено"));
+        task2.setCategories(Arrays.asList(new Category(3L, "architecture"), new Category(4L, "construction")));
+        task2.setCustomer(new UserInfo(1L, "POMA", "РОМАНОВ", "constructor", 5, null));
         tasks.add(task1);
         tasks.add(task2);
     }

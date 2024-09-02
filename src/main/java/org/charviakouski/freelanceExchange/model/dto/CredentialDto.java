@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CredentialDto {
-    private Integer id;
+    private Long id;
     private String email;
     private boolean active;
     private RoleDto role;

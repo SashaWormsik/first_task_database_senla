@@ -30,7 +30,7 @@ public class TaskController {
         }
     }
 
-    public String insert(String jsonTask) throws ControllerException {
+    public String insert(String jsonTask) {
         try {
             TaskDto taskDto = taskService.insert(entityMapper.fromJsonToDto(jsonTask, TaskDto.class));
             return entityMapper.fromDtoToJson(taskDto);
@@ -39,7 +39,7 @@ public class TaskController {
         }
     }
 
-    public String update(String jsonTask) throws ControllerException {
+    public String update(String jsonTask) {
         try {
             TaskDto taskDto = taskService.update(entityMapper.fromJsonToDto(jsonTask, TaskDto.class));
             return entityMapper.fromDtoToJson(taskDto);

@@ -1,6 +1,5 @@
 package org.charviakouski.freelanceExchange.controller;
 
-import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.CategoryService;
@@ -19,17 +18,17 @@ public class CategoryController {
         return null;
     }
 
-    public String getById(String jsonCategoryId) throws ServiceException {
+    public String getById(String jsonCategoryId) {
         categoryService.getById(entityMapper.fromJsonToDto(jsonCategoryId, CategoryDto.class));
         return null;
     }
 
-    public String insert(String jsonCategory) throws ServiceException {
+    public String insert(String jsonCategory) {
         categoryService.insert(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
         return null;
     }
 
-    public String update(String jsonCategory) throws ServiceException {
+    public String update(String jsonCategory) {
         categoryService.update(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
         return null;
     }

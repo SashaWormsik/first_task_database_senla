@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Credential {
-    private Integer id;
+    private Long id;
     private String email;
     private String password;
     private Date createDate;

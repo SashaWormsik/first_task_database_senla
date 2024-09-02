@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Response {
-    private Integer id;
+    private Long id;
     private BigDecimal suggestedPrice;
     private Date suggestedDate;
     private Date createDate;
