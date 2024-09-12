@@ -15,6 +15,11 @@ import java.util.Optional;
 @Component
 public class UserInfoRepositoryImpl implements UserInfoRepository {
 
+    private static final String SELECT_USER_BY_ID =
+            "SELECT id AS user_info_id, name AS user_info_name, " +
+                    "surname AS  user_info_surname,profession AS user_info_profession, " +
+                    "work_experience AS user_info_work_experience,description AS user_info_description" +
+                    " FROM user_info WHERE id = ?";
     private static final String USER_IS_PRESENT_BY_NAME =
             "SELECT EXISTS(SELECT * FROM user_info WHERE user_info.name = ?);";
     private static final String INSERT_NEW_USER_INFO =
@@ -36,6 +41,39 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
     private MapperFromResultSetToEntity<UserInfo> userInfoMapper;
 
     @Override
+    public Optional<UserInfo> getById(UserInfo userInfo) {
+        Optional<UserInfo> optionalUserInfo = Optional.empty();
+        try (Connection connection = connectionHolder.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_USER_BY_ID)) {
+            statement.setLong(1, userInfo.getId());
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                optionalUserInfo = userInfoMapper.map(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return optionalUserInfo;
+    }
+
+    @Override
+    public boolean UserInfoIsPresentByName(UserInfo userInfo){
+        boolean result = false;
+        try (Connection connection = connectionHolder.getConnection();
+             PreparedStatement statement = connection.prepareStatement(USER_IS_PRESENT_BY_NAME)) {
+            statement.setString(1, userInfo.getName());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    result = resultSet.getBoolean(1);
+                }
+            }
+        } catch (SQLException exception) {
+            throw new RuntimeException(exception);
+        }
+        return result;
+    }
+
+    @Override
     public UserInfo insert(UserInfo userInfo) {
         try (Connection connection = connectionHolder.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_NEW_USER_INFO, Statement.RETURN_GENERATED_KEYS)) {
@@ -52,7 +90,7 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
                 }
             }
         } catch (SQLException exception) {
-            throw new RepositoryException(exception);
+            throw new RuntimeException(exception);
         }
         return userInfo;
     }
@@ -72,35 +110,14 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
                 newUserInfo.setId(oldUserInfo.getId());
             }
         } catch (SQLException exception) {
-            throw new RepositoryException(exception);
+            throw new RuntimeException(exception);
         }
         return newUserInfo;
-    }
-
-    public boolean UserInfoIsPresentByName(UserInfo userInfo){
-        boolean result = false;
-        try (Connection connection = connectionHolder.getConnection();
-             PreparedStatement statement = connection.prepareStatement(USER_IS_PRESENT_BY_NAME)) {
-            statement.setString(1, userInfo.getName());
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    result = resultSet.getBoolean(1);
-                }
-            }
-        } catch (SQLException exception) {
-            throw new RepositoryException(exception);
-        }
-        return result;
     }
 
 
     @Override
     public List<UserInfo> getAll() {
-        return null;
-    }
-
-    @Override
-    public Optional<UserInfo> getById(UserInfo userInfo) {
         return null;
     }
 

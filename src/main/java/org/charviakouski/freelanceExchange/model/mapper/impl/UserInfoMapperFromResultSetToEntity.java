@@ -18,7 +18,6 @@ public class UserInfoMapperFromResultSetToEntity implements MapperFromResultSetT
         try {
             userInfo.setId(resultSet.getLong("user_info_id"));
             userInfo.setName(resultSet.getString("user_info_name"));
-            userInfo.setName(resultSet.getString("user_info_name"));
             userInfo.setSurname(resultSet.getString("user_info_surname"));
             userInfo.setProfession(resultSet.getString("user_info_profession"));
             userInfo.setWorkExperience(resultSet.getInt("user_info_work_experience"));

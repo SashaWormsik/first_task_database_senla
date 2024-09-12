@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserInfoRepository {
+    boolean UserInfoIsPresentByName(UserInfo userInfo);
+
     List<UserInfo> getAll();
 
     Optional<UserInfo> getById(UserInfo userInfo);

@@ -14,23 +14,22 @@ public class UserInfoController {
     private EntityMapper entityMapper;
 
     public String getAll() {
-        userInfoService.getAll();
-        return null;
+        return entityMapper.fromDtoToJson(userInfoService.getAll());
     }
 
     public String getById(String jsonUserInfoId) {
-        userInfoService.getById(entityMapper.fromJsonToDto(jsonUserInfoId, UserInfoDto.class));
-        return null;
+        UserInfoDto userInfoDto = userInfoService.getById(entityMapper.fromJsonToDto(jsonUserInfoId, UserInfoDto.class));
+        return entityMapper.fromDtoToJson(userInfoDto);
     }
 
     public String insert(String jsonUserInfo) {
-        userInfoService.insert(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
-        return null;
+        UserInfoDto userInfoDto = userInfoService.insert(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
+        return entityMapper.fromDtoToJson(userInfoDto);
     }
 
     public String update(String jsonUserInfo) {
-        userInfoService.update(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
-        return null;
+        UserInfoDto userInfoDto = userInfoService.update(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
+        return entityMapper.fromDtoToJson(userInfoDto);
     }
 
     public boolean delete(String jsonUserInfo) {

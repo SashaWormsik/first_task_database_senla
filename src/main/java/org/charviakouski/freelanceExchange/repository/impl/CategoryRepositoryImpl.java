@@ -38,6 +38,8 @@ public class CategoryRepositoryImpl implements CategoryRepository {
                     "VALUES (? , ?)";
     private static final String UPDATE_CATEGORY =
             "UPDATE category SET name = ? WHERE id = ?;";
+    private static final String DELETE_CATEGORY_FOR_TASK_IN_TASK_CATEGORY_TABLE =
+            "DELETE FROM task_category WHERE task_id = ?;";
 
     @Autowired
     private ConnectionHolder connectionHolder;
@@ -49,11 +51,13 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         return getCategoryByCriteria(category.getId().toString(), SELECT_CATEGORY_BY_ID);
     }
 
+    @Override
     public Optional<Category> getByName(Category category) {
         return getCategoryByCriteria(category.getName(), SELECT_CATEGORY_BY_NAME);
     }
 
-    public List<Category> getAllCategoryForTask(Task task) {
+    @Override
+    public Optional<List<Category>> getAllCategoryForTask(Task task) {
         List<Category> categories = new ArrayList<>();
         try (Connection connection = connectionHolder.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_CATEGORY_FOR_TASK)) {
@@ -64,9 +68,10 @@ public class CategoryRepositoryImpl implements CategoryRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RepositoryException(e);
+            throw new RuntimeException(e);
         }
-        return categories;
+
+        return categories.isEmpty() ? Optional.empty() : Optional.of(categories);
     }
 
     @Override
@@ -82,27 +87,39 @@ public class CategoryRepositoryImpl implements CategoryRepository {
                 }
             }
         } catch (SQLException exception) {
-            throw new RepositoryException(exception);
+            throw new RuntimeException(exception);
         }
         return category;
     }
 
+    @Override
     public boolean insertInTaskCategory(List<Category> categories, Task task) {
+        int[] result;
         try (Connection connection = connectionHolder.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_CATEGORY_FOR_TASK_IN_TASK_CATEGORY_TABLE)) {
-            connection.setAutoCommit(false);
             for (Category category : categories) {
                 statement.setLong(1, category.getId());
                 statement.setLong(2, task.getId());
                 statement.addBatch();
             }
-            statement.executeBatch();
-            connection.commit();
-            connection.setAutoCommit(true);
+            result = statement.executeBatch();
         } catch (SQLException exception) {
-            throw new RepositoryException(exception);
+            throw new RuntimeException(exception);
         }
-        return true;
+        return result != null && result.length > 0;
+    }
+
+    @Override
+    public boolean deleteInTaskCategory(Task task) {
+        int result;
+        try (Connection connection = connectionHolder.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_CATEGORY_FOR_TASK_IN_TASK_CATEGORY_TABLE)) {
+            statement.setLong(1, task.getId());
+            result = statement.executeUpdate();
+        } catch (SQLException exception) {
+            throw new RuntimeException(exception);
+        }
+        return result > 0;
     }
 
     @Override
@@ -116,11 +133,12 @@ public class CategoryRepositoryImpl implements CategoryRepository {
                 newCategory.setId(oldCategory.getId());
             }
         } catch (SQLException exception) {
-            throw new RepositoryException(exception);
+            throw new RuntimeException(exception);
         }
         return newCategory;
     }
 
+    @Override
     public boolean categoryIsPresent(Category category) {
         boolean result = false;
         try (Connection connection = connectionHolder.getConnection();
@@ -132,7 +150,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
                 }
             }
         } catch (SQLException exception) {
-            throw new RepositoryException(exception);
+            throw new RuntimeException(exception);
         }
         return result;
     }
@@ -157,7 +175,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
                 optionalCategory = categoryMapper.map(resultSet);
             }
         } catch (SQLException exception) {
-            throw new RepositoryException(exception);
+            throw new RuntimeException(exception);
         }
         return optionalCategory;
     }
