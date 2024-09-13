@@ -57,7 +57,7 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
     }
 
     @Override
-    public boolean UserInfoIsPresentByName(UserInfo userInfo){
+    public boolean isUserInfoPresentByName(UserInfo userInfo){
         boolean result = false;
         try (Connection connection = connectionHolder.getConnection();
              PreparedStatement statement = connection.prepareStatement(USER_IS_PRESENT_BY_NAME)) {

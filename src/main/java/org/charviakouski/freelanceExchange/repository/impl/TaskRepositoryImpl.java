@@ -1,7 +1,6 @@
 package org.charviakouski.freelanceExchange.repository.impl;
 
 import org.charviakouski.freelanceExchange.connection.ConnectionHolder;
-import org.charviakouski.freelanceExchange.exception.RepositoryException;
 import org.charviakouski.freelanceExchange.model.entity.Task;
 import org.charviakouski.freelanceExchange.model.entity.TaskStatus;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
@@ -47,7 +46,8 @@ public class TaskRepositoryImpl implements TaskRepository {
                     "description = ?, " +
                     "price = ?, " +
                     "deadline = ?, " +
-                    "create_date = ? " +
+                    "create_date = ?, " +
+                    "status_id = (SELECT id FROM task_status WHERE status = ?) " +
                     "WHERE task.id = ?;";
     private static final String UPDATE_TASK_STATUS =
             "UPDATE task " +
@@ -112,7 +112,8 @@ public class TaskRepositoryImpl implements TaskRepository {
             statement.setBigDecimal(3, newTask.getPrice());
             statement.setDate(4, new Date(newTask.getDeadline().getTime()));
             statement.setDate(5, new Date(newTask.getCreateDate().getTime()));
-            statement.setLong(6, oldTask.getId());
+            statement.setString(6, newTask.getStatus().getStatus());
+            statement.setLong(7, newTask.getId());
             int row = statement.executeUpdate();
             if (row == 1) {
                 newTask.setId(oldTask.getId());
@@ -141,7 +142,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public List<Task> getAll() {
         List<Task> tasks = new ArrayList<>();
-        Optional<Task> optionalTask = Optional.empty();
+        Optional<Task> optionalTask;
         try (Connection connection = connectionHolder.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
             ResultSet resultSet = statement.executeQuery();

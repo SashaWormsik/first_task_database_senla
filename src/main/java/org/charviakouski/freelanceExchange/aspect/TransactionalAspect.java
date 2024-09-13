@@ -10,39 +10,31 @@ import org.charviakouski.freelanceExchange.connection.ConnectionHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.Connection;
+
 @RequiredArgsConstructor
 @Component
 @Aspect
 @Slf4j
 public class TransactionalAspect {
-    private ConnectionHolder connectionHolder;
-
     @Autowired
-    public TransactionalAspect(ConnectionHolder connectionHolder) {
-        this.connectionHolder = connectionHolder;
-    }
-
+    private ConnectionHolder connectionHolder;
 
     @SneakyThrows
     @Around(value = "@annotation(org.charviakouski.freelanceExchange.annotation.Transactional)")
     public Object advice(ProceedingJoinPoint joinPoint) {
+        Object result;
+        Connection connection = connectionHolder.getConnection();
         try {
-            connectionHolder.getConnection().setAutoCommit(false);
-            System.out.println("ТРАНЗАКЦИЯ ОТКРЫТА!!!!!!!!!!!!!==============");
-            Object result = joinPoint.proceed();
-            connectionHolder.getConnection().commit();
-            connectionHolder.getConnection().setAutoCommit(true);
-            System.out.println("КОМИТ!!!!!!!!!!!!!==============");
-            return result;
+            connection.setAutoCommit(false);
+            result = joinPoint.proceed();
+            connection.commit();
         } catch (RuntimeException e) {
-            connectionHolder.getConnection().rollback();
-            connectionHolder.getConnection().setAutoCommit(true);
-            System.out.println("ОТКАТ!!!!!!!!!!!!!==============");
+            connection.rollback();
             throw e;
+        } finally {
+            connection.setAutoCommit(true);
         }
+        return result;
     }
 }
-
-
-
-

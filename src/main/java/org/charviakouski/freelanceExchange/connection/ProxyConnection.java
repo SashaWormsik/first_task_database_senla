@@ -1,5 +1,7 @@
 package org.charviakouski.freelanceExchange.connection;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;

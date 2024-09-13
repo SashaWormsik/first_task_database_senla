@@ -139,7 +139,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public boolean categoryIsPresent(Category category) {
+    public boolean isCategoryPresent(Category category) {
         boolean result = false;
         try (Connection connection = connectionHolder.getConnection();
              PreparedStatement statement = connection.prepareStatement(CATEGORY_IS_PRESENT)) {

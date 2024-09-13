@@ -1,28 +1,42 @@
 package org.charviakouski.freelanceExchange;
 
 import lombok.SneakyThrows;
-import org.charviakouski.freelanceExchange.annotation.Transactional;
 import org.charviakouski.freelanceExchange.config.JavaConfig;
-import org.charviakouski.freelanceExchange.connection.ConnectionHolder;
 import org.charviakouski.freelanceExchange.controller.TaskController;
-import org.charviakouski.freelanceExchange.exception.ControllerException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 public class MyApplication {
+
+    private static final String NEW_TASK = "{\n" +
+            "  \"title\" : \"\",\n" +
+            "  \"description\" : \"\",\n" +
+            "  \"price\" : 100.00,\n" +
+            "  \"deadline\" : 1725829200000,\n" +
+            "  \"createDate\" : 1725829200000,\n" +
+            "  \"customer\" : {\n" +
+            "    \"name\" : \"Иван\",\n" +
+            "    \"surname\" : \"Чехов\",\n" +
+            "    \"profession\" : \"плотник\",\n" +
+            "    \"workExperience\" : 2,\n" +
+            "    \"description\" : \"охуенный плотник\"\n" +
+            "  },\n" +
+            "  \"status\" : {\n" +
+            "    \"status\" : \"NEW STATUS\"\n" +
+            "  },\n" +
+            "  \"categories\" : [ {\n" +
+            "    \"id\" : 22,\n" +
+            "    \"name\" : \"ABU\"\n" +
+            "  } ]\n" +
+            "}";
+
     @SneakyThrows
-    @Transactional
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(JavaConfig.class);
         TaskController taskController = context.getBean(TaskController.class);
-        String find = taskController.getAll();
+        taskController.insert(NEW_TASK);
+        String find = taskController.getById("{\"id\":24}");
         System.out.println(find);
-        context.getBean(ConnectionHolder.class).destroyPool();
         context.close();
-
-
-
     }
 }
 

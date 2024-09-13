@@ -1,35 +1,46 @@
 package org.charviakouski.freelanceExchange.connection;
 
 import org.charviakouski.freelanceExchange.exception.RepositoryException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.concurrent.BlockingQueue;
 
 @Component
 public class ConnectionHolder {
 
-    private final HashMap<String, ProxyConnection> connections = new HashMap<>();
+    @Autowired
+    private ConnectionFactory connectionFactory;
+    private BlockingQueue<ProxyConnection> freeConnection;
+    private BlockingQueue<ProxyConnection> usedConnection;
+    private final HashMap<String, ProxyConnection> transactionConnections = new HashMap<>();
+
+
 
     public ProxyConnection getConnection() {
-        return connections.computeIfAbsent(Thread.currentThread().getName(), ConnectionHolder::apply);
+        return transactionConnections.computeIfAbsent(Thread.currentThread().getName(), this::apply);
     }
 
-    private static ProxyConnection apply(String connection) {
+    private ProxyConnection apply(String connection) {
         try {
-            Connection tempConnection = ConnectionFactory.getConnection();
+            Connection tempConnection = connectionFactory.getConnection();
             return new ProxyConnection(tempConnection);
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
     }
 
+    @PreDestroy
     public void destroyPool() {
-        connections.values().forEach(connection -> {
+        System.out.println("DESTROY==============================");
+        transactionConnections.values().forEach(connection -> {
             try {
                 connection.reallyClose();
             } catch (SQLException e) {

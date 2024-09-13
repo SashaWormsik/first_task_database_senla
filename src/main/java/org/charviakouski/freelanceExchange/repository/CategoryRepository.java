@@ -24,7 +24,7 @@ public interface CategoryRepository {
 
     Category update(Category newCategory, Category oldCategory);
 
-    boolean categoryIsPresent(Category category);
+    boolean isCategoryPresent(Category category);
 
     boolean delete(Category category);
 }
