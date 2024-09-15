@@ -8,6 +8,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class MyApplication {
 
@@ -71,9 +72,9 @@ public class MyApplication {
         for (Runnable run : runnableList) {
             executorService.execute(run);
         }
-        System.out.println(taskController.getAll());
         executorService.shutdown();
-        context.close();
+        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        System.out.println(taskController.getAll());
     }
 }
 
