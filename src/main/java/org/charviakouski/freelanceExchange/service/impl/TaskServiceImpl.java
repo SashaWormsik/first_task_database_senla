@@ -26,8 +26,6 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private UserInfoRepository userInfoRepository;
     @Autowired
-    TaskStatusRepository taskStatusRepository;
-    @Autowired
     private EntityMapper entityMapper;
 
     @Override

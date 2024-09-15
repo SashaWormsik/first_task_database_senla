@@ -21,7 +21,6 @@ public class ConnectionHolder {
     private final ThreadLocal<Boolean> transactionStatus = ThreadLocal.withInitial(() -> false);
     private final Map<Thread, Connection> threadConnectionMap = new ConcurrentHashMap<>();
     private final BlockingQueue<Connection> connectionPool = new LinkedBlockingDeque<>();
-    ;
 
     public Connection getConnection() throws SQLException {
         Thread currentThread = Thread.currentThread();

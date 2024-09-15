@@ -61,19 +61,16 @@ public class MyApplication {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(JavaConfig.class);
         TaskController taskController = context.getBean(TaskController.class);
 
-        Runnable insertOneTASK = () -> {
-            taskController.insert(NEW_TASK_ONE);
-        };
-        Runnable insertTwoTASK = () -> {
-            taskController.insert(NEW_TASK_TWO);
-        };
+        Runnable insertOneTASK = () -> taskController.insert(NEW_TASK_ONE);
+        Runnable insertTwoTASK = () -> taskController.insert(NEW_TASK_TWO);
         List<Runnable> runnableList = List.of(insertOneTASK, insertTwoTASK);
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
-        for (Runnable run : runnableList) {
-            executorService.execute(run);
+        try (ExecutorService executorService = Executors.newFixedThreadPool(2)) {
+            for (Runnable run : runnableList) {
+                executorService.execute(run);
+            }
+            executorService.shutdown();
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         }
-        executorService.shutdown();
-        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         System.out.println(taskController.getAll());
     }
 }

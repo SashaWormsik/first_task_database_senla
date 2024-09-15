@@ -41,13 +41,9 @@ public class TransactionalAspect {
             }
             throw runtimeException;
         } finally {
-            try {
-                connection.setAutoCommit(previousAutoCommit);
-                connectionHolder.setTransactionStatus(false);
-                connectionHolder.releaseConnection();
-            } catch (SQLException e) {
-                throw new RuntimeException("Ошибка при задании автокомита", e);
-            }
+            connection.setAutoCommit(previousAutoCommit);
+            connectionHolder.setTransactionStatus(false);
+            connectionHolder.releaseConnection();
         }
     }
 }

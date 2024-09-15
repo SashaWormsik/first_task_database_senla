@@ -60,10 +60,6 @@ public class TaskRepositoryImpl implements TaskRepository {
     ConnectionHolder connectionHolder;
     @Autowired
     MapperFromResultSetToEntity<Task> taskMapper;
-    @Autowired
-    MapperFromResultSetToEntity<UserInfo> userInfoMapper;
-    @Autowired
-    MapperFromResultSetToEntity<TaskStatus> taskStatusMapper;
 
     @SneakyThrows
     @Override
@@ -142,7 +138,7 @@ public class TaskRepositoryImpl implements TaskRepository {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_TASK_STATUS)) {
             statement.setString(1, task.getStatus().getStatus());
             statement.setLong(2, task.getId());
-            int row = statement.executeUpdate();
+            statement.executeUpdate();
         } catch (SQLException exception) {
             throw new RuntimeException(exception);
         } finally {
