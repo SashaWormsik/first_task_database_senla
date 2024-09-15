@@ -3,97 +3,75 @@ package org.charviakouski.freelanceExchange;
 import lombok.SneakyThrows;
 import org.charviakouski.freelanceExchange.config.JavaConfig;
 import org.charviakouski.freelanceExchange.controller.TaskController;
-import org.charviakouski.freelanceExchange.exception.ControllerException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class MyApplication {
+
+    private static final String NEW_TASK_ONE = "{\n" +
+            "  \"title\" : \" TASK ONE !!!!!!! OOOOOOOONNNNNNEEEEEEEEEEEEE\",\n" +
+            "  \"description\" : \"ОПИСАНИЕ ТАСКА ОДИН\",\n" +
+            "  \"price\" : 100.00,\n" +
+            "  \"deadline\" : 1725829200000,\n" +
+            "  \"createDate\" : 1725829200000,\n" +
+            "  \"customer\" : {\n" +
+            "    \"name\" : \"Иван\",\n" +
+            "    \"surname\" : \"Чехов\",\n" +
+            "    \"profession\" : \"плотник\",\n" +
+            "    \"workExperience\" : 2,\n" +
+            "    \"description\" : \"плотник\"\n" +
+            "  },\n" +
+            "  \"status\" : {\n" +
+            "    \"status\" : \"in waiting\"\n" +
+            "  },\n" +
+            "  \"categories\" : [ {\n" +
+            "    \"id\" : 3,\n" +
+            "    \"name\" : \"worker\"\n" +
+            "  } ]\n" +
+            "}";
+
+    private static final String NEW_TASK_TWO = "{\n" +
+            "  \"title\" : \" TASK TWO !!!!!!!!!!!!!!! TWOOOOOOOOO\",\n" +
+            "  \"description\" : \"ОПИСАНИЕ ТАСКА ДВА\",\n" +
+            "  \"price\" : 100.00,\n" +
+            "  \"deadline\" : 1725829200000,\n" +
+            "  \"createDate\" : 1725829200000,\n" +
+            "  \"customer\" : {\n" +
+            "    \"name\" : \"Иван\",\n" +
+            "    \"surname\" : \"Чехов\",\n" +
+            "    \"profession\" : \"плотник\",\n" +
+            "    \"workExperience\" : 2,\n" +
+            "    \"description\" : \"плотник\"\n" +
+            "  },\n" +
+            "  \"status\" : {\n" +
+            "    \"status\" : \"in waiting\"\n" +
+            "  },\n" +
+            "  \"categories\" : [ {\n" +
+            "    \"id\" : 3,\n" +
+            "    \"name\" : \"worker\"\n" +
+            "  } ]\n" +
+            "}";
+
     @SneakyThrows
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(JavaConfig.class);
         TaskController taskController = context.getBean(TaskController.class);
-        try {
-            System.out.println("==============ВЫВОД ВСЕХ ОБЪЕКТОВ==============");
-            System.out.println(taskController.getAll());
-            System.out.println("==============ВЫВОД ОБЪЕКТА ПО ID СУЩЕСТВУЮЩЕГО==============");
-            System.out.println(taskController.getById("{\"id\":1}"));
-            String insert1 = "{\"id\":3," +
-                    "\"title\":\"Task3\"," +
-                    "\"description\":\"Task3\"," +
-                    "\"price\":585," +
-                    "\"deadline\":1724967451473," +
-                    "\"createDate\":1724967451473," +
-                    "\"customer\":{" +
-                    "\"id\":3," +
-                    "\"name\":\"ИВан\"," +
-                    "\"surname\":\"Попов\"," +
-                    "\"profession\":\"developer\"," +
-                    "\"workExperience\":12," +
-                    "\"description\":null}," +
-                    "\"status\":{" +
-                    "\"id\":1," +
-                    "\"status\":\"В ОЖИДАНИИ\"}," +
-                    "\"categories\":[" +
-                    "{\"id\":1,\"name\":\"Ux/Ui\"}," +
-                    "{\"id\":2,\"name\":\"IT\"}]}";
-            String insert2 = "{\"id\":4," +
-                    "\"title\":\"Task4\"," +
-                    "\"description\":\"Task4\"," +
-                    "\"price\":59999999," +
-                    "\"deadline\":1724967451473," +
-                    "\"createDate\":1724967451473," +
-                    "\"customer\":{" +
-                    "\"id\":4," +
-                    "\"name\":\"Диана\"," +
-                    "\"surname\":\"Милощ\"," +
-                    "\"profession\":\"developer\"," +
-                    "\"workExperience\":12," +
-                    "\"description\":null}," +
-                    "\"status\":{" +
-                    "\"id\":1," +
-                    "\"status\":\"В ОЖИДАНИИ\"}," +
-                    "\"categories\":[" +
-                    "{\"id\":1,\"name\":\"Ux/Ui\"}," +
-                    "{\"id\":2,\"name\":\"IT\"}]}";
-            taskController.insert(insert1);
-            taskController.insert(insert2);
-            System.out.println("==============ВЫВОД ВСЕХ ОБЪЕКТОВ==============");
-            System.out.println(taskController.getAll());
-            System.out.println("==============УДАЛЕНИЕ ОБЪЕКТА СУЩЕСТВУЮЩЕГО==============");
-            System.out.println(taskController.delete("{\"id\":1}"));
-            System.out.println("==============УДАЛЕНИЕ ОБЪЕКТА КОТОРОГО НЕТ==============");
-            System.out.println(taskController.delete("{\"id\":555}"));
-            System.out.println("==============ВЫВОД ВСЕХ ОБЪЕКТОВ==============");
-            System.out.println(taskController.getAll());
-            System.out.println("==============ОБНОВЛЕНИЕ ОБЪЕКТА==============");
-            String update2 = "{\"id\":4," +
-                    "\"title\":\"Task4\"," +
-                    "\"description\":\"ОБНОВИЛИ ОПИСАНИЕ!!!!!!!!!!!!ОПИСАНИЕ НОВОЕ\"," +
-                    "\"price\":59999999," +
-                    "\"deadline\":1724967451473," +
-                    "\"createDate\":1724967451473," +
-                    "\"customer\":{" +
-                    "\"id\":4," +
-                    "\"name\":\"Диана\"," +
-                    "\"surname\":\"Милощ\"," +
-                    "\"profession\":\"developer\"," +
-                    "\"workExperience\":12," +
-                    "\"description\":null}," +
-                    "\"status\":{" +
-                    "\"id\":1," +
-                    "\"status\":\"В ОЖИДАНИИ\"}," +
-                    "\"categories\":[" +
-                    "{\"id\":1,\"name\":\"Ux/Ui\"}," +
-                    "{\"id\":2,\"name\":\"IT\"}]}";
-            System.out.println(taskController.update(update2));
-            System.out.println("==============ВЫВОД ВСЕХ ОБЪЕКТОВ==============");
-            System.out.println(taskController.getAll());
-            System.out.println("==============ВЫВОД ОБЪЕКТА ПО ID КОТОРОГО НЕТ==============");
-            System.out.println(taskController.getById("{\"id\":44}"));
-        }catch (ControllerException e){
-            System.out.println(e.getMessage());
+
+        Runnable insertOneTASK = () -> taskController.insert(NEW_TASK_ONE);
+        Runnable insertTwoTASK = () -> taskController.insert(NEW_TASK_TWO);
+        List<Runnable> runnableList = List.of(insertOneTASK, insertTwoTASK);
+        try (ExecutorService executorService = Executors.newFixedThreadPool(2)) {
+            for (Runnable run : runnableList) {
+                executorService.execute(run);
+            }
+            executorService.shutdown();
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         }
+        System.out.println(taskController.getAll());
     }
 }
 
