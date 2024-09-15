@@ -3,8 +3,6 @@ package org.charviakouski.freelanceExchange.repository.impl;
 import lombok.SneakyThrows;
 import org.charviakouski.freelanceExchange.connection.ConnectionHolder;
 import org.charviakouski.freelanceExchange.model.entity.Task;
-import org.charviakouski.freelanceExchange.model.entity.TaskStatus;
-import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.mapper.MapperFromResultSetToEntity;
 import org.charviakouski.freelanceExchange.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,7 +7,6 @@ import org.charviakouski.freelanceExchange.model.entity.Task;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.CategoryRepository;
 import org.charviakouski.freelanceExchange.repository.TaskRepository;
-import org.charviakouski.freelanceExchange.repository.TaskStatusRepository;
 import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.charviakouski.freelanceExchange.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
