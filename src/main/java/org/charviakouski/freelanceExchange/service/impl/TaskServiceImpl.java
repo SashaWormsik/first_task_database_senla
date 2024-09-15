@@ -4,8 +4,6 @@ import org.charviakouski.freelanceExchange.annotation.Transactional;
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
 import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.charviakouski.freelanceExchange.model.entity.Task;
-import org.charviakouski.freelanceExchange.model.entity.TaskStatus;
-import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.CategoryRepository;
 import org.charviakouski.freelanceExchange.repository.TaskRepository;
@@ -45,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDto insert(TaskDto taskDto) {
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        task.setCustomer(userInfoRepository.insert(task.getCustomer()) );
+        task.setCustomer(userInfoRepository.insert(task.getCustomer()));
         task = taskRepository.insert(task);
         categoryRepository.insertInTaskCategory(task.getCategories(), task);
         task.setCategories(categoryRepository.getAllCategoryForTask(task).orElse(null));
