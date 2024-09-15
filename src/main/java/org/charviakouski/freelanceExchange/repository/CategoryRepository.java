@@ -3,6 +3,7 @@ package org.charviakouski.freelanceExchange.repository;
 import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.charviakouski.freelanceExchange.model.entity.Task;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 

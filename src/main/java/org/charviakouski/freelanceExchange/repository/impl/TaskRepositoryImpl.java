@@ -1,5 +1,6 @@
 package org.charviakouski.freelanceExchange.repository.impl;
 
+import lombok.SneakyThrows;
 import org.charviakouski.freelanceExchange.connection.ConnectionHolder;
 import org.charviakouski.freelanceExchange.model.entity.Task;
 import org.charviakouski.freelanceExchange.model.entity.TaskStatus;
@@ -64,11 +65,12 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Autowired
     MapperFromResultSetToEntity<TaskStatus> taskStatusMapper;
 
+    @SneakyThrows
     @Override
     public Optional<Task> getById(Task task) {
         Optional<Task> optionalTask = Optional.empty();
-        try (Connection connection = connectionHolder.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SELECT_TASK_BY_ID)) {
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_TASK_BY_ID)) {
             statement.setLong(1, task.getId());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -76,14 +78,17 @@ public class TaskRepositoryImpl implements TaskRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            connectionHolder.releaseConnection();
         }
         return optionalTask;
     }
 
+    @SneakyThrows
     @Override
     public Task insert(Task task) {
-        try (Connection connection = connectionHolder.getConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT_NEW_TASK, Statement.RETURN_GENERATED_KEYS)) {
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_NEW_TASK, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, task.getTitle());
             statement.setString(2, task.getDescription());
             statement.setBigDecimal(3, task.getPrice());
@@ -92,21 +97,23 @@ public class TaskRepositoryImpl implements TaskRepository {
             statement.setLong(6, task.getCustomer().getId());
             int row = statement.executeUpdate();
             if (row == 1) {
-                try (ResultSet resultSet = statement.getGeneratedKeys()) {
-                    resultSet.next();
-                    task.setId(resultSet.getLong(1));
-                }
+                ResultSet resultSet = statement.getGeneratedKeys();
+                resultSet.next();
+                task.setId(resultSet.getLong(1));
             }
         } catch (SQLException exception) {
             throw new RuntimeException(exception);
+        } finally {
+            connectionHolder.releaseConnection();
         }
         return task;
     }
 
+    @SneakyThrows
     @Override
     public Task update(Task newTask, Task oldTask) {
-        try (Connection connection = connectionHolder.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_TASK)) {
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_TASK)) {
             statement.setString(1, newTask.getTitle());
             statement.setString(2, newTask.getDescription());
             statement.setBigDecimal(3, newTask.getPrice());
@@ -122,29 +129,35 @@ public class TaskRepositoryImpl implements TaskRepository {
             }
         } catch (SQLException exception) {
             throw new RuntimeException(exception);
+        } finally {
+            connectionHolder.releaseConnection();
         }
         return newTask;
     }
 
+    @SneakyThrows
     @Override
     public Task updateTaskStatus(Task task) {
-        try (Connection connection = connectionHolder.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_TASK_STATUS)) {
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_TASK_STATUS)) {
             statement.setString(1, task.getStatus().getStatus());
             statement.setLong(2, task.getId());
             int row = statement.executeUpdate();
         } catch (SQLException exception) {
             throw new RuntimeException(exception);
+        } finally {
+            connectionHolder.releaseConnection();
         }
         return task;
     }
 
+    @SneakyThrows
     @Override
     public List<Task> getAll() {
         List<Task> tasks = new ArrayList<>();
         Optional<Task> optionalTask;
-        try (Connection connection = connectionHolder.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 optionalTask = taskMapper.map(resultSet);
@@ -152,6 +165,8 @@ public class TaskRepositoryImpl implements TaskRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            connectionHolder.releaseConnection();
         }
         return tasks;
     }

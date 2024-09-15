@@ -5,11 +5,15 @@ import org.charviakouski.freelanceExchange.config.JavaConfig;
 import org.charviakouski.freelanceExchange.controller.TaskController;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class MyApplication {
 
-    private static final String NEW_TASK = "{\n" +
-            "  \"title\" : \"\",\n" +
-            "  \"description\" : \"\",\n" +
+    private static final String NEW_TASK_ONE = "{\n" +
+            "  \"title\" : \" TASK ONE !!!!!!! OOOOOOOONNNNNNEEEEEEEEEEEEE\",\n" +
+            "  \"description\" : \"ОПИСАНИЕ ТАСКА ОДИН\",\n" +
             "  \"price\" : 100.00,\n" +
             "  \"deadline\" : 1725829200000,\n" +
             "  \"createDate\" : 1725829200000,\n" +
@@ -18,14 +22,36 @@ public class MyApplication {
             "    \"surname\" : \"Чехов\",\n" +
             "    \"profession\" : \"плотник\",\n" +
             "    \"workExperience\" : 2,\n" +
-            "    \"description\" : \"охуенный плотник\"\n" +
+            "    \"description\" : \"плотник\"\n" +
             "  },\n" +
             "  \"status\" : {\n" +
-            "    \"status\" : \"NEW STATUS\"\n" +
+            "    \"status\" : \"in waiting\"\n" +
             "  },\n" +
             "  \"categories\" : [ {\n" +
-            "    \"id\" : 22,\n" +
-            "    \"name\" : \"ABU\"\n" +
+            "    \"id\" : 3,\n" +
+            "    \"name\" : \"worker\"\n" +
+            "  } ]\n" +
+            "}";
+
+    private static final String NEW_TASK_TWO = "{\n" +
+            "  \"title\" : \" TASK TWO !!!!!!!!!!!!!!! TWOOOOOOOOO\",\n" +
+            "  \"description\" : \"ОПИСАНИЕ ТАСКА ДВА\",\n" +
+            "  \"price\" : 100.00,\n" +
+            "  \"deadline\" : 1725829200000,\n" +
+            "  \"createDate\" : 1725829200000,\n" +
+            "  \"customer\" : {\n" +
+            "    \"name\" : \"Иван\",\n" +
+            "    \"surname\" : \"Чехов\",\n" +
+            "    \"profession\" : \"плотник\",\n" +
+            "    \"workExperience\" : 2,\n" +
+            "    \"description\" : \"плотник\"\n" +
+            "  },\n" +
+            "  \"status\" : {\n" +
+            "    \"status\" : \"in waiting\"\n" +
+            "  },\n" +
+            "  \"categories\" : [ {\n" +
+            "    \"id\" : 3,\n" +
+            "    \"name\" : \"worker\"\n" +
             "  } ]\n" +
             "}";
 
@@ -33,9 +59,20 @@ public class MyApplication {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(JavaConfig.class);
         TaskController taskController = context.getBean(TaskController.class);
-        taskController.insert(NEW_TASK);
-        String find = taskController.getById("{\"id\":24}");
-        System.out.println(find);
+
+        Runnable insertOneTASK = () -> {
+            taskController.insert(NEW_TASK_ONE);
+        };
+        Runnable insertTwoTASK = () -> {
+            taskController.insert(NEW_TASK_TWO);
+        };
+        List<Runnable> runnableList = List.of(insertOneTASK, insertTwoTASK);
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        for (Runnable run : runnableList) {
+            executorService.execute(run);
+        }
+        System.out.println(taskController.getAll());
+        executorService.shutdown();
         context.close();
     }
 }

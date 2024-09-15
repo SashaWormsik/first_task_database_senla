@@ -1,7 +1,7 @@
 package org.charviakouski.freelanceExchange.repository.impl;
 
+import lombok.SneakyThrows;
 import org.charviakouski.freelanceExchange.connection.ConnectionHolder;
-import org.charviakouski.freelanceExchange.exception.RepositoryException;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.mapper.MapperFromResultSetToEntity;
 import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
@@ -40,11 +40,12 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
     @Autowired
     private MapperFromResultSetToEntity<UserInfo> userInfoMapper;
 
+    @SneakyThrows
     @Override
     public Optional<UserInfo> getById(UserInfo userInfo) {
         Optional<UserInfo> optionalUserInfo = Optional.empty();
-        try (Connection connection = connectionHolder.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SELECT_USER_BY_ID)) {
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_USER_BY_ID)) {
             statement.setLong(1, userInfo.getId());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -52,31 +53,36 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            connectionHolder.releaseConnection();
         }
         return optionalUserInfo;
     }
 
+    @SneakyThrows
     @Override
-    public boolean isUserInfoPresentByName(UserInfo userInfo){
+    public boolean isUserInfoPresentByName(UserInfo userInfo) {
         boolean result = false;
-        try (Connection connection = connectionHolder.getConnection();
-             PreparedStatement statement = connection.prepareStatement(USER_IS_PRESENT_BY_NAME)) {
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(USER_IS_PRESENT_BY_NAME)) {
             statement.setString(1, userInfo.getName());
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    result = resultSet.getBoolean(1);
-                }
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getBoolean(1);
             }
         } catch (SQLException exception) {
             throw new RuntimeException(exception);
+        } finally {
+            connectionHolder.releaseConnection();
         }
         return result;
     }
 
+    @SneakyThrows
     @Override
     public UserInfo insert(UserInfo userInfo) {
-        try (Connection connection = connectionHolder.getConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT_NEW_USER_INFO, Statement.RETURN_GENERATED_KEYS)) {
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_NEW_USER_INFO, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, userInfo.getName());
             statement.setString(2, userInfo.getSurname());
             statement.setString(3, userInfo.getProfession());
@@ -91,14 +97,17 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
             }
         } catch (SQLException exception) {
             throw new RuntimeException(exception);
+        } finally {
+            connectionHolder.releaseConnection();
         }
         return userInfo;
     }
 
+    @SneakyThrows
     @Override
     public UserInfo update(UserInfo newUserInfo, UserInfo oldUserInfo) {
-        try (Connection connection = connectionHolder.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_USER_INFO)) {
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_USER_INFO)) {
             statement.setString(1, newUserInfo.getName());
             statement.setString(2, newUserInfo.getSurname());
             statement.setString(3, newUserInfo.getProfession());
@@ -111,6 +120,8 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
             }
         } catch (SQLException exception) {
             throw new RuntimeException(exception);
+        } finally {
+            connectionHolder.releaseConnection();
         }
         return newUserInfo;
     }

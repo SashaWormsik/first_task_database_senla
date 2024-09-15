@@ -1,64 +1,87 @@
 package org.charviakouski.freelanceExchange.connection;
 
-import org.charviakouski.freelanceExchange.exception.RepositoryException;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
 import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingDeque;
 
 @Component
+@Data
 public class ConnectionHolder {
 
     @Autowired
     private ConnectionFactory connectionFactory;
-    private BlockingQueue<ProxyConnection> freeConnection;
-    private BlockingQueue<ProxyConnection> usedConnection;
-    private final HashMap<String, ProxyConnection> transactionConnections = new HashMap<>();
+    private final ThreadLocal<Boolean> transactionStatus = ThreadLocal.withInitial(() -> false);
+    private final Map<Thread, Connection> threadConnectionMap = new ConcurrentHashMap<>();
+    private final BlockingQueue<Connection> connectionPool = new LinkedBlockingDeque<>();
+    ;
 
-
-
-    public ProxyConnection getConnection() {
-        return transactionConnections.computeIfAbsent(Thread.currentThread().getName(), this::apply);
+    public Connection getConnection() throws SQLException {
+        Thread currentThread = Thread.currentThread();
+        if (threadConnectionMap.containsKey(currentThread) && isTransactionActive()) {
+            if (threadConnectionMap.get(currentThread).isClosed()) {
+                throw new RuntimeException("Connection используемый в транзакции закрыт");
+            }
+            return threadConnectionMap.get(currentThread);
+        }
+        return getConnectionFromPool();
     }
 
-    private ProxyConnection apply(String connection) {
+    public void releaseConnection() {
+        Thread currentThread = Thread.currentThread();
+        Connection connection = threadConnectionMap.get(currentThread);
         try {
-            Connection tempConnection = connectionFactory.getConnection();
-            return new ProxyConnection(tempConnection);
+            if (connection != null && !connection.isClosed() && !isTransactionActive()) {
+                connectionPool.add(threadConnectionMap.remove(currentThread));
+            }
         } catch (SQLException e) {
-            throw new RepositoryException(e);
+            throw new RuntimeException("Ошибка освобождения connection");
         }
+    }
+
+
+    public boolean isTransactionActive() {
+        return transactionStatus.get();
+    }
+
+    public void setTransactionStatus(boolean status) {
+        transactionStatus.set(status);
     }
 
     @PreDestroy
-    public void destroyPool() {
-        System.out.println("DESTROY==============================");
-        transactionConnections.values().forEach(connection -> {
-            try {
-                connection.reallyClose();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        deregisterDrivers();
-    }
-
-    private void deregisterDrivers() {
-        Enumeration<Driver> drivers = DriverManager.getDrivers();
-        while (drivers.hasMoreElements()) {
-            Driver driver = drivers.nextElement();
-            try {
-                DriverManager.deregisterDriver(driver);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+    public void closeAllConnections() {
+        connectionPool.addAll(threadConnectionMap.values());
+        for (Connection connection : connectionPool) {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException("Ошибка закрытия всех connections", e);
+                }
             }
         }
+        threadConnectionMap.clear();
+        connectionPool.clear();
+    }
+
+    private Connection getConnectionFromPool() throws SQLException {
+        if (connectionPool.isEmpty()) {
+            threadConnectionMap.put(Thread.currentThread(), connectionFactory.getConnection());
+        } else {
+            for (Connection connection : connectionPool) {
+                if (connection != null && !connection.isClosed()) {
+                    threadConnectionMap.put(Thread.currentThread(), connection);
+                    break;
+                }
+            }
+        }
+        return threadConnectionMap.get(Thread.currentThread());
     }
 }

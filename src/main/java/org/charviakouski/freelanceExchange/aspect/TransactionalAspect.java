@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 @RequiredArgsConstructor
 @Component
@@ -23,18 +24,30 @@ public class TransactionalAspect {
     @SneakyThrows
     @Around(value = "@annotation(org.charviakouski.freelanceExchange.annotation.Transactional)")
     public Object advice(ProceedingJoinPoint joinPoint) {
-        Object result;
         Connection connection = connectionHolder.getConnection();
+        connectionHolder.setTransactionStatus(true);
+        boolean previousAutoCommit = false;
         try {
+            previousAutoCommit = connection.getAutoCommit();
             connection.setAutoCommit(false);
-            result = joinPoint.proceed();
+            Object result = joinPoint.proceed();
             connection.commit();
-        } catch (RuntimeException e) {
-            connection.rollback();
-            throw e;
+            return result;
+        } catch (RuntimeException runtimeException) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                throw new RuntimeException("Ошибка при откате транзакции", e);
+            }
+            throw runtimeException;
         } finally {
-            connection.setAutoCommit(true);
+            try {
+                connection.setAutoCommit(previousAutoCommit);
+                connectionHolder.setTransactionStatus(false);
+                connectionHolder.releaseConnection();
+            } catch (SQLException e) {
+                throw new RuntimeException("Ошибка при задании автокомита", e);
+            }
         }
-        return result;
     }
 }

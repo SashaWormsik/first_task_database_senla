@@ -1,5 +1,6 @@
 package org.charviakouski.freelanceExchange.repository.impl;
 
+import lombok.SneakyThrows;
 import org.charviakouski.freelanceExchange.connection.ConnectionHolder;
 import org.charviakouski.freelanceExchange.model.entity.TaskStatus;
 import org.charviakouski.freelanceExchange.model.mapper.MapperFromResultSetToEntity;
@@ -26,11 +27,12 @@ public class TaskStatusRepositoryImpl implements TaskStatusRepository {
     @Autowired
     private MapperFromResultSetToEntity<TaskStatus> taskStatusMapper;
 
+    @SneakyThrows
     @Override
     public Optional<TaskStatus> getByStatusName(TaskStatus taskStatus) {
         Optional<TaskStatus> optionalTaskStatus = Optional.empty();
-        try (Connection connection = connectionHolder.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SELECT_CATEGORY_BY_STATUS_NAME)) {
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_CATEGORY_BY_STATUS_NAME)) {
             statement.setObject(1, taskStatus.getStatus());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -38,6 +40,8 @@ public class TaskStatusRepositoryImpl implements TaskStatusRepository {
             }
         } catch (SQLException exception) {
             throw new RuntimeException(exception);
+        } finally {
+            connectionHolder.releaseConnection();
         }
         return optionalTaskStatus;
     }

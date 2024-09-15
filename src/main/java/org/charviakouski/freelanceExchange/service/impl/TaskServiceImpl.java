@@ -45,8 +45,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDto insert(TaskDto taskDto) {
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        UserInfo userInfo =userInfoRepository.insert(task.getCustomer()) ;
-        task.setCustomer(userInfo);
+        task.setCustomer(userInfoRepository.insert(task.getCustomer()) );
         task = taskRepository.insert(task);
         categoryRepository.insertInTaskCategory(task.getCategories(), task);
         task.setCategories(categoryRepository.getAllCategoryForTask(task).orElse(null));
@@ -62,7 +61,6 @@ public class TaskServiceImpl implements TaskService {
         if (!oldTask.isPresent()) {
             throw new RuntimeException("Объект отсутствует, а значит обновить невозможно");
         }
-        task = taskRepository.update(task, oldTask.get());
         categoryRepository.deleteInTaskCategory(task);
         categoryRepository.insertInTaskCategory(categories, task);
         task.setCategories(categoryRepository.getAllCategoryForTask(task).orElse(null));
@@ -78,9 +76,8 @@ public class TaskServiceImpl implements TaskService {
             throw new RuntimeException("Объект не существует!!!");
         }
         if (optionalCategory.isPresent()) {
-            List<Category> categoryList = optionalCategory.get();
             task = optionalTask.get();
-            task.setCategories(categoryList);
+            task.setCategories(optionalCategory.get());
         }
         return entityMapper.fromEntityToDto(task, TaskDto.class);
     }
