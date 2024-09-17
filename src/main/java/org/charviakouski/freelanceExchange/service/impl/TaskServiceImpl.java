@@ -1,6 +1,5 @@
 package org.charviakouski.freelanceExchange.service.impl;
 
-import org.charviakouski.freelanceExchange.annotation.Transactional;
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
 import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.charviakouski.freelanceExchange.model.entity.Task;
@@ -36,7 +35,6 @@ public class TaskServiceImpl implements TaskService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     @Override
     public TaskDto insert(TaskDto taskDto) {
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
@@ -47,7 +45,6 @@ public class TaskServiceImpl implements TaskService {
         return entityMapper.fromEntityToDto(task, TaskDto.class);
     }
 
-    @Transactional
     @Override
     public TaskDto update(TaskDto taskDto) {
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);

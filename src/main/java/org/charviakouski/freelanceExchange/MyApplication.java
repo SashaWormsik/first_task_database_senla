@@ -60,7 +60,6 @@ public class MyApplication {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(JavaConfig.class);
         TaskController taskController = context.getBean(TaskController.class);
-
         Runnable insertOneTASK = () -> taskController.insert(NEW_TASK_ONE);
         Runnable insertTwoTASK = () -> taskController.insert(NEW_TASK_TWO);
         List<Runnable> runnableList = List.of(insertOneTASK, insertTwoTASK);
