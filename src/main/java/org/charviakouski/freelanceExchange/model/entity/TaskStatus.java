@@ -15,12 +15,12 @@ import java.util.List;
 public class TaskStatus {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 100, unique = true, nullable = false)
     private String status;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "taskStatus")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
     private List<Task> task;
 }

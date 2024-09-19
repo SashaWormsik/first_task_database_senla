@@ -18,7 +18,6 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public List<CredentialDto> getAll() {
-        credentialRepository.getAll();
         return null;
     }
 

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -20,5 +20,5 @@ public class TaskDto {
     private Date createDate;
     private UserInfoDto customer;
     private TaskStatusDto status;
-    private List<CategoryDto> categories;
+    private Set<CategoryDto> categories;
 }

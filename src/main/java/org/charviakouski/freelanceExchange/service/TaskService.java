@@ -1,6 +1,6 @@
 package org.charviakouski.freelanceExchange.service;
 
-import org.charviakouski.freelanceExchange.annotation.Transactional;
+
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
 
 import java.util.List;

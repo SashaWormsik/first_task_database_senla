@@ -15,10 +15,10 @@ import java.util.Date;
 public class Feedback {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "create_date", nullable = false)
     private Date createDate;
 
     @Column(nullable = false)

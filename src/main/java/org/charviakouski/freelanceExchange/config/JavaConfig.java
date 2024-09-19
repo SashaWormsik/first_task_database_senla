@@ -28,9 +28,9 @@ public class JavaConfig {
     private String userName;
     @Value("${spring.datasource.password}")
     private String password;
-    @Value("${liquibase.changeLog.file}")
+    @Value("${spring.liquibase.changeLog.file}")
     private String changeLogFile;
-    @Value("${liquibase.schema.database}")
+    @Value("${spring.liquibase.schema.database}")
     private String liquibaseSchema;
     @Value("${hibernate.dialect}")
     private String hibernateDialect;
@@ -71,7 +71,7 @@ public class JavaConfig {
         LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
         entityManager.setDataSource(dataSource());
         entityManager.setPackagesToScan("org.charviakouski.freelanceExchange.model.entity");
-        entityManager.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        entityManager.setJpaVendorAdapter(hibernateJpaVendorAdapter());
         entityManager.setJpaProperties(getHibernateProperties());
         return entityManager;
     }

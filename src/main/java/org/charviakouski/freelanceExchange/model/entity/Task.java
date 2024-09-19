@@ -18,7 +18,7 @@ import java.util.Set;
 public class Task {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 100, nullable = false)
@@ -33,7 +33,7 @@ public class Task {
     @Column
     private Date deadline;
 
-    @Column(nullable = false)
+    @Column(name = "create_date", nullable = false)
     private Date createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

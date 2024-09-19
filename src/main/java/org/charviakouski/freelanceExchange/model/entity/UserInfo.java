@@ -16,7 +16,7 @@ import java.util.List;
 public class UserInfo {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 100)
@@ -28,7 +28,7 @@ public class UserInfo {
     @Column(length = 100)
     private String profession;
 
-    @Column(precision = 2)
+    @Column(name = "work_experience", precision = 2)
     private Integer workExperience;
 
     @Column(length = 500)

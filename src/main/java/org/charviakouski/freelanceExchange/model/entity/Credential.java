@@ -14,8 +14,11 @@ import java.util.Date;
 @Table(name = "credential")
 public class Credential {
     @Id
+    private Long id;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
+    @MapsId
     private UserInfo userInfo;
 
     @Column(length = 100, nullable = false, unique = true)
@@ -24,7 +27,7 @@ public class Credential {
     @Column(length = 250, nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name = "create_date", nullable = false)
     private Date createDate;
 
     @Column(nullable = false)
@@ -33,7 +36,7 @@ public class Credential {
     @Column(length = 250)
     private String token;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id")
     private Role role;
 }

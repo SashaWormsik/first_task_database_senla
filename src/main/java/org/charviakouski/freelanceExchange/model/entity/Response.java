@@ -16,16 +16,16 @@ import java.util.Date;
 public class Response {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(precision = 10, scale = 2)
+    @Column(name = "suggested_price", precision = 10, scale = 2)
     private BigDecimal suggestedPrice;
 
-    @Column
+    @Column(name = "suggested_date")
     private Date suggestedDate;
 
-    @Column(nullable = false)
+    @Column(name = "create_date", nullable = false)
     private Date createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -20,15 +20,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> getAll() {
-        return categoryRepository.getAll().stream()
-                .map(category -> entityMapper.fromEntityToDto(category, CategoryDto.class))
-                .collect(Collectors.toList());
+        return null;
     }
 
     @Override
     public CategoryDto getById(CategoryDto categoryDto) {
         return null;
-
     }
 
     @Override

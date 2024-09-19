@@ -22,6 +22,11 @@ public class UserInfoController {
         return entityMapper.fromDtoToJson(userInfoDto);
     }
 
+    public String getByName (String name){
+        UserInfoDto userInfoDto = userInfoService.getByName(entityMapper.fromJsonToDto(name, UserInfoDto.class));
+        return entityMapper.fromDtoToJson(userInfoDto);
+    }
+
     public String insert(String jsonUserInfo) {
         UserInfoDto userInfoDto = userInfoService.insert(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
         return entityMapper.fromDtoToJson(userInfoDto);
