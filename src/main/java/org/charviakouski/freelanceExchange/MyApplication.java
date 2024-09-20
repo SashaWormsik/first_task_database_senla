@@ -2,15 +2,17 @@ package org.charviakouski.freelanceExchange;
 
 import lombok.SneakyThrows;
 import org.charviakouski.freelanceExchange.config.JavaConfig;
-import org.charviakouski.freelanceExchange.controller.TaskController;
 import org.charviakouski.freelanceExchange.controller.UserInfoController;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
+import org.charviakouski.freelanceExchange.model.entity.Credential;
+import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 public class MyApplication {
 
@@ -20,12 +22,47 @@ public class MyApplication {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(JavaConfig.class);
         UserInfoController controller = context.getBean(UserInfoController.class);
         EntityMapper mapper = context.getBean(EntityMapper.class);
-        UserInfo userInfo = new UserInfo();
-        userInfo.setName("BDFY");
-        String name =mapper.fromDtoToJson(mapper.fromEntityToDto(userInfo, UserInfoDto.class));
-        System.out.println(controller.getByName(name));
-
+        UserInfoRepository repository = context.getBean(UserInfoRepository.class);
+        Role role = Role.builder()
+                .name("ADMIN")
+                .build();
+        Credential credential = Credential.builder()
+                .email("aasdasd@ccc.ru")
+                .active(true)
+                .createDate(new Date())
+                .password("1234")
+                .role(role)
+                .build();
+        UserInfo userInfo = UserInfo.builder()
+                .name("Павед")
+                .surname("Иванов")
+                .description("АБОТАЮ КАК ХОЧУ")
+                .profession("Лентяй")
+                .workExperience(25)
+                .credential(credential)
+                .build();
+        Credential credential2 = Credential.builder()
+                .email("@@@@@ ru")
+                .active(true)
+                .createDate(new Date())
+                .password("1234")
+                .role(role)
+                .build();
+        UserInfo userInfo2 = UserInfo.builder()
+                .name("ЁД")
+                .surname("!!!!!!!!!!!")
+                .description("КАК ХОЧУ")
+                .profession("Лентяй")
+                .workExperience(25)
+                .credential(credential2)
+                .build();
+        String u = controller.insert(mapper.fromDtoToJson(mapper.fromEntityToDto(userInfo, UserInfoDto.class)));
+        //String u2 = controller.insert(mapper.fromDtoToJson(mapper.fromEntityToDto(userInfo2, UserInfoDto.class)));
+        System.out.println(u);
+        //System.out.println("==================================================================");
+        //System.out.println(u2);
     }
+
 }
 
 

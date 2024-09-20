@@ -16,8 +16,9 @@ public abstract class AbstractRepository<K, T> {
 
     protected abstract Class<T> getEntityClass();
 
-    public void create(T entity) {
+    public T create(T entity) {
         entityManager.persist(entity);
+        return entity;
     }
 
     public Optional<T> getById(K id) {

@@ -22,11 +22,6 @@ public class UserInfoController {
         return entityMapper.fromDtoToJson(userInfoDto);
     }
 
-    public String getByName (String name){
-        UserInfoDto userInfoDto = userInfoService.getByName(entityMapper.fromJsonToDto(name, UserInfoDto.class));
-        return entityMapper.fromDtoToJson(userInfoDto);
-    }
-
     public String insert(String jsonUserInfo) {
         UserInfoDto userInfoDto = userInfoService.insert(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
         return entityMapper.fromDtoToJson(userInfoDto);
@@ -38,7 +33,16 @@ public class UserInfoController {
     }
 
     public boolean delete(String jsonUserInfo) {
-        userInfoService.delete(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
-        return false;
+        return userInfoService.delete(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
+    }
+
+    public String getAllUserInfoByName(String jsonUserInfoName) {
+        UserInfoDto userInfoDto = entityMapper.fromJsonToDto(jsonUserInfoName, UserInfoDto.class);
+        return entityMapper.fromDtoToJson(userInfoService.getAllUserInfoByName(userInfoDto));
+    }
+
+    public String getUserInfoByEmail(String jsonUserInfoEmail) {
+        UserInfoDto userInfoDto = entityMapper.fromJsonToDto(jsonUserInfoEmail, UserInfoDto.class);
+        return entityMapper.fromDtoToJson(userInfoService.getUserInfoByEmail(userInfoDto));
     }
 }

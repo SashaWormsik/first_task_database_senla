@@ -14,27 +14,26 @@ public class TaskStatusController {
     private EntityMapper entityMapper;
 
     public String getAll() {
-        taskStatusService.getAll();
-        return null;
+        return entityMapper.fromDtoToJson(taskStatusService.getAll());
     }
 
     public String getById(String jsonTaskStatusId) {
-        taskStatusService.getById(entityMapper.fromJsonToDto(jsonTaskStatusId, TaskStatusDto.class));
-        return null;
+        TaskStatusDto taskStatusDto = taskStatusService.getById(entityMapper.fromJsonToDto(jsonTaskStatusId, TaskStatusDto.class));
+        return entityMapper.fromDtoToJson(taskStatusDto);
     }
 
     public String insert(String jsonTaskStatus) {
-        taskStatusService.insert(entityMapper.fromJsonToDto(jsonTaskStatus, TaskStatusDto.class));
-        return null;
+        TaskStatusDto taskStatusDto = taskStatusService.insert(entityMapper.fromJsonToDto(jsonTaskStatus, TaskStatusDto.class));
+        return entityMapper.fromDtoToJson(taskStatusDto);
     }
 
     public String update(String jsonTaskStatus) {
-        taskStatusService.update(entityMapper.fromJsonToDto(jsonTaskStatus, TaskStatusDto.class));
-        return null;
+        TaskStatusDto taskStatusDto = taskStatusService.update(entityMapper.fromJsonToDto(jsonTaskStatus, TaskStatusDto.class));
+        return entityMapper.fromDtoToJson(taskStatusDto);
     }
 
     public boolean delete(String jsonTaskStatus) {
-        taskStatusService.delete(entityMapper.fromJsonToDto(jsonTaskStatus, TaskStatusDto.class));
-        return false;
+        return taskStatusService.delete(entityMapper.fromJsonToDto(jsonTaskStatus, TaskStatusDto.class));
+
     }
 }

@@ -2,15 +2,18 @@ package org.charviakouski.freelanceExchange.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -21,19 +24,21 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "title",length = 100, nullable = false)
     private String title;
 
-    @Column(length = 500)
+    @Column(name = "description", length = 500)
     private String description;
 
-    @Column(precision = 10, scale = 2)
+    @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column
+    @Column(name = "deadline")
+    @Temporal(TemporalType.DATE)
     private Date deadline;
 
     @Column(name = "create_date", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,7 +49,7 @@ public class Task {
     @JoinColumn(name = "status_id")
     private TaskStatus status;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
     private List<Response> responses;
 
     @ManyToMany(fetch = FetchType.LAZY)

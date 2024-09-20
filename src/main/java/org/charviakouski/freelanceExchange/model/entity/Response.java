@@ -2,13 +2,16 @@ package org.charviakouski.freelanceExchange.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -23,9 +26,10 @@ public class Response {
     private BigDecimal suggestedPrice;
 
     @Column(name = "suggested_date")
-    private Date suggestedDate;
+    private LocalDateTime suggestedDate;
 
     @Column(name = "create_date", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

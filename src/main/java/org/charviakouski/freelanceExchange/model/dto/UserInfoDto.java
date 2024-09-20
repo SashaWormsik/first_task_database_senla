@@ -14,4 +14,5 @@ public class UserInfoDto {
     private String profession;
     private Integer workExperience;
     private String description;
+    private CredentialDto credential;
 }

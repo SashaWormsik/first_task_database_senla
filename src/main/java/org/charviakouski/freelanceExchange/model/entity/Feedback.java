@@ -2,12 +2,14 @@ package org.charviakouski.freelanceExchange.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -19,9 +21,10 @@ public class Feedback {
     private Long id;
 
     @Column(name = "create_date", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date createDate;
 
-    @Column(nullable = false)
+    @Column(name = "content", nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

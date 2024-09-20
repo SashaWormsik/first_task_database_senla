@@ -15,5 +15,7 @@ public interface UserInfoService {
 
     boolean delete(UserInfoDto userInfoDto);
 
-    UserInfoDto getByName(UserInfoDto userInfoDto);
+    List<UserInfoDto> getAllUserInfoByName(UserInfoDto userInfoDto);
+
+    UserInfoDto getUserInfoByEmail(UserInfoDto userInfoDto);
 }

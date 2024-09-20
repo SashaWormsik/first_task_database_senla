@@ -1,6 +1,7 @@
 package org.charviakouski.freelanceExchange.service;
 
 import org.charviakouski.freelanceExchange.model.dto.ResponseDto;
+import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface ResponseService {
     ResponseDto update(ResponseDto responseDto);
 
     boolean delete(ResponseDto responseDto);
+
+    List<ResponseDto> getAllResponsesByExecutor(UserInfoDto userInfodto);
 }

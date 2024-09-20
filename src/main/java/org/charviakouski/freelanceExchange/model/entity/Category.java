@@ -2,12 +2,14 @@ package org.charviakouski.freelanceExchange.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -18,7 +20,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100, unique = true, nullable = false)
+    @Column(name = "name", length = 100, unique = true, nullable = false)
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)

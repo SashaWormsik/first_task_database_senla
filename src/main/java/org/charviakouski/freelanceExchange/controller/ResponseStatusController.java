@@ -14,27 +14,25 @@ public class ResponseStatusController {
     private EntityMapper entityMapper;
 
     public String getAll() {
-        responseStatusService.getAll();
-        return null;
+        return entityMapper.fromDtoToJson(responseStatusService.getAll());
     }
 
     public String getById(String jsonResponseStatusId) {
-        responseStatusService.getById(entityMapper.fromJsonToDto(jsonResponseStatusId, ResponseStatusDto.class));
-        return null;
+        ResponseStatusDto responseStatusDto = responseStatusService.getById(entityMapper.fromJsonToDto(jsonResponseStatusId, ResponseStatusDto.class));
+        return entityMapper.fromDtoToJson(responseStatusDto);
     }
 
     public String insert(String jsonResponseStatus) {
-        responseStatusService.insert(entityMapper.fromJsonToDto(jsonResponseStatus, ResponseStatusDto.class));
-        return null;
+        ResponseStatusDto responseStatusDto = responseStatusService.insert(entityMapper.fromJsonToDto(jsonResponseStatus, ResponseStatusDto.class));
+        return entityMapper.fromDtoToJson(responseStatusDto);
     }
 
     public String update(String jsonResponseStatus) {
-        responseStatusService.update(entityMapper.fromJsonToDto(jsonResponseStatus, ResponseStatusDto.class));
-        return null;
+        ResponseStatusDto responseStatusDto = responseStatusService.update(entityMapper.fromJsonToDto(jsonResponseStatus, ResponseStatusDto.class));
+        return entityMapper.fromDtoToJson(responseStatusDto);
     }
 
     public boolean delete(String jsonResponseStatus) {
-        responseStatusService.delete(entityMapper.fromJsonToDto(jsonResponseStatus, ResponseStatusDto.class));
-        return false;
+        return responseStatusService.delete(entityMapper.fromJsonToDto(jsonResponseStatus, ResponseStatusDto.class));
     }
 }

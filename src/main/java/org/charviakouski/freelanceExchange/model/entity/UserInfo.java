@@ -2,6 +2,7 @@ package org.charviakouski.freelanceExchange.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -19,30 +21,37 @@ public class UserInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100)
+    @Column(name = "name", length = 100)
     private String name;
 
-    @Column(length = 100)
+    @Column(name = "surname", length = 100)
     private String surname;
 
-    @Column(length = 100)
+    @Column(name = "profession", length = 100)
     private String profession;
 
     @Column(name = "work_experience", precision = 2)
     private Integer workExperience;
 
-    @Column(length = 500)
+    @Column(name = "description", length = 500)
     private String description;
 
-    @OneToOne(mappedBy = "userInfo")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "userInfo", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private Credential credential;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "executor")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "executor", cascade = CascadeType.ALL)
     private List<Response> responses;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "addressee")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "addressee", cascade = CascadeType.ALL)
     private List<Feedback> addresseeFeedback;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sender")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sender", cascade = CascadeType.ALL)
     private List<Feedback> senderFeedback;
+
+    public void setCredential(Credential credential) {
+        this.credential = credential;
+        this.credential.setUserInfo(this);
+    }
+
 }

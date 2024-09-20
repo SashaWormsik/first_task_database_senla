@@ -15,4 +15,7 @@ public interface TaskService {
     TaskDto update(TaskDto taskDto);
 
     boolean delete(TaskDto taskDto);
+
+    List<TaskDto> getAllTaskByTitle(TaskDto taskDto);
+    List<TaskDto> getAllTaskByPrice(TaskDto taskDto);
 }

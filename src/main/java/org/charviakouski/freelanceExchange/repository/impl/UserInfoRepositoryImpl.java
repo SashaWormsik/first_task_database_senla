@@ -6,6 +6,9 @@ import org.charviakouski.freelanceExchange.repository.AbstractRepository;
 import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class UserInfoRepositoryImpl extends AbstractRepository<Long, UserInfo> implements UserInfoRepository {
 
@@ -16,12 +19,19 @@ public class UserInfoRepositoryImpl extends AbstractRepository<Long, UserInfo> i
 
 
     @Override
-    public UserInfo getUserInfoByName(String username) {
-        String jpqlQuery = "SELECT u FROM UserInfo u WHERE u.name = :name";
+    public List<UserInfo> getAllUserInfoByName(String username) {
+        String jpqlQuery = "SELECT u FROM UserInfo u WHERE LOWER(u.name) LIKE(concat('%', :name, '%') )";
         TypedQuery<UserInfo> query = entityManager.createQuery(jpqlQuery, UserInfo.class);
         query.setParameter("name", username);
-        UserInfo userInfo = query.getSingleResult();
-        return userInfo;
+        return query.getResultList();
     }
 
+    @Override
+    public Optional<UserInfo> getUserInfoByEmail(String email) {
+        String jpqlQuery = "SELECT u, c FROM UserInfo u LEFT JOIN u.credential c  WHERE u.credential.email = :email";
+        TypedQuery<UserInfo> query = entityManager.createQuery(jpqlQuery, UserInfo.class);
+        query.setParameter("email", email);
+        List<UserInfo> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.getFirst());
+    }
 }

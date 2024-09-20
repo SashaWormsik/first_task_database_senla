@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface DefaultRepository <K, T>{
 
-    void create(T entity);
+    T create(T entity);
     Optional<T> getById(K id);
     List<T> getAll();
     T update(T entity);
