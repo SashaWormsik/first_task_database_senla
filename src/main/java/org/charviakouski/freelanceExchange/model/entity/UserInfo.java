@@ -17,7 +17,6 @@ import java.util.List;
 @Table(name = "user_info")
 public class UserInfo {
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -36,8 +35,7 @@ public class UserInfo {
     @Column(name = "description", length = 500)
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "userInfo", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private Credential credential;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "executor", cascade = CascadeType.ALL)
@@ -48,10 +46,4 @@ public class UserInfo {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "sender", cascade = CascadeType.ALL)
     private List<Feedback> senderFeedback;
-
-    public void setCredential(Credential credential) {
-        this.credential = credential;
-        this.credential.setUserInfo(this);
-    }
-
 }

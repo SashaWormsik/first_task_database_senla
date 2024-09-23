@@ -1,5 +1,8 @@
 package org.charviakouski.freelanceExchange.service.impl;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.model.dto.ResponseStatusDto;
@@ -18,6 +21,8 @@ import java.util.Optional;
 @Component
 @Transactional
 public class CredentialServiceImpl implements CredentialService {
+
+    private static final Logger LOGGER = LogManager.getLogger();
     @Autowired
     private CredentialRepository credentialRepository;
     @Autowired
@@ -25,12 +30,14 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public CredentialDto insert(CredentialDto credentialDto) {
+        LOGGER.log(Level.INFO, "insert new Credential with email {}", credentialDto.getEmail());
         Credential credential = entityMapper.fromDtoToEntity(credentialDto, Credential.class);
         return entityMapper.fromEntityToDto(credentialRepository.create(credential), CredentialDto.class);
     }
 
     @Override
     public CredentialDto update(CredentialDto credentialDto) {
+        LOGGER.log(Level.INFO, "update Credential with email {}", credentialDto.getEmail());
         Credential credential = entityMapper.fromDtoToEntity(credentialDto, Credential.class);
         return entityMapper.fromEntityToDto(credentialRepository.update(credential), CredentialDto.class);
     }
@@ -39,6 +46,7 @@ public class CredentialServiceImpl implements CredentialService {
     public CredentialDto getById(CredentialDto credentialDto) {
         Optional<Credential> optionalCredential = credentialRepository.getById(credentialDto.getId());
         if (optionalCredential.isEmpty()) {
+            LOGGER.log(Level.INFO, "credential with ID {} not found", credentialDto.getId());
             throw new ServiceException("Credential not found");
         }
         return entityMapper.fromEntityToDto(optionalCredential.get(), CredentialDto.class);
@@ -46,6 +54,7 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public List<CredentialDto> getAll() {
+        LOGGER.log(Level.INFO, "get ALL credentials");
         return credentialRepository.getAll().stream()
                 .map(credential -> entityMapper.fromEntityToDto(credential, CredentialDto.class))
                 .toList();
@@ -53,6 +62,7 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public boolean delete(CredentialDto credentialDto) {
+        LOGGER.log(Level.INFO, "delete credential with ID {}", credentialDto.getId());
         credentialRepository.delete(credentialDto.getId());
         return credentialRepository.getById(credentialDto.getId()).isEmpty();
     }

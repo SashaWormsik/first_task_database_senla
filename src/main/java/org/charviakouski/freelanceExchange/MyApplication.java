@@ -3,7 +3,6 @@ package org.charviakouski.freelanceExchange;
 import lombok.SneakyThrows;
 import org.charviakouski.freelanceExchange.config.JavaConfig;
 import org.charviakouski.freelanceExchange.controller.UserInfoController;
-import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.model.entity.Credential;
 import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
@@ -11,7 +10,6 @@ import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 public class MyApplication {
@@ -24,6 +22,7 @@ public class MyApplication {
         EntityMapper mapper = context.getBean(EntityMapper.class);
         UserInfoRepository repository = context.getBean(UserInfoRepository.class);
         Role role = Role.builder()
+                .id(1L)
                 .name("ADMIN")
                 .build();
         Credential credential = Credential.builder()
@@ -42,7 +41,7 @@ public class MyApplication {
                 .credential(credential)
                 .build();
         Credential credential2 = Credential.builder()
-                .email("@@@@@ ru")
+                .email("@@@ ru")
                 .active(true)
                 .createDate(new Date())
                 .password("1234")
@@ -56,13 +55,9 @@ public class MyApplication {
                 .workExperience(25)
                 .credential(credential2)
                 .build();
-        String u = controller.insert(mapper.fromDtoToJson(mapper.fromEntityToDto(userInfo, UserInfoDto.class)));
-        //String u2 = controller.insert(mapper.fromDtoToJson(mapper.fromEntityToDto(userInfo2, UserInfoDto.class)));
-        System.out.println(u);
-        //System.out.println("==================================================================");
-        //System.out.println(u2);
+        credential2.setUserInfo(userInfo2);
+       repository.create(userInfo2);
     }
-
 }
 
 

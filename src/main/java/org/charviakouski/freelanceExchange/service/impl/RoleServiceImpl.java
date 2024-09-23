@@ -1,5 +1,8 @@
 package org.charviakouski.freelanceExchange.service.impl;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.RoleDto;
 import org.charviakouski.freelanceExchange.model.entity.Role;
@@ -16,6 +19,8 @@ import java.util.Optional;
 @Component
 @Transactional
 public class RoleServiceImpl implements RoleService {
+
+    private static final Logger LOGGER = LogManager.getLogger();
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
@@ -23,12 +28,14 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDto insert(RoleDto roleDto) {
+        LOGGER.log(Level.INFO, "insert new Role with name {}", roleDto.getName());
         Role role = entityMapper.fromDtoToEntity(roleDto, Role.class);
         return entityMapper.fromEntityToDto(roleRepository.create(role), RoleDto.class);
     }
 
     @Override
     public RoleDto update(RoleDto roleDto) {
+        LOGGER.log(Level.INFO, "update Role with name {}", roleDto.getName());
         Role role = entityMapper.fromDtoToEntity(roleDto, Role.class);
         return entityMapper.fromEntityToDto(roleRepository.update(role), RoleDto.class);
     }
@@ -37,6 +44,7 @@ public class RoleServiceImpl implements RoleService {
     public RoleDto getById(RoleDto roleDto) {
         Optional<Role> optionalRole = roleRepository.getById(roleDto.getId());
         if (optionalRole.isEmpty()) {
+            LOGGER.log(Level.INFO, "role with ID {} not found", roleDto.getId());
             throw new ServiceException("Role not found");
         }
         return entityMapper.fromEntityToDto(optionalRole.get(), RoleDto.class);
@@ -44,6 +52,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<RoleDto> getAll() {
+        LOGGER.log(Level.INFO, "get ALL role");
         return roleRepository.getAll().stream()
                 .map(role -> entityMapper.fromEntityToDto(role, RoleDto.class))
                 .toList();
@@ -51,6 +60,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public boolean delete(RoleDto roleDto) {
+        LOGGER.log(Level.INFO, "delete role with name {}", roleDto.getName());
         roleRepository.delete(roleDto.getId());
         return roleRepository.getById(roleDto.getId()).isEmpty();
     }

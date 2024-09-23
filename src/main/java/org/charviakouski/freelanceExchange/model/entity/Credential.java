@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -18,15 +16,14 @@ import java.util.Date;
 @Table(name = "credential")
 public class Credential {
     @Id
-    @Column(name = "id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
     @MapsId
+    @OneToOne
+    @JoinColumn(name = "id")
     private UserInfo userInfo;
 
-    @Column(name ="email", length = 100, nullable = false, unique = true)
+    @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
 
     @Column(name = "password", length = 250, nullable = false)

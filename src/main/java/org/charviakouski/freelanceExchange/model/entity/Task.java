@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -18,13 +17,21 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "task")
+@NamedEntityGraph(
+        name = "task-entity-graph"
+        , attributeNodes = {
+        @NamedAttributeNode("customer"),
+        @NamedAttributeNode("status"),
+        @NamedAttributeNode("responses"),
+        @NamedAttributeNode("categories")
+})
 public class Task {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title",length = 100, nullable = false)
+    @Column(name = "title", length = 100, nullable = false)
     private String title;
 
     @Column(name = "description", length = 500)
