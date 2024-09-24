@@ -22,7 +22,6 @@ public class MyApplication {
         EntityMapper mapper = context.getBean(EntityMapper.class);
         UserInfoRepository repository = context.getBean(UserInfoRepository.class);
         Role role = Role.builder()
-                .id(1L)
                 .name("ADMIN")
                 .build();
         Credential credential = Credential.builder()
@@ -38,7 +37,6 @@ public class MyApplication {
                 .description("АБОТАЮ КАК ХОЧУ")
                 .profession("Лентяй")
                 .workExperience(25)
-                .credential(credential)
                 .build();
         Credential credential2 = Credential.builder()
                 .email("@@@ ru")
@@ -56,7 +54,7 @@ public class MyApplication {
                 .credential(credential2)
                 .build();
         credential2.setUserInfo(userInfo2);
-       repository.create(userInfo2);
+        repository.create(userInfo2);
     }
 }
 

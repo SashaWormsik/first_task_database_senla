@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder
@@ -23,9 +23,9 @@ public class Category {
     @Column(name = "name", length = 100, unique = true, nullable = false)
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "task_category",
             joinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"))
-    private Set<Task> tasks;
+    private List<Task> tasks;
 }

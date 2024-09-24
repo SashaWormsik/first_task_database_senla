@@ -17,6 +17,7 @@ public abstract class AbstractRepository<K, T> {
 
     protected abstract Class<T> getEntityClass();
 
+    @Transactional
     public T create(T entity) {
         entityManager.persist(entity);
         return entity;

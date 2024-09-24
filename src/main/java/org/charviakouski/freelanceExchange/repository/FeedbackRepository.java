@@ -5,6 +5,6 @@ import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 
 import java.util.List;
 
-public interface FeedbackRepository extends DefaultRepository<Long, Feedback> {
+public interface FeedbackRepository extends CrudRepository<Long, Feedback> {
     List<Feedback> getAllFeedbackByAddressee(UserInfo userInfo);
 }

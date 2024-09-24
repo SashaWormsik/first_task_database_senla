@@ -20,7 +20,7 @@ public class UserInfoRepositoryImpl extends AbstractRepository<Long, UserInfo> i
 
     @Override
     public List<UserInfo> getAllUserInfoByName(String username) {
-        String jpqlQuery = "SELECT u FROM UserInfo u WHERE LOWER(u.name) LIKE(concat('%', :name, '%') )";
+        String jpqlQuery = "SELECT u FROM UserInfo u WHERE LOWER(u.name) LIKE(LOWER(concat('%', :name, '%') ))";
         TypedQuery<UserInfo> query = entityManager.createQuery(jpqlQuery, UserInfo.class);
         query.setParameter("name", username);
         return query.getResultList();
@@ -28,7 +28,7 @@ public class UserInfoRepositoryImpl extends AbstractRepository<Long, UserInfo> i
 
     @Override
     public Optional<UserInfo> getUserInfoByEmail(String email) {
-        String jpqlQuery = "SELECT u, c FROM UserInfo u LEFT JOIN u.credential c  WHERE u.credential.email = :email";
+        String jpqlQuery = "SELECT u FROM UserInfo u LEFT JOIN u.credential c  WHERE u.credential.email = :email";
         TypedQuery<UserInfo> query = entityManager.createQuery(jpqlQuery, UserInfo.class);
         query.setParameter("email", email);
         List<UserInfo> result = query.getResultList();

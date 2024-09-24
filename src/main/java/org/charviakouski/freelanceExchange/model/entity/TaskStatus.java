@@ -23,6 +23,6 @@ public class TaskStatus {
     @Column(name = "status", length = 100, unique = true, nullable = false)
     private String status;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
     private List<Task> task;
 }

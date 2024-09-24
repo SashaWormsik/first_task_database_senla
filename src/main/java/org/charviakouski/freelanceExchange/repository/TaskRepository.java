@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public interface TaskRepository extends DefaultRepository<Long, Task> {
+public interface TaskRepository extends CrudRepository<Long, Task> {
     List<Task> getAllTasksByTitle(String title);
 
     List<Task> getAllTasksByPrice(BigDecimal price);
