@@ -18,6 +18,5 @@ public interface TaskService {
 
     List<TaskDto> getAllTaskByTitle(TaskDto taskDto);
     List<TaskDto> getAllTaskByPrice(TaskDto taskDto);
-
     TaskDto getTaskByIdGraph(TaskDto taskDto);
 }
