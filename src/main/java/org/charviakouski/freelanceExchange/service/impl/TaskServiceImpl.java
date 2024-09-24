@@ -82,6 +82,7 @@ public class TaskServiceImpl implements TaskService {
                 .toList();
     }
 
+    @Override
     public TaskDto getTaskByIdGraph(TaskDto taskDto) {
         log.info("get task by ID with GRAPH= {}", taskDto.getId());
         Optional<Task> optionalTask = taskRepository.getTaskByIdGraph(taskDto.getId());

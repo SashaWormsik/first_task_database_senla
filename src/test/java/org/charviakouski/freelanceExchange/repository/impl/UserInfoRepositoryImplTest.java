@@ -73,7 +73,7 @@ public class UserInfoRepositoryImplTest {
     @Test
     @Transactional
     public void getAllUserInfoByNameTest() {
-        UserInfo actualUserInfo = userInfoRepository.getAllUserInfoByName(USER.getName()).get(0);
+        UserInfo actualUserInfo = userInfoRepository.getAllUserInfoByName(USER.getName()).getFirst();
         Assertions.assertEquals(USER, actualUserInfo);
     }
 

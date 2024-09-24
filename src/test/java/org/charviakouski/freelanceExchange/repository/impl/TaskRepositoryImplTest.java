@@ -63,14 +63,14 @@ public class TaskRepositoryImplTest {
     @Test
     @Transactional
     public void getAllTasksByTitleTest() {
-        Task actualTask = taskRepository.getAllTasksByTitle("NEW TASK").get(0);
+        Task actualTask = taskRepository.getAllTasksByTitle("NEW TASK").getFirst();
         Assertions.assertEquals(TASK, actualTask);
     }
 
     @Test
     @Transactional
     public void getAllTasksByPriceTest() {
-        Task actualTask = taskRepository.getAllTasksByPrice(BigDecimal.valueOf(1000.00)).get(0);
+        Task actualTask = taskRepository.getAllTasksByPrice(BigDecimal.valueOf(1000.00)).getFirst();
         Assertions.assertEquals(TASK, actualTask);
     }
 

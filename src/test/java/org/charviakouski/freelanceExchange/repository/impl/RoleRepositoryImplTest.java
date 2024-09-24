@@ -70,7 +70,7 @@ public class RoleRepositoryImplTest {
     @Transactional
     public void getByIdTest() {
         Role expecteRole = ROLE_WORKER;
-        Role actual = roleRepository.getById(expecteRole.getId()).get();
+        Role actual = roleRepository.getById(expecteRole.getId()).orElse(null);
         Assertions.assertEquals(expecteRole, actual);
     }
 
