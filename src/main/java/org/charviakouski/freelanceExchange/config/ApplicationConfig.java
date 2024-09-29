@@ -3,9 +3,7 @@ package org.charviakouski.freelanceExchange.config;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import liquibase.integration.spring.SpringLiquibase;
-import org.charviakouski.freelanceExchange.MyApplication;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,9 +21,9 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan(basePackageClasses = MyApplication.class)
+@ComponentScan("org.charviakouski.freelanceExchange")
 @PropertySource("classpath:application.properties")
-public class JavaConfig {
+public class ApplicationConfig {
     @Value("${spring.datasource.driver}")
     private String driver;
     @Value("${spring.datasource.url}")
@@ -73,7 +71,7 @@ public class JavaConfig {
     }
 
     @Bean
-    public EntityManager entityManager(@Autowired EntityManagerFactory entityManagerFactory) {
+    public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
         return entityManagerFactory.createEntityManager();
     }
 
