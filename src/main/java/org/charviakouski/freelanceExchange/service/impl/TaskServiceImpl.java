@@ -1,86 +1,95 @@
 package org.charviakouski.freelanceExchange.service.impl;
 
-import org.charviakouski.freelanceExchange.annotation.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
-import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.charviakouski.freelanceExchange.model.entity.Task;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
-import org.charviakouski.freelanceExchange.repository.CategoryRepository;
 import org.charviakouski.freelanceExchange.repository.TaskRepository;
-import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.charviakouski.freelanceExchange.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Component
+@Transactional
 public class TaskServiceImpl implements TaskService {
+
     @Autowired
     private TaskRepository taskRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private UserInfoRepository userInfoRepository;
     @Autowired
     private EntityMapper entityMapper;
 
     @Override
-    public List<TaskDto> getAll() {
-        List<Task> taskList = taskRepository.getAll();
-        taskList.forEach(task -> task.setCategories(categoryRepository.getAllCategoryForTask(task).orElse(null)));
-        return taskList.stream()
-                .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class))
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    @Override
     public TaskDto insert(TaskDto taskDto) {
+        log.info("insert new Task with title {}", taskDto.getTitle());
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        task.setCustomer(userInfoRepository.insert(task.getCustomer()));
-        task = taskRepository.insert(task);
-        categoryRepository.insertInTaskCategory(task.getCategories(), task);
-        task.setCategories(categoryRepository.getAllCategoryForTask(task).orElse(null));
-        return entityMapper.fromEntityToDto(task, TaskDto.class);
+        return entityMapper.fromEntityToDto(taskRepository.create(task), TaskDto.class);
     }
 
-    @Transactional
     @Override
     public TaskDto update(TaskDto taskDto) {
+        log.info("update Task with title {}", taskDto.getTitle());
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        List<Category> categories = task.getCategories();
-        Optional<Task> oldTask = taskRepository.getById(task);
-        if (!oldTask.isPresent()) {
-            throw new RuntimeException("Объект отсутствует, а значит обновить невозможно");
-        }
-        categoryRepository.deleteInTaskCategory(task);
-        categoryRepository.insertInTaskCategory(categories, task);
-        task.setCategories(categoryRepository.getAllCategoryForTask(task).orElse(null));
-        return entityMapper.fromEntityToDto(taskRepository.update(task, oldTask.get()), TaskDto.class);
+        return entityMapper.fromEntityToDto(taskRepository.update(task), TaskDto.class);
     }
 
     @Override
     public TaskDto getById(TaskDto taskDto) {
-        Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        Optional<Task> optionalTask = taskRepository.getById(task);
-        Optional<List<Category>> optionalCategory = categoryRepository.getAllCategoryForTask(task);
-        if (!optionalTask.isPresent()) {
-            throw new RuntimeException("Объект не существует!!!");
+        Optional<Task> optionalTask = taskRepository.getById(taskDto.getId());
+        if (optionalTask.isEmpty()) {
+            log.info("task with ID {} not found", taskDto.getId());
+            throw new ServiceException("Task not found");
         }
-        if (optionalCategory.isPresent()) {
-            task = optionalTask.get();
-            task.setCategories(optionalCategory.get());
-        }
-        return entityMapper.fromEntityToDto(task, TaskDto.class);
+        return entityMapper.fromEntityToDto(optionalTask.get(), TaskDto.class);
+    }
+
+    @Override
+    public List<TaskDto> getAll() {
+        log.info("get ALL task");
+        return taskRepository.getAll().stream()
+                .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class))
+                .toList();
     }
 
 
     @Override
     public boolean delete(TaskDto taskDto) {
-        Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        return taskRepository.delete(task);
+        log.info("delete task with title {}", taskDto.getTitle());
+        taskRepository.delete(taskDto.getId());
+        return taskRepository.getById(taskDto.getId()).isEmpty();
+    }
+
+    @Override
+    public List<TaskDto> getAllTaskByTitle(TaskDto taskDto) {
+        log.info("get ALL task with title like as {}", taskDto.getTitle());
+        List<Task> taskList = taskRepository.getAllTasksByTitle(taskDto.getTitle());
+        return taskList.stream()
+                .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class))
+                .toList();
+    }
+
+    @Override
+    public List<TaskDto> getAllTaskByPrice(TaskDto taskDto) {
+        log.info("get ALL task with price = {}", taskDto.getPrice());
+        List<Task> taskList = taskRepository.getAllTasksByPrice(taskDto.getPrice());
+        return taskList.stream()
+                .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class))
+                .toList();
+    }
+
+    @Override
+    public TaskDto getTaskByIdGraph(TaskDto taskDto) {
+        log.info("get task by ID with GRAPH= {}", taskDto.getId());
+        Optional<Task> optionalTask = taskRepository.getTaskByIdGraph(taskDto.getId());
+        if (optionalTask.isEmpty()) {
+            log.info("task with ID {} not found (GRAPH)", taskDto.getId());
+            throw new ServiceException("Task not found");
+        }
+        return entityMapper.fromEntityToDto(optionalTask.get(), TaskDto.class);
     }
 }

@@ -2,19 +2,14 @@ package org.charviakouski.freelanceExchange.repository;
 
 import org.charviakouski.freelanceExchange.model.entity.Task;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public interface TaskRepository {
-    Task updateTaskStatus(Task task);
+public interface TaskRepository extends CrudRepository<Long, Task> {
+    List<Task> getAllTasksByTitle(String title);
 
-    List<Task> getAll();
+    List<Task> getAllTasksByPrice(BigDecimal price);
 
-    Optional<Task> getById(Task task);
-
-    Task insert(Task task);
-
-    Task update(Task newTask, Task oldTask);
-
-    boolean delete(Task task);
+    Optional<Task> getTaskByIdGraph(Long id);
 }

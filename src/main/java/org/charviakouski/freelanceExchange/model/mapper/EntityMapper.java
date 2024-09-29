@@ -1,7 +1,7 @@
 package org.charviakouski.freelanceExchange.model.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 
 public class EntityMapper {
@@ -10,14 +10,20 @@ public class EntityMapper {
     private final ModelMapper modelMapper = new ModelMapper();
 
 
-    @SneakyThrows
     public String fromDtoToJson(Object object) {
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+        try {
+            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    @SneakyThrows
     public <T> T fromJsonToDto(String json, Class<T> clazz) {
-        return objectMapper.readValue(json, clazz);
+        try {
+            return objectMapper.readValue(json, clazz);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public <T> T fromEntityToDto(Object entity, Class<T> classDto) {

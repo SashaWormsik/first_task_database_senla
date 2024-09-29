@@ -5,16 +5,8 @@ import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserInfoRepository {
-    boolean isUserInfoPresentByName(UserInfo userInfo);
+public interface UserInfoRepository extends CrudRepository<Long, UserInfo> {
 
-    List<UserInfo> getAll();
-
-    Optional<UserInfo> getById(UserInfo userInfo);
-
-    UserInfo insert(UserInfo userInfo);
-
-    UserInfo update(UserInfo newUserInfo, UserInfo oldUserInfo);
-
-    boolean delete(UserInfo userInfo);
+    List<UserInfo> getAllUserInfoByName(String username);
+    Optional<UserInfo> getUserInfoByEmail(String email);
 }

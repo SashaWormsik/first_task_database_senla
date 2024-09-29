@@ -14,4 +14,8 @@ public interface UserInfoService {
     UserInfoDto update(UserInfoDto userInfoDto);
 
     boolean delete(UserInfoDto userInfoDto);
+
+    List<UserInfoDto> getAllUserInfoByName(UserInfoDto userInfoDto);
+
+    UserInfoDto getUserInfoByEmail(UserInfoDto userInfoDto);
 }

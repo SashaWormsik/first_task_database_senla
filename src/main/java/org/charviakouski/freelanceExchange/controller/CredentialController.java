@@ -14,27 +14,25 @@ public class CredentialController {
     private EntityMapper entityMapper;
 
     public String getAll() {
-        credentialService.getAll();
-        return null;
+        return entityMapper.fromDtoToJson(credentialService.getAll());
     }
 
     public String getById(String jsonCredentialId) {
-        credentialService.getById(entityMapper.fromJsonToDto(jsonCredentialId, CredentialDto.class));
-        return null;
+        CredentialDto credentialDto = credentialService.getById(entityMapper.fromJsonToDto(jsonCredentialId, CredentialDto.class));
+        return entityMapper.fromDtoToJson(credentialDto);
     }
 
     public String insert(String jsonCredential) {
-        credentialService.insert(entityMapper.fromJsonToDto(jsonCredential, CredentialDto.class));
-        return null;
+        CredentialDto credentialDto = credentialService.insert(entityMapper.fromJsonToDto(jsonCredential, CredentialDto.class));
+        return entityMapper.fromDtoToJson(credentialDto);
     }
 
     public String update(String jsonCredential) {
-        credentialService.update(entityMapper.fromJsonToDto(jsonCredential, CredentialDto.class));
-        return null;
+        CredentialDto credentialDto = credentialService.update(entityMapper.fromJsonToDto(jsonCredential, CredentialDto.class));
+        return entityMapper.fromDtoToJson(credentialDto);
     }
 
     public boolean delete(String jsonCredential) {
-        credentialService.delete(entityMapper.fromJsonToDto(jsonCredential, CredentialDto.class));
-        return false;
+        return credentialService.delete(entityMapper.fromJsonToDto(jsonCredential, CredentialDto.class));
     }
 }

@@ -2,76 +2,59 @@ package org.charviakouski.freelanceExchange;
 
 import lombok.SneakyThrows;
 import org.charviakouski.freelanceExchange.config.JavaConfig;
-import org.charviakouski.freelanceExchange.controller.TaskController;
+import org.charviakouski.freelanceExchange.controller.UserInfoController;
+import org.charviakouski.freelanceExchange.model.entity.Credential;
+import org.charviakouski.freelanceExchange.model.entity.Role;
+import org.charviakouski.freelanceExchange.model.entity.UserInfo;
+import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
+import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
 
 public class MyApplication {
 
-    private static final String NEW_TASK_ONE = "{\n" +
-            "  \"title\" : \" TASK ONE !!!!!!! OOOOOOOONNNNNNEEEEEEEEEEEEE\",\n" +
-            "  \"description\" : \"ОПИСАНИЕ ТАСКА ОДИН\",\n" +
-            "  \"price\" : 100.00,\n" +
-            "  \"deadline\" : 1725829200000,\n" +
-            "  \"createDate\" : 1725829200000,\n" +
-            "  \"customer\" : {\n" +
-            "    \"name\" : \"Иван\",\n" +
-            "    \"surname\" : \"Чехов\",\n" +
-            "    \"profession\" : \"плотник\",\n" +
-            "    \"workExperience\" : 2,\n" +
-            "    \"description\" : \"плотник\"\n" +
-            "  },\n" +
-            "  \"status\" : {\n" +
-            "    \"status\" : \"in waiting\"\n" +
-            "  },\n" +
-            "  \"categories\" : [ {\n" +
-            "    \"id\" : 3,\n" +
-            "    \"name\" : \"worker\"\n" +
-            "  } ]\n" +
-            "}";
-
-    private static final String NEW_TASK_TWO = "{\n" +
-            "  \"title\" : \" TASK TWO !!!!!!!!!!!!!!! TWOOOOOOOOO\",\n" +
-            "  \"description\" : \"ОПИСАНИЕ ТАСКА ДВА\",\n" +
-            "  \"price\" : 100.00,\n" +
-            "  \"deadline\" : 1725829200000,\n" +
-            "  \"createDate\" : 1725829200000,\n" +
-            "  \"customer\" : {\n" +
-            "    \"name\" : \"Иван\",\n" +
-            "    \"surname\" : \"Чехов\",\n" +
-            "    \"profession\" : \"плотник\",\n" +
-            "    \"workExperience\" : 2,\n" +
-            "    \"description\" : \"плотник\"\n" +
-            "  },\n" +
-            "  \"status\" : {\n" +
-            "    \"status\" : \"in waiting\"\n" +
-            "  },\n" +
-            "  \"categories\" : [ {\n" +
-            "    \"id\" : 3,\n" +
-            "    \"name\" : \"worker\"\n" +
-            "  } ]\n" +
-            "}";
 
     @SneakyThrows
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(JavaConfig.class);
-        TaskController taskController = context.getBean(TaskController.class);
-
-        Runnable insertOneTASK = () -> taskController.insert(NEW_TASK_ONE);
-        Runnable insertTwoTASK = () -> taskController.insert(NEW_TASK_TWO);
-        List<Runnable> runnableList = List.of(insertOneTASK, insertTwoTASK);
-        try (ExecutorService executorService = Executors.newFixedThreadPool(2)) {
-            for (Runnable run : runnableList) {
-                executorService.execute(run);
-            }
-            executorService.shutdown();
-            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-        }
-        System.out.println(taskController.getAll());
+        UserInfoController controller = context.getBean(UserInfoController.class);
+        EntityMapper mapper = context.getBean(EntityMapper.class);
+        UserInfoRepository repository = context.getBean(UserInfoRepository.class);
+        Role role = Role.builder()
+                .name("ADMIN")
+                .build();
+        Credential credential = Credential.builder()
+                .email("aasdasd@ccc.ru")
+                .active(true)
+                .createDate(new Date())
+                .password("1234")
+                .role(role)
+                .build();
+        UserInfo userInfo = UserInfo.builder()
+                .name("Павед")
+                .surname("Иванов")
+                .description("АБОТАЮ КАК ХОЧУ")
+                .profession("Лентяй")
+                .workExperience(25)
+                .build();
+        Credential credential2 = Credential.builder()
+                .email("@@@ ru")
+                .active(true)
+                .createDate(new Date())
+                .password("1234")
+                .role(role)
+                .build();
+        UserInfo userInfo2 = UserInfo.builder()
+                .name("ЁД")
+                .surname("!!!!!!!!!!!")
+                .description("КАК ХОЧУ")
+                .profession("Лентяй")
+                .workExperience(25)
+                .credential(credential2)
+                .build();
+        credential2.setUserInfo(userInfo2);
+        repository.create(userInfo2);
     }
 }
 

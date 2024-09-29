@@ -1,6 +1,7 @@
 package org.charviakouski.freelanceExchange.service;
 
 import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
+import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface FeedbackService {
     FeedBackDto update(FeedBackDto feedBackDto);
 
     boolean delete(FeedBackDto feedBackDto);
+
+    List<FeedBackDto> getAllFeedbackByAddressee(UserInfoDto userInfoDto);
 }

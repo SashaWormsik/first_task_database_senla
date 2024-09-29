@@ -37,4 +37,14 @@ public class TaskController {
     public boolean delete(String jsonTask) {
         return taskService.delete(entityMapper.fromJsonToDto(jsonTask, TaskDto.class));
     }
+
+    public String getAllTaskByTitle(String jsonTask) {
+        TaskDto taskDto = entityMapper.fromJsonToDto(jsonTask, TaskDto.class);
+        return entityMapper.fromDtoToJson(taskService.getAllTaskByTitle(taskDto));
+    }
+
+    public String getAllTaskByPrice(String jsonTask) {
+        TaskDto taskDto = entityMapper.fromJsonToDto(jsonTask, TaskDto.class);
+        return entityMapper.fromDtoToJson(taskService.getAllTaskByPrice(taskDto));
+    }
 }

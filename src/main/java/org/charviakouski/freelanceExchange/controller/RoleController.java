@@ -14,27 +14,25 @@ public class RoleController {
     private EntityMapper entityMapper;
 
     public String getAll() {
-        roleService.getAll();
-        return null;
+        return entityMapper.fromDtoToJson(roleService.getAll());
     }
 
     public String getById(String jsonRoleId) {
-        roleService.getById(entityMapper.fromJsonToDto(jsonRoleId, RoleDto.class));
-        return null;
+        RoleDto roleDto = roleService.getById(entityMapper.fromJsonToDto(jsonRoleId, RoleDto.class));
+        return entityMapper.fromDtoToJson(roleDto);
     }
 
     public String insert(String jsonRole) {
-        roleService.insert(entityMapper.fromJsonToDto(jsonRole, RoleDto.class));
-        return null;
+        RoleDto roleDto = roleService.insert(entityMapper.fromJsonToDto(jsonRole, RoleDto.class));
+        return entityMapper.fromDtoToJson(roleDto);
     }
 
     public String update(String jsonRole) {
-        roleService.update(entityMapper.fromJsonToDto(jsonRole, RoleDto.class));
-        return null;
+        RoleDto roleDto = roleService.update(entityMapper.fromJsonToDto(jsonRole, RoleDto.class));
+        return entityMapper.fromDtoToJson(roleDto);
     }
 
     public boolean delete(String jsonRole) {
-        roleService.delete(entityMapper.fromJsonToDto(jsonRole, RoleDto.class));
-        return false;
+        return roleService.delete(entityMapper.fromJsonToDto(jsonRole, RoleDto.class));
     }
 }

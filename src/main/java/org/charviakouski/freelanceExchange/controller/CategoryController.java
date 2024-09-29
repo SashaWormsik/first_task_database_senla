@@ -14,27 +14,25 @@ public class CategoryController {
     private EntityMapper entityMapper;
 
     public String getAll() {
-        categoryService.getAll();
-        return null;
+        return entityMapper.fromDtoToJson(categoryService.getAll());
     }
 
     public String getById(String jsonCategoryId) {
-        categoryService.getById(entityMapper.fromJsonToDto(jsonCategoryId, CategoryDto.class));
-        return null;
+        CategoryDto categoryDto = categoryService.getById(entityMapper.fromJsonToDto(jsonCategoryId, CategoryDto.class));
+        return entityMapper.fromDtoToJson(categoryDto);
     }
 
     public String insert(String jsonCategory) {
-        categoryService.insert(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
-        return null;
+        CategoryDto categoryDto = categoryService.insert(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
+        return entityMapper.fromDtoToJson(categoryDto);
     }
 
     public String update(String jsonCategory) {
-        categoryService.update(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
-        return null;
+        CategoryDto categoryDto = categoryService.update(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
+        return entityMapper.fromDtoToJson(categoryDto);
     }
 
     public boolean delete(String jsonCategory) {
-        categoryService.delete(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
-        return false;
+        return categoryService.delete(entityMapper.fromJsonToDto(jsonCategory, CategoryDto.class));
     }
 }

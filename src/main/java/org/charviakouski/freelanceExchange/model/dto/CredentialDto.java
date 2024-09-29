@@ -4,12 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CredentialDto {
     private Long id;
     private String email;
+    private String password;
+    private Date createDate;
     private boolean active;
+    private String token;
     private RoleDto role;
+    private UserInfoDto userInfo;
 }

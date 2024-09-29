@@ -1,18 +1,10 @@
 package org.charviakouski.freelanceExchange.repository;
 
 import org.charviakouski.freelanceExchange.model.entity.Response;
+import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface ResponseRepository {
-    List<Response> getAll();
-
-    Optional<Response> getById(Response response);
-
-    Response insert(Response response);
-
-    Response update(Response newResponse, Response oldResponse);
-
-    boolean delete(Response response);
+public interface ResponseRepository extends CrudRepository<Long, Response> {
+    List<Response> getAllResponsesByExecutor(UserInfo userInfo);
 }
