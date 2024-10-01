@@ -39,10 +39,10 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public CredentialDto getById(CredentialDto credentialDto) {
-        Optional<Credential> optionalCredential = credentialRepository.getById(credentialDto.getId());
+    public CredentialDto getById(Long id) {
+        Optional<Credential> optionalCredential = credentialRepository.getById(id);
         if (optionalCredential.isEmpty()) {
-            log.info("credential with ID {} not found", credentialDto.getId());
+            log.info("credential with ID {} not found", id);
             throw new ServiceException("Credential not found");
         }
         return entityMapper.fromEntityToDto(optionalCredential.get(), CredentialDto.class);
@@ -57,9 +57,9 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public boolean delete(CredentialDto credentialDto) {
-        log.info("delete credential with ID {}", credentialDto.getId());
-        credentialRepository.delete(credentialDto.getId());
-        return credentialRepository.getById(credentialDto.getId()).isEmpty();
+    public boolean delete(Long id) {
+        log.info("delete credential with ID {}", id);
+        credentialRepository.delete(id);
+        return credentialRepository.getById(id).isEmpty();
     }
 }

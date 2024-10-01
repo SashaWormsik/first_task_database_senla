@@ -7,11 +7,11 @@ import java.util.List;
 public interface CredentialService {
     List<CredentialDto> getAll();
 
-    CredentialDto getById(CredentialDto credentialDto);
+    CredentialDto getById(Long id);
 
     CredentialDto insert(CredentialDto credentialDto);
 
     CredentialDto update(CredentialDto credentialDto);
 
-    boolean delete(CredentialDto credentialDto);
+    boolean delete(Long id);
 }

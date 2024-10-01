@@ -40,10 +40,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getById(CategoryDto categoryDto) {
-        Optional<Category> optionalCategory = categoryRepository.getById(categoryDto.getId());
+    public CategoryDto getById(Long id) {
+        Optional<Category> optionalCategory = categoryRepository.getById(id);
         if (optionalCategory.isEmpty()) {
-            log.info("category with ID {} not found", categoryDto.getId());
+            log.info("category with ID {} not found", id);
             throw new ServiceException("Category not found");
         }
         return entityMapper.fromEntityToDto(optionalCategory.get(), CategoryDto.class);
@@ -58,9 +58,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public boolean delete(CategoryDto categoryDto) {
-        log.info("delete category with name {}", categoryDto.getName());
-        categoryRepository.delete(categoryDto.getId());
-        return categoryRepository.getById(categoryDto.getId()).isEmpty();
+    public boolean delete(Long id) {
+        log.info("delete category with ID {}", id);
+        categoryRepository.delete(id);
+        return categoryRepository.getById(id).isEmpty();
     }
 }

@@ -7,11 +7,11 @@ import java.util.List;
 public interface RoleService {
     List<RoleDto> getAll();
 
-    RoleDto getById(RoleDto roleDto);
+    RoleDto getById(Long id);
 
     RoleDto insert(RoleDto roleDto);
 
     RoleDto update(RoleDto roleDto);
 
-    boolean delete(RoleDto roleDto);
+    boolean delete(Long id);
 }

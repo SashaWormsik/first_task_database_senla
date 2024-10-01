@@ -1,46 +1,59 @@
 package org.charviakouski.freelanceExchange.controller;
 
+import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
 import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Component
+@RestController
+@RequestMapping("/feedbacks")
 public class FeedbackController {
     @Autowired
     private FeedbackService feedbackService;
     @Autowired
     private EntityMapper entityMapper;
 
-    public String getAll() {
-        return entityMapper.fromDtoToJson(feedbackService.getAll());
+    @GetMapping
+    public ResponseEntity<List<FeedBackDto>> getAll() {
+        List<FeedBackDto> feedBackDtoList = feedbackService.getAll();
+        return ResponseEntity.ok().body(feedBackDtoList);
     }
 
-    public String getById(String jsonFeedbackId) {
-        FeedBackDto feedBackDto = feedbackService.getById(entityMapper.fromJsonToDto(jsonFeedbackId, FeedBackDto.class));
-        return entityMapper.fromDtoToJson(feedBackDto);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<FeedBackDto> getById(@PathVariable(name = "id") long id) {
+        FeedBackDto feedBackDto = feedbackService.getById(id);
+        return ResponseEntity.ok().body(feedBackDto);
     }
 
-    public String insert(String jsonFeedback) {
-        FeedBackDto feedBackDto = feedbackService.insert(entityMapper.fromJsonToDto(jsonFeedback, FeedBackDto.class));
-        return entityMapper.fromDtoToJson(feedBackDto);
+    @PostMapping
+    public ResponseEntity<FeedBackDto> insert(@RequestBody FeedBackDto feedBackDto) {
+        FeedBackDto newFeedBackDto = feedbackService.insert(feedBackDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newFeedBackDto);
     }
 
-    public String update(String jsonFeedback) {
-        FeedBackDto feedBackDto = feedbackService.update(entityMapper.fromJsonToDto(jsonFeedback, FeedBackDto.class));
-        return entityMapper.fromDtoToJson(feedBackDto);
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<FeedBackDto> update(@PathVariable(name = "id") long id, @RequestBody FeedBackDto feedBackDto) {
+        feedBackDto.setId(id);
+        FeedBackDto updatedFeedBackDto = feedbackService.update(feedBackDto);
+        return ResponseEntity.ok().body(updatedFeedBackDto);
     }
 
-    public boolean delete(String jsonFeedback) {
-        return feedbackService.delete(entityMapper.fromJsonToDto(jsonFeedback, FeedBackDto.class));
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") long id) {
+        feedbackService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
-    public String getAllFeedbackByAddressee(String jsonFeedbackAddressee) {
-        UserInfoDto userInfoDto = entityMapper.fromJsonToDto(jsonFeedbackAddressee, UserInfoDto.class);
-        return entityMapper.fromDtoToJson(feedbackService.getAllFeedbackByAddressee(userInfoDto));
+    @GetMapping(value = "/addressee")
+    public ResponseEntity<List<FeedBackDto>> getAllFeedbackByAddressee(@RequestParam(name = "addresseeId") long addresseeId) {
+        List<FeedBackDto> feedBackDtoList = feedbackService.getAllFeedbackByAddressee(addresseeId);
+        return ResponseEntity.ok().body(feedBackDtoList);
     }
 }

@@ -41,10 +41,10 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public ResponseDto getById(ResponseDto responseDto) {
-        Optional<Response> optionalResponse = responseRepository.getById(responseDto.getId());
+    public ResponseDto getById(Long id) {
+        Optional<Response> optionalResponse = responseRepository.getById(id);
         if (optionalResponse.isEmpty()) {
-            log.info("response with ID = {} not found", responseDto.getTask().getId());
+            log.info("response with ID = {} not found", id);
             throw new ServiceException("Response not found");
         }
         return entityMapper.fromEntityToDto(optionalResponse.get(), ResponseDto.class);
@@ -59,16 +59,16 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public boolean delete(ResponseDto responseDto) {
-        log.info("delete response with ID {}", responseDto.getId());
-        responseRepository.delete(responseDto.getId());
-        return responseRepository.getById(responseDto.getId()).isEmpty();
+    public boolean delete(Long id) {
+        log.info("delete response with ID {}", id);
+        responseRepository.delete(id);
+        return responseRepository.getById(id).isEmpty();
     }
 
     @Override
-    public List<ResponseDto> getAllResponsesByExecutor(UserInfoDto userInfodto) {
-        log.info("get ALL responses for Executor {}", userInfodto.getName());
-        UserInfo userInfo = entityMapper.fromDtoToEntity(userInfodto, UserInfo.class);
+    public List<ResponseDto> getAllResponsesByExecutor(Long id) {
+        log.info("get ALL responses for Executor ID {}", id);
+        UserInfo userInfo = UserInfo.builder().id(id).build();
         return responseRepository.getAllResponsesByExecutor(userInfo).stream()
                 .map(response -> entityMapper.fromEntityToDto(response, ResponseDto.class))
                 .toList();

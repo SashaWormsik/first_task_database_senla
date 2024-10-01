@@ -4,45 +4,60 @@ import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Component
+import java.util.List;
+
+@RestController
+@RequestMapping("/users")
 public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
     @Autowired
     private EntityMapper entityMapper;
 
-    public String getAll() {
-        return entityMapper.fromDtoToJson(userInfoService.getAll());
+    @GetMapping
+    public ResponseEntity<List<UserInfoDto>> getAll() {
+        List<UserInfoDto> userInfoDtoList = userInfoService.getAll();
+        return ResponseEntity.ok().body(userInfoDtoList);
     }
 
-    public String getById(String jsonUserInfoId) {
-        UserInfoDto userInfoDto = userInfoService.getById(entityMapper.fromJsonToDto(jsonUserInfoId, UserInfoDto.class));
-        return entityMapper.fromDtoToJson(userInfoDto);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<UserInfoDto> getById(@PathVariable(name = "id") long id) {
+        UserInfoDto userInfoDto = userInfoService.getById(id);
+        return ResponseEntity.ok().body(userInfoDto);
     }
 
-    public String insert(String jsonUserInfo) {
-        UserInfoDto userInfoDto = userInfoService.insert(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
-        return entityMapper.fromDtoToJson(userInfoDto);
+    @PostMapping
+    public ResponseEntity<UserInfoDto> insert(@RequestBody UserInfoDto userInfoDto) {
+        UserInfoDto newUserInfoDto = userInfoService.insert(userInfoDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUserInfoDto);
     }
 
-    public String update(String jsonUserInfo) {
-        UserInfoDto userInfoDto = userInfoService.update(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
-        return entityMapper.fromDtoToJson(userInfoDto);
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UserInfoDto> update(@PathVariable(name = "id") long id, @RequestBody UserInfoDto userInfoDto) {
+        userInfoDto.setId(id);
+        UserInfoDto updatedUserInfoDto = userInfoService.update(userInfoDto);
+        return ResponseEntity.ok().body(updatedUserInfoDto);
     }
 
-    public boolean delete(String jsonUserInfo) {
-        return userInfoService.delete(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") long id) {
+        userInfoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
-    public String getAllUserInfoByName(String jsonUserInfoName) {
-        UserInfoDto userInfoDto = entityMapper.fromJsonToDto(jsonUserInfoName, UserInfoDto.class);
-        return entityMapper.fromDtoToJson(userInfoService.getAllUserInfoByName(userInfoDto));
+    @GetMapping(value = "/name")
+    public ResponseEntity<List<UserInfoDto>> getAllUserInfoByName(@RequestParam(name = "username") String username) {
+        List<UserInfoDto> userInfoDtoList = userInfoService.getAllUserInfoByName(username);
+        return ResponseEntity.ok().body(userInfoDtoList);
     }
 
-    public String getUserInfoByEmail(String jsonUserInfoEmail) {
-        UserInfoDto userInfoDto = entityMapper.fromJsonToDto(jsonUserInfoEmail, UserInfoDto.class);
-        return entityMapper.fromDtoToJson(userInfoService.getUserInfoByEmail(userInfoDto));
+    @GetMapping(value = "/email")
+    public ResponseEntity<UserInfoDto> getUserInfoByEmail(@RequestParam(name = "email") String email) {
+        UserInfoDto userInfoDto = userInfoService.getUserInfoByEmail(email);
+        return ResponseEntity.ok().body(userInfoDto);
     }
 }

@@ -8,13 +8,13 @@ import java.util.List;
 public interface ResponseService {
     List<ResponseDto> getAll();
 
-    ResponseDto getById(ResponseDto responseDto);
+    ResponseDto getById(Long id);
 
     ResponseDto insert(ResponseDto responseDto);
 
     ResponseDto update(ResponseDto responseDto);
 
-    boolean delete(ResponseDto responseDto);
+    boolean delete(Long id);
 
-    List<ResponseDto> getAllResponsesByExecutor(UserInfoDto userInfodto);
+    List<ResponseDto> getAllResponsesByExecutor(Long id);
 }

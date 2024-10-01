@@ -39,10 +39,10 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
     }
 
     @Override
-    public ResponseStatusDto getById(ResponseStatusDto responseStatusDto) {
-        Optional<ResponseStatus> optionalResponseStatus = responseStatusRepository.getById(responseStatusDto.getId());
+    public ResponseStatusDto getById(Long id) {
+        Optional<ResponseStatus> optionalResponseStatus = responseStatusRepository.getById(id);
         if (optionalResponseStatus.isEmpty()) {
-            log.info("responseStatus with ID {} not found", responseStatusDto.getId());
+            log.info("responseStatus with ID {} not found", id);
             throw new ServiceException("ResponseStatus not found");
         }
         return entityMapper.fromEntityToDto(optionalResponseStatus.get(), ResponseStatusDto.class);
@@ -57,9 +57,9 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
     }
 
     @Override
-    public boolean delete(ResponseStatusDto responseStatusDto) {
-        log.info("delete responseStatus with status {}", responseStatusDto.getStatus());
-        responseStatusRepository.delete(responseStatusDto.getId());
-        return responseStatusRepository.getById(responseStatusDto.getId()).isEmpty();
+    public boolean delete(Long id) {
+        log.info("delete responseStatus with ID {}", id);
+        responseStatusRepository.delete(id);
+        return responseStatusRepository.getById(id).isEmpty();
     }
 }
