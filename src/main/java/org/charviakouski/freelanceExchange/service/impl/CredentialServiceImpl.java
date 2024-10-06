@@ -59,7 +59,6 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public boolean delete(Long id) {
         log.info("delete credential with ID {}", id);
-        credentialRepository.delete(id);
-        return credentialRepository.getById(id).isEmpty();
+        return credentialRepository.delete(id);
     }
 }

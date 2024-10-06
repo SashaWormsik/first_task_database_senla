@@ -16,33 +16,33 @@ public class ResponseStatusController {
     private ResponseStatusService responseStatusService;
 
     @GetMapping
-    public ResponseEntity<List<ResponseStatusDto>> getAll() {
-        List<ResponseStatusDto> responseStatusDtoList = responseStatusService.getAll();
-        return ResponseEntity.ok().body(responseStatusDtoList);
+    @ResponseStatus(HttpStatus.OK)
+    public List<ResponseStatusDto> getAll() {
+        return responseStatusService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ResponseStatusDto> getById(@PathVariable(name = "id") long id) {
-        ResponseStatusDto responseStatusDto = responseStatusService.getById(id);
-        return ResponseEntity.ok().body(responseStatusDto);
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseStatusDto getById(@PathVariable(name = "id") long id) {
+        return responseStatusService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ResponseStatusDto> insert(@RequestBody ResponseStatusDto responseStatusDto) {
-        ResponseStatusDto newResponseStatusDto = responseStatusService.insert(responseStatusDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newResponseStatusDto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseStatusDto insert(@RequestBody ResponseStatusDto responseStatusDto) {
+        return responseStatusService.insert(responseStatusDto);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ResponseStatusDto> update(@PathVariable(name = "id") long id, @RequestBody ResponseStatusDto responseStatusDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseStatusDto update(@PathVariable(name = "id") long id, @RequestBody ResponseStatusDto responseStatusDto) {
         responseStatusDto.setId(id);
-        ResponseStatusDto updatedResponseStatusDto = responseStatusService.update(responseStatusDto);
-        return ResponseEntity.ok().body(updatedResponseStatusDto);
+        return responseStatusService.update(responseStatusDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable(name = "id") long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
         responseStatusService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 }

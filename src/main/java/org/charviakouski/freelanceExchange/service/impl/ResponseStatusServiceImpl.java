@@ -59,7 +59,6 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
     @Override
     public boolean delete(Long id) {
         log.info("delete responseStatus with ID {}", id);
-        responseStatusRepository.delete(id);
-        return responseStatusRepository.getById(id).isEmpty();
+        return responseStatusRepository.delete(id);
     }
 }

@@ -6,5 +6,5 @@ import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import java.util.List;
 
 public interface ResponseRepository extends CrudRepository<Long, Response> {
-    List<Response> getAllResponsesByExecutor(UserInfo userInfo);
+    List<Response> getAllResponsesByExecutor(Long id);
 }

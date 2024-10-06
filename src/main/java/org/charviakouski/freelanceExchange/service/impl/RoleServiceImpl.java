@@ -59,7 +59,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public boolean delete(Long id) {
         log.info("delete role with ID {}", id);
-        roleRepository.delete(id);
-        return roleRepository.getById(id).isEmpty();
+        return roleRepository.delete(id);
     }
 }

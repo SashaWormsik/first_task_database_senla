@@ -39,8 +39,9 @@ public abstract class AbstractRepository<K, T> {
         return entityManager.merge(entity);
     }
 
-    public void delete(K id) {
+    public boolean delete(K id) {
         getById(id).ifPresent(entityManager::remove);
+        return getById(id).isEmpty();
     }
 
 }

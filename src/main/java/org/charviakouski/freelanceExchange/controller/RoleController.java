@@ -18,33 +18,34 @@ public class RoleController {
     private RoleService roleService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<RoleDto>> getAll() {
         List<RoleDto> roles = roleService.getAll();
         return ResponseEntity.ok().body(roles);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<RoleDto> getById(@PathVariable(name = "id") long id) {
-        RoleDto roleDto = roleService.getById(id);
-        return ResponseEntity.ok().body(roleDto);
+    @ResponseStatus(HttpStatus.OK)
+    public RoleDto getById(@PathVariable(name = "id") long id) {
+        return roleService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<RoleDto> insert(@RequestBody RoleDto roleDto) {
-        RoleDto newRoleDto = roleService.insert(roleDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newRoleDto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public RoleDto insert(@RequestBody RoleDto roleDto) {
+        return roleService.insert(roleDto);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<RoleDto> update(@PathVariable(name = "id") long id, @RequestBody RoleDto roleDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public RoleDto update(@PathVariable(name = "id") long id, @RequestBody RoleDto roleDto) {
         roleDto.setId(id);
-        RoleDto updatedRoleDto = roleService.update(roleDto);
-        return ResponseEntity.ok().body(updatedRoleDto);
+        return roleService.update(roleDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable(name = "id") long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
         roleService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 }

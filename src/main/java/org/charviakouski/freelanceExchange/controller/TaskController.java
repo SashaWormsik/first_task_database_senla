@@ -5,7 +5,6 @@ import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -20,46 +19,46 @@ public class TaskController {
     private EntityMapper entityMapper;
 
     @GetMapping
-    public ResponseEntity<List<TaskDto>> getAll() {
-        List<TaskDto> taskDtoList = taskService.getAll();
-        return ResponseEntity.ok().body(taskDtoList);
+    @ResponseStatus(HttpStatus.OK)
+    public List<TaskDto> getAll() {
+        return taskService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<TaskDto> getById(@PathVariable(name = "id") long id) {
-        TaskDto taskDto = taskService.getById(id);
-        return ResponseEntity.ok().body(taskDto);
+    @ResponseStatus(HttpStatus.OK)
+    public TaskDto getById(@PathVariable(name = "id") long id) {
+        return taskService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<TaskDto> insert(@RequestBody TaskDto taskDto) {
-        TaskDto newTaskDto = taskService.insert(taskDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newTaskDto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskDto insert(@RequestBody TaskDto taskDto) {
+        return taskService.insert(taskDto);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<TaskDto> update(@PathVariable(name = "id") long id, @RequestBody TaskDto taskDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public TaskDto update(@PathVariable(name = "id") long id, @RequestBody TaskDto taskDto) {
         taskDto.setId(id);
-        TaskDto updatedTaskDto = taskService.update(taskDto);
-        return ResponseEntity.ok().body(updatedTaskDto);
+        return taskService.update(taskDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable(name = "id") long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
         taskService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/title")
-    public ResponseEntity<List<TaskDto>> getAllTaskByTitle(@RequestParam(name = "title") String title) {
-        List<TaskDto> taskDtoList = taskService.getAllTaskByTitle(title);
-        return ResponseEntity.ok().body(taskDtoList);
+    @ResponseStatus(HttpStatus.OK)
+    public List<TaskDto> getAllTaskByTitle(@RequestParam(name = "title") String title) {
+        return taskService.getAllTaskByTitle(title);
     }
 
     @GetMapping(value = "/price")
-    public ResponseEntity<List<TaskDto>> getAllTaskByPrice(@RequestParam(name = "price") String price) {
+    @ResponseStatus(HttpStatus.OK)
+    public List<TaskDto> getAllTaskByPrice(@RequestParam(name = "price") String price) {
         BigDecimal pr = new BigDecimal(price);
-        List<TaskDto> taskDtoList = taskService.getAllTaskByPrice(pr);
-        return ResponseEntity.ok().body(taskDtoList);
+        return taskService.getAllTaskByPrice(pr);
     }
 }

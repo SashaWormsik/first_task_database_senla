@@ -5,7 +5,6 @@ import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,45 +18,45 @@ public class UserInfoController {
     private EntityMapper entityMapper;
 
     @GetMapping
-    public ResponseEntity<List<UserInfoDto>> getAll() {
-        List<UserInfoDto> userInfoDtoList = userInfoService.getAll();
-        return ResponseEntity.ok().body(userInfoDtoList);
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserInfoDto> getAll() {
+        return userInfoService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserInfoDto> getById(@PathVariable(name = "id") long id) {
-        UserInfoDto userInfoDto = userInfoService.getById(id);
-        return ResponseEntity.ok().body(userInfoDto);
+    @ResponseStatus(HttpStatus.OK)
+    public UserInfoDto getById(@PathVariable(name = "id") long id) {
+        return userInfoService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<UserInfoDto> insert(@RequestBody UserInfoDto userInfoDto) {
-        UserInfoDto newUserInfoDto = userInfoService.insert(userInfoDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUserInfoDto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserInfoDto insert(@RequestBody UserInfoDto userInfoDto) {
+        return userInfoService.insert(userInfoDto);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserInfoDto> update(@PathVariable(name = "id") long id, @RequestBody UserInfoDto userInfoDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public UserInfoDto update(@PathVariable(name = "id") long id, @RequestBody UserInfoDto userInfoDto) {
         userInfoDto.setId(id);
-        UserInfoDto updatedUserInfoDto = userInfoService.update(userInfoDto);
-        return ResponseEntity.ok().body(updatedUserInfoDto);
+        return userInfoService.update(userInfoDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable(name = "id") long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
         userInfoService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/name")
-    public ResponseEntity<List<UserInfoDto>> getAllUserInfoByName(@RequestParam(name = "username") String username) {
-        List<UserInfoDto> userInfoDtoList = userInfoService.getAllUserInfoByName(username);
-        return ResponseEntity.ok().body(userInfoDtoList);
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserInfoDto> getAllUserInfoByName(@RequestParam(name = "username") String username) {
+        return userInfoService.getAllUserInfoByName(username);
     }
 
     @GetMapping(value = "/email")
-    public ResponseEntity<UserInfoDto> getUserInfoByEmail(@RequestParam(name = "email") String email) {
-        UserInfoDto userInfoDto = userInfoService.getUserInfoByEmail(email);
-        return ResponseEntity.ok().body(userInfoDto);
+    @ResponseStatus(HttpStatus.OK)
+    public UserInfoDto getUserInfoByEmail(@RequestParam(name = "email") String email) {
+        return userInfoService.getUserInfoByEmail(email);
     }
 }

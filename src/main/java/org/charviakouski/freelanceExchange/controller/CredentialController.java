@@ -16,33 +16,33 @@ public class CredentialController {
     private CredentialService credentialService;
 
     @GetMapping
-    public ResponseEntity<List<CredentialDto>> getAll() {
-        List<CredentialDto> credentials = credentialService.getAll();
-        return ResponseEntity.ok().body(credentials);
+    @ResponseStatus(HttpStatus.OK)
+    public List<CredentialDto> getAll() {
+        return credentialService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CredentialDto> getById(@PathVariable(name = "id") long id) {
-        CredentialDto credentialDto = credentialService.getById(id);
-        return ResponseEntity.ok().body(credentialDto);
+    @ResponseStatus(HttpStatus.OK)
+    public CredentialDto getById(@PathVariable(name = "id") long id) {
+        return credentialService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<CredentialDto> insert(@RequestBody CredentialDto credentialDto) {
-        CredentialDto newCredentialDto = credentialService.insert(credentialDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newCredentialDto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public CredentialDto insert(@RequestBody CredentialDto credentialDto) {
+        return credentialService.insert(credentialDto);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CredentialDto> update(@PathVariable(name = "id") long id, @RequestBody CredentialDto credentialDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public CredentialDto update(@PathVariable(name = "id") long id, @RequestBody CredentialDto credentialDto) {
         credentialDto.setId(id);
-        CredentialDto updatedCredentialDto = credentialService.update(credentialDto);
-        return ResponseEntity.ok().body(updatedCredentialDto);
+        return credentialService.update(credentialDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable(name = "id") long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
         credentialService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 }

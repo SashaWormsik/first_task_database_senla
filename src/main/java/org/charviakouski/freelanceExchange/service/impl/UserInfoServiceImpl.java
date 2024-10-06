@@ -59,8 +59,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public boolean delete(Long id) {
         log.info("delete userInfo with ID {}", id);
-        userInfoRepository.delete(id);
-        return userInfoRepository.getById(id).isEmpty();
+        return userInfoRepository.delete(id);
     }
 
     @Override
@@ -73,7 +72,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserInfoDto getUserInfoByEmail(String email) {;
+    public UserInfoDto getUserInfoByEmail(String email) {
+        ;
         Optional<UserInfo> optionalUserInfo = userInfoRepository.getUserInfoByEmail(email);
         if (optionalUserInfo.isEmpty()) {
             log.info("userInfo with Email {} not found", email);

@@ -3,9 +3,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.ResponseDto;
-import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.model.entity.Response;
-import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.ResponseRepository;
 import org.charviakouski.freelanceExchange.service.ResponseService;
@@ -61,15 +59,13 @@ public class ResponseServiceImpl implements ResponseService {
     @Override
     public boolean delete(Long id) {
         log.info("delete response with ID {}", id);
-        responseRepository.delete(id);
-        return responseRepository.getById(id).isEmpty();
+        return responseRepository.delete(id);
     }
 
     @Override
     public List<ResponseDto> getAllResponsesByExecutor(Long id) {
         log.info("get ALL responses for Executor ID {}", id);
-        UserInfo userInfo = UserInfo.builder().id(id).build();
-        return responseRepository.getAllResponsesByExecutor(userInfo).stream()
+        return responseRepository.getAllResponsesByExecutor(id).stream()
                 .map(response -> entityMapper.fromEntityToDto(response, ResponseDto.class))
                 .toList();
     }

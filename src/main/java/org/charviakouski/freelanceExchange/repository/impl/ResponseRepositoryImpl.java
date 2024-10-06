@@ -22,7 +22,7 @@ public class ResponseRepositoryImpl extends AbstractRepository<Long, Response> i
     }
 
     @Override
-    public List<Response> getAllResponsesByExecutor(UserInfo userInfo) {
+    public List<Response> getAllResponsesByExecutor(Long id) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Response> criteriaQuery = criteriaBuilder.createQuery(Response.class);
         Root<Response> root = criteriaQuery.from(Response.class);
@@ -30,7 +30,7 @@ public class ResponseRepositoryImpl extends AbstractRepository<Long, Response> i
         root.fetch(Response_.task, JoinType.LEFT);
         root.fetch(Response_.responseStatus, JoinType.LEFT);
         Join<Response, UserInfo> userInfoJoin = root.join(Response_.executor, JoinType.LEFT);
-        criteriaQuery.select(root).where(criteriaBuilder.equal(userInfoJoin.get(UserInfo_.id), userInfo.getId()));
+        criteriaQuery.select(root).where(criteriaBuilder.equal(userInfoJoin.get(UserInfo_.id), id));
         return entityManager.createQuery(criteriaQuery).getResultList();
 
     }

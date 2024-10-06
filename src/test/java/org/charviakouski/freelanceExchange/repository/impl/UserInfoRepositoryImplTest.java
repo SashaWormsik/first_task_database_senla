@@ -66,8 +66,8 @@ public class UserInfoRepositoryImplTest {
     public void createCredentialTest() {
         NEW_USER.setCredential(NEW_CREDENTIAL);
         userInfoRepository.create(NEW_USER);
-        UserInfo actuakUserInfo = userInfoRepository.getById(NEW_USER.getId()).orElse(null);
-        Assertions.assertEquals(NEW_USER, actuakUserInfo);
+        UserInfo actualUserInfo = userInfoRepository.getById(NEW_USER.getId()).orElse(null);
+        Assertions.assertEquals(NEW_USER, actualUserInfo);
     }
 
     @Test

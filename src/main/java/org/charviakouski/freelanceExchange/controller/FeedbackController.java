@@ -21,39 +21,39 @@ public class FeedbackController {
     private EntityMapper entityMapper;
 
     @GetMapping
-    public ResponseEntity<List<FeedBackDto>> getAll() {
-        List<FeedBackDto> feedBackDtoList = feedbackService.getAll();
-        return ResponseEntity.ok().body(feedBackDtoList);
+    @ResponseStatus(HttpStatus.OK)
+    public List<FeedBackDto> getAll() {
+        return feedbackService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<FeedBackDto> getById(@PathVariable(name = "id") long id) {
-        FeedBackDto feedBackDto = feedbackService.getById(id);
-        return ResponseEntity.ok().body(feedBackDto);
+    @ResponseStatus(HttpStatus.OK)
+    public FeedBackDto getById(@PathVariable(name = "id") long id) {
+        return feedbackService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<FeedBackDto> insert(@RequestBody FeedBackDto feedBackDto) {
-        FeedBackDto newFeedBackDto = feedbackService.insert(feedBackDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newFeedBackDto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public FeedBackDto insert(@RequestBody FeedBackDto feedBackDto) {
+        return feedbackService.insert(feedBackDto);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<FeedBackDto> update(@PathVariable(name = "id") long id, @RequestBody FeedBackDto feedBackDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public FeedBackDto update(@PathVariable(name = "id") long id, @RequestBody FeedBackDto feedBackDto) {
         feedBackDto.setId(id);
-        FeedBackDto updatedFeedBackDto = feedbackService.update(feedBackDto);
-        return ResponseEntity.ok().body(updatedFeedBackDto);
+        return feedbackService.update(feedBackDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable(name = "id") long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
         feedbackService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/addressee")
-    public ResponseEntity<List<FeedBackDto>> getAllFeedbackByAddressee(@RequestParam(name = "addresseeId") long addresseeId) {
-        List<FeedBackDto> feedBackDtoList = feedbackService.getAllFeedbackByAddressee(addresseeId);
-        return ResponseEntity.ok().body(feedBackDtoList);
+    @ResponseStatus(HttpStatus.OK)
+    public List<FeedBackDto> getAllFeedbackByAddressee(@RequestParam(name = "addresseeId") long addresseeId) {
+        return feedbackService.getAllFeedbackByAddressee(addresseeId);
     }
 }

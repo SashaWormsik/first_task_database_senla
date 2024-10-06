@@ -60,7 +60,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public boolean delete(Long id) {
         log.info("delete category with ID {}", id);
-        categoryRepository.delete(id);
-        return categoryRepository.getById(id).isEmpty();
+        return categoryRepository.delete(id);
     }
 }

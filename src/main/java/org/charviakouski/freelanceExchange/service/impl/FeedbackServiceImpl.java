@@ -61,8 +61,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public boolean delete(Long id) {
         log.info("delete feedback with id {}", id);
-        feedbackRepository.delete(id);
-        return feedbackRepository.getById(id).isEmpty();
+        return feedbackRepository.delete(id);
     }
 
     @Override

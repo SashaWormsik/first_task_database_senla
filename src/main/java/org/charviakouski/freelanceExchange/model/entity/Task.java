@@ -1,10 +1,7 @@
 package org.charviakouski.freelanceExchange.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,6 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 @Entity
 @Table(name = "task")
 @NamedEntityGraph(

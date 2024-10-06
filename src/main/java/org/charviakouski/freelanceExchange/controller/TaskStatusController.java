@@ -4,7 +4,6 @@ import org.charviakouski.freelanceExchange.model.dto.TaskStatusDto;
 import org.charviakouski.freelanceExchange.service.TaskStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,34 +15,33 @@ public class TaskStatusController {
     private TaskStatusService taskStatusService;
 
     @GetMapping
-    public ResponseEntity<List<TaskStatusDto>> getAll() {
-        List<TaskStatusDto> taskStatusListDto = taskStatusService.getAll();
-        return ResponseEntity.ok().body(taskStatusListDto);
+    @ResponseStatus(HttpStatus.OK)
+    public List<TaskStatusDto> getAll() {
+        return taskStatusService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<TaskStatusDto> getById(@PathVariable(name = "id") long id) {
-        TaskStatusDto taskStatusDto = taskStatusService.getById(id);
-        return ResponseEntity.ok().body(taskStatusDto);
+    @ResponseStatus(HttpStatus.OK)
+    public TaskStatusDto getById(@PathVariable(name = "id") long id) {
+        return taskStatusService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<TaskStatusDto> insert(@RequestBody TaskStatusDto taskStatusDto) {
-        TaskStatusDto newTaskStatusDto = taskStatusService.insert(taskStatusDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newTaskStatusDto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskStatusDto insert(@RequestBody TaskStatusDto taskStatusDto) {
+        return taskStatusService.insert(taskStatusDto);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<TaskStatusDto> update(@PathVariable(name = "id") long id, @RequestBody TaskStatusDto taskStatusDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public TaskStatusDto update(@PathVariable(name = "id") long id, @RequestBody TaskStatusDto taskStatusDto) {
         taskStatusDto.setId(id);
-        TaskStatusDto updatedTaskStatusDto = taskStatusService.update(taskStatusDto);
-        return ResponseEntity.ok().body(updatedTaskStatusDto);
+        return taskStatusService.update(taskStatusDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable(name = "id") long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
         taskStatusService.delete(id);
-        return ResponseEntity.noContent().build();
-
     }
 }

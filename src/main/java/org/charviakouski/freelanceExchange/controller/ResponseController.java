@@ -5,7 +5,6 @@ import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.ResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,40 +18,40 @@ public class ResponseController {
     private EntityMapper entityMapper;
 
     @GetMapping
-    public ResponseEntity<List<ResponseDto>> getAll() {
-        List<ResponseDto> responseDtos = responseService.getAll();
-        return ResponseEntity.ok().body(responseDtos);
+    @ResponseStatus(HttpStatus.OK)
+    public List<ResponseDto> getAll() {
+        return responseService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ResponseDto> getById(@PathVariable(name = "id") long id) {
-        ResponseDto responseDto = responseService.getById(id);
-        return ResponseEntity.ok().body(responseDto);
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDto getById(@PathVariable(name = "id") long id) {
+        return responseService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDto> insert(@RequestBody ResponseDto responseDto) {
-        ResponseDto newResponseDto = responseService.insert(responseDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newResponseDto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseDto insert(@RequestBody ResponseDto responseDto) {
+        return responseService.insert(responseDto);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ResponseDto> update(@PathVariable(name = "id") long id, @RequestBody ResponseDto responseDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDto update(@PathVariable(name = "id") long id, @RequestBody ResponseDto responseDto) {
         responseDto.setId(id);
-        ResponseDto updatedResponseDto = responseService.update(responseDto);
-        return ResponseEntity.ok().body(updatedResponseDto);
+        return responseService.update(responseDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable(name = "id") long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
         responseService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/executor")
-    public ResponseEntity<List<ResponseDto>> getAllResponsesByExecutor(@RequestParam(name = "executorId") Long executorId) {
-        List<ResponseDto> responseDtoList = responseService.getAllResponsesByExecutor(executorId);
-        return ResponseEntity.ok().body(responseDtoList);
+    @ResponseStatus(HttpStatus.OK)
+    public List<ResponseDto> getAllResponsesByExecutor(@RequestParam(name = "executorId") Long executorId) {
+        return responseService.getAllResponsesByExecutor(executorId);
 
     }
 }

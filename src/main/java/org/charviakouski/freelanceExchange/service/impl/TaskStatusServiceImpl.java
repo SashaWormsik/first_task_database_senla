@@ -59,7 +59,6 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     @Override
     public boolean delete(Long id) {
         log.info("delete taskStatus with ID {}", id);
-        taskStatusRepository.delete(id);
-        return taskStatusRepository.getById(id).isEmpty();
+        return taskStatusRepository.delete(id);
     }
 }
