@@ -21,6 +21,6 @@ public class Role {
     @Column(name = "name", length = 100, unique = true, nullable = false)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role", cascade = CascadeType.ALL)
     private List<Credential> credentials;
 }

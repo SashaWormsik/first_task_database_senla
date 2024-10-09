@@ -206,20 +206,19 @@
                 <version>3.4.0</version>
             </plugin>
 
-            <!--<plugin>
+            <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
                     <url>http://localhost:8080/manager/text</url>
-                    <server>TomcatServer</server>
+                    <server>localTomcat</server>
                     <username>admin</username>
-                    <password>root</password>
-                    <path>/app</path>
+                    <password>admin</password>
+                    <path>/freelanceExchange</path>
                     <update>true</update>
                 </configuration>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
-
 </project>

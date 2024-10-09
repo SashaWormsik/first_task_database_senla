@@ -3,11 +3,10 @@ package org.charviakouski.freelanceExchange.config;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -24,6 +23,7 @@ import java.util.Properties;
 @Configuration
 @PropertySource("classpath:applicationTest.properties")
 @EnableWebMvc
+@ComponentScan(value = "org.charviakouski.freelanceExchange", excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Configuration.class)})
 public class TestConfig {
 
     @Value("${test.spring.datasource.driver}")
@@ -42,6 +42,11 @@ public class TestConfig {
     private String hibernateShowSql;
     @Value("${hibernate.hbm2ddl.auto}")
     private String autoDdlCreation;
+
+    @Bean
+    public EntityMapper entityMapper (){
+        return new EntityMapper();
+    }
 
     @Bean
     public DataSource dataSource() {

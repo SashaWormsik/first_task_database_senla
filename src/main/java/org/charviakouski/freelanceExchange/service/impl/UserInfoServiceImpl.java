@@ -28,6 +28,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfoDto insert(UserInfoDto userInfoDto) {
         log.info("insert new UserInfo with name {}", userInfoDto.getName());
         UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
+        userInfo.getCredential().setUserInfo(userInfo);
         return entityMapper.fromEntityToDto(userInfoRepository.create(userInfo), UserInfoDto.class);
     }
 
@@ -35,6 +36,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfoDto update(UserInfoDto userInfoDto) {
         log.info("update UserInfo with name {}", userInfoDto.getName());
         UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
+        userInfo.getCredential().setUserInfo(userInfo);
         return entityMapper.fromEntityToDto(userInfoRepository.update(userInfo), UserInfoDto.class);
     }
 
