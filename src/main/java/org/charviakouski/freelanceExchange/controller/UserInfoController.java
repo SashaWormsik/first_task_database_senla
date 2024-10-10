@@ -4,45 +4,59 @@ import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-@Component
+import java.util.List;
+
+@RestController
+@RequestMapping("/users")
 public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
     @Autowired
     private EntityMapper entityMapper;
 
-    public String getAll() {
-        return entityMapper.fromDtoToJson(userInfoService.getAll());
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserInfoDto> getAll() {
+        return userInfoService.getAll();
     }
 
-    public String getById(String jsonUserInfoId) {
-        UserInfoDto userInfoDto = userInfoService.getById(entityMapper.fromJsonToDto(jsonUserInfoId, UserInfoDto.class));
-        return entityMapper.fromDtoToJson(userInfoDto);
+    @GetMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserInfoDto getById(@PathVariable(name = "id") long id) {
+        return userInfoService.getById(id);
     }
 
-    public String insert(String jsonUserInfo) {
-        UserInfoDto userInfoDto = userInfoService.insert(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
-        return entityMapper.fromDtoToJson(userInfoDto);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserInfoDto insert(@RequestBody UserInfoDto userInfoDto) {
+        return userInfoService.insert(userInfoDto);
     }
 
-    public String update(String jsonUserInfo) {
-        UserInfoDto userInfoDto = userInfoService.update(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
-        return entityMapper.fromDtoToJson(userInfoDto);
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserInfoDto update(@PathVariable(name = "id") long id, @RequestBody UserInfoDto userInfoDto) {
+        userInfoDto.setId(id);
+        return userInfoService.update(userInfoDto);
     }
 
-    public boolean delete(String jsonUserInfo) {
-        return userInfoService.delete(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
+        userInfoService.delete(id);
     }
 
-    public String getAllUserInfoByName(String jsonUserInfoName) {
-        UserInfoDto userInfoDto = entityMapper.fromJsonToDto(jsonUserInfoName, UserInfoDto.class);
-        return entityMapper.fromDtoToJson(userInfoService.getAllUserInfoByName(userInfoDto));
+    @GetMapping(value = "/name")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserInfoDto> getAllUserInfoByName(@RequestParam(name = "username") String username) {
+        return userInfoService.getAllUserInfoByName(username);
     }
 
-    public String getUserInfoByEmail(String jsonUserInfoEmail) {
-        UserInfoDto userInfoDto = entityMapper.fromJsonToDto(jsonUserInfoEmail, UserInfoDto.class);
-        return entityMapper.fromDtoToJson(userInfoService.getUserInfoByEmail(userInfoDto));
+    @GetMapping(value = "/email")
+    @ResponseStatus(HttpStatus.OK)
+    public UserInfoDto getUserInfoByEmail(@RequestParam(name = "email") String email) {
+        return userInfoService.getUserInfoByEmail(email);
     }
 }

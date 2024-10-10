@@ -1,47 +1,57 @@
 package org.charviakouski.freelanceExchange.controller;
 
 import org.charviakouski.freelanceExchange.model.dto.ResponseDto;
-import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.ResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Component
+@RestController
+@RequestMapping("/responses")
 public class ResponseController {
     @Autowired
     private ResponseService responseService;
     @Autowired
     private EntityMapper entityMapper;
 
-    public String getAll() {
-        return entityMapper.fromDtoToJson(responseService.getAll());
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ResponseDto> getAll() {
+        return responseService.getAll();
     }
 
-    public String getById(String jsonResponseId) {
-        ResponseDto responseDto = responseService.getById(entityMapper.fromJsonToDto(jsonResponseId, ResponseDto.class));
-        return entityMapper.fromDtoToJson(responseDto);
+    @GetMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDto getById(@PathVariable(name = "id") long id) {
+        return responseService.getById(id);
     }
 
-    public String insert(String jsonResponse) {
-        ResponseDto responseDto = responseService.insert(entityMapper.fromJsonToDto(jsonResponse, ResponseDto.class));
-        return entityMapper.fromDtoToJson(responseDto);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseDto insert(@RequestBody ResponseDto responseDto) {
+        return responseService.insert(responseDto);
     }
 
-    public String update(String jsonResponse) {
-        ResponseDto responseDto = responseService.update(entityMapper.fromJsonToDto(jsonResponse, ResponseDto.class));
-        return entityMapper.fromDtoToJson(responseDto);
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDto update(@PathVariable(name = "id") long id, @RequestBody ResponseDto responseDto) {
+        responseDto.setId(id);
+        return responseService.update(responseDto);
     }
 
-    public boolean delete(String jsonResponse) {
-        return responseService.delete(entityMapper.fromJsonToDto(jsonResponse, ResponseDto.class));
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
+        responseService.delete(id);
     }
 
-    public String getAllResponsesByExecutor(String jsonUserInfo) {
-        List<ResponseDto> responseDto = responseService.getAllResponsesByExecutor(entityMapper.fromJsonToDto(jsonUserInfo, UserInfoDto.class));
-        return entityMapper.fromDtoToJson(responseDto);
+    @GetMapping(value = "/executor")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ResponseDto> getAllResponsesByExecutor(@RequestParam(name = "executorId") Long executorId) {
+        return responseService.getAllResponsesByExecutor(executorId);
 
     }
 }

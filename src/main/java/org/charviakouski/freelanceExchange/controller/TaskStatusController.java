@@ -1,39 +1,47 @@
 package org.charviakouski.freelanceExchange.controller;
 
 import org.charviakouski.freelanceExchange.model.dto.TaskStatusDto;
-import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.TaskStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-@Component
+import java.util.List;
+
+@RestController
+@RequestMapping("/taskStatuses")
 public class TaskStatusController {
     @Autowired
     private TaskStatusService taskStatusService;
-    @Autowired
-    private EntityMapper entityMapper;
 
-    public String getAll() {
-        return entityMapper.fromDtoToJson(taskStatusService.getAll());
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<TaskStatusDto> getAll() {
+        return taskStatusService.getAll();
     }
 
-    public String getById(String jsonTaskStatusId) {
-        TaskStatusDto taskStatusDto = taskStatusService.getById(entityMapper.fromJsonToDto(jsonTaskStatusId, TaskStatusDto.class));
-        return entityMapper.fromDtoToJson(taskStatusDto);
+    @GetMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TaskStatusDto getById(@PathVariable(name = "id") long id) {
+        return taskStatusService.getById(id);
     }
 
-    public String insert(String jsonTaskStatus) {
-        TaskStatusDto taskStatusDto = taskStatusService.insert(entityMapper.fromJsonToDto(jsonTaskStatus, TaskStatusDto.class));
-        return entityMapper.fromDtoToJson(taskStatusDto);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskStatusDto insert(@RequestBody TaskStatusDto taskStatusDto) {
+        return taskStatusService.insert(taskStatusDto);
     }
 
-    public String update(String jsonTaskStatus) {
-        TaskStatusDto taskStatusDto = taskStatusService.update(entityMapper.fromJsonToDto(jsonTaskStatus, TaskStatusDto.class));
-        return entityMapper.fromDtoToJson(taskStatusDto);
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TaskStatusDto update(@PathVariable(name = "id") long id, @RequestBody TaskStatusDto taskStatusDto) {
+        taskStatusDto.setId(id);
+        return taskStatusService.update(taskStatusDto);
     }
 
-    public boolean delete(String jsonTaskStatus) {
-        return taskStatusService.delete(entityMapper.fromJsonToDto(jsonTaskStatus, TaskStatusDto.class));
-
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
+        taskStatusService.delete(id);
     }
 }

@@ -1,38 +1,48 @@
 package org.charviakouski.freelanceExchange.controller;
 
 import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
-import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Component
+import java.util.List;
+
+@RestController
+@RequestMapping("/credentials")
 public class CredentialController {
     @Autowired
     private CredentialService credentialService;
-    @Autowired
-    private EntityMapper entityMapper;
 
-    public String getAll() {
-        return entityMapper.fromDtoToJson(credentialService.getAll());
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<CredentialDto> getAll() {
+        return credentialService.getAll();
     }
 
-    public String getById(String jsonCredentialId) {
-        CredentialDto credentialDto = credentialService.getById(entityMapper.fromJsonToDto(jsonCredentialId, CredentialDto.class));
-        return entityMapper.fromDtoToJson(credentialDto);
+    @GetMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public CredentialDto getById(@PathVariable(name = "id") long id) {
+        return credentialService.getById(id);
     }
 
-    public String insert(String jsonCredential) {
-        CredentialDto credentialDto = credentialService.insert(entityMapper.fromJsonToDto(jsonCredential, CredentialDto.class));
-        return entityMapper.fromDtoToJson(credentialDto);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CredentialDto insert(@RequestBody CredentialDto credentialDto) {
+        return credentialService.insert(credentialDto);
     }
 
-    public String update(String jsonCredential) {
-        CredentialDto credentialDto = credentialService.update(entityMapper.fromJsonToDto(jsonCredential, CredentialDto.class));
-        return entityMapper.fromDtoToJson(credentialDto);
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public CredentialDto update(@PathVariable(name = "id") long id, @RequestBody CredentialDto credentialDto) {
+        credentialDto.setId(id);
+        return credentialService.update(credentialDto);
     }
 
-    public boolean delete(String jsonCredential) {
-        return credentialService.delete(entityMapper.fromJsonToDto(jsonCredential, CredentialDto.class));
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
+        credentialService.delete(id);
     }
 }

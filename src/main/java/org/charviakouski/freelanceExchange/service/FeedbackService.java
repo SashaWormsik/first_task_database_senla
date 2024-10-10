@@ -8,13 +8,13 @@ import java.util.List;
 public interface FeedbackService {
     List<FeedBackDto> getAll();
 
-    FeedBackDto getById(FeedBackDto feedBackDto);
+    FeedBackDto getById(Long id);
 
     FeedBackDto insert(FeedBackDto feedBackDto);
 
     FeedBackDto update(FeedBackDto feedBackDto);
 
-    boolean delete(FeedBackDto feedBackDto);
+    boolean delete(Long id);
 
-    List<FeedBackDto> getAllFeedbackByAddressee(UserInfoDto userInfoDto);
+    List<FeedBackDto> getAllFeedbackByAddressee(Long id);
 }

@@ -12,13 +12,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-@SpringJUnitConfig({TestConfig.class, TaskRepositoryImpl.class})
+@SpringJUnitWebConfig({TestConfig.class, TaskRepositoryImpl.class})
 public class TaskRepositoryImplTest {
 
     private final TaskStatus TASK_STATUS = TaskStatus.builder()

@@ -4,6 +4,7 @@ import org.charviakouski.freelanceExchange.config.TestConfig;
 import org.charviakouski.freelanceExchange.model.entity.Credential;
 import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
+import org.charviakouski.freelanceExchange.repository.RoleRepository;
 import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -11,11 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-@SpringJUnitConfig({TestConfig.class, UserInfoRepositoryImpl.class})
+@SpringJUnitWebConfig({TestConfig.class, UserInfoRepositoryImpl.class, RoleRepositoryImpl.class})
 public class UserInfoRepositoryImplTest {
 
     private final Role ROLE_ADMIN = Role.builder()
@@ -54,9 +57,12 @@ public class UserInfoRepositoryImplTest {
 
     @Autowired
     private UserInfoRepository userInfoRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @BeforeEach
     public void data() {
+        roleRepository.create(ROLE_ADMIN);
         USER.setCredential(CREDENTIAL);
         userInfoRepository.create(USER);
     }
@@ -66,8 +72,10 @@ public class UserInfoRepositoryImplTest {
     public void createCredentialTest() {
         NEW_USER.setCredential(NEW_CREDENTIAL);
         userInfoRepository.create(NEW_USER);
-        UserInfo actuakUserInfo = userInfoRepository.getById(NEW_USER.getId()).orElse(null);
-        Assertions.assertEquals(NEW_USER, actuakUserInfo);
+        UserInfo actualUserInfo = userInfoRepository.getById(NEW_USER.getId()).orElse(null);
+        Assertions.assertEquals(NEW_USER, actualUserInfo);
+        System.out.println(USER.getCredential().getRole());
+        System.out.println(NEW_USER.getCredential().getRole());
     }
 
     @Test

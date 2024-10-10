@@ -39,10 +39,10 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     }
 
     @Override
-    public TaskStatusDto getById(TaskStatusDto taskStatusDto) {
-        Optional<TaskStatus> optionalTaskStatus = taskStatusRepository.getById(taskStatusDto.getId());
+    public TaskStatusDto getById(Long id) {
+        Optional<TaskStatus> optionalTaskStatus = taskStatusRepository.getById(id);
         if (optionalTaskStatus.isEmpty()) {
-            log.info("taskStatus with ID {} not found", taskStatusDto.getId());
+            log.info("taskStatus with ID {} not found", id);
             throw new ServiceException("TaskStatus not found");
         }
         return entityMapper.fromEntityToDto(optionalTaskStatus.get(), TaskStatusDto.class);
@@ -57,9 +57,8 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     }
 
     @Override
-    public boolean delete(TaskStatusDto taskStatusDto) {
-        log.info("delete taskStatus with status {}", taskStatusDto.getStatus());
-        taskStatusRepository.delete(taskStatusDto.getId());
-        return taskStatusRepository.getById(taskStatusDto.getId()).isEmpty();
+    public boolean delete(Long id) {
+        log.info("delete taskStatus with ID {}", id);
+        return taskStatusRepository.delete(id);
     }
 }

@@ -41,10 +41,10 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public FeedBackDto getById(FeedBackDto feedBackDto) {
-        Optional<Feedback> optionalFeedback = feedbackRepository.getById(feedBackDto.getId());
+    public FeedBackDto getById(Long id) {
+        Optional<Feedback> optionalFeedback = feedbackRepository.getById(id);
         if (optionalFeedback.isEmpty()) {
-            log.info("feedback with ID {} not found", feedBackDto.getId());
+            log.info("feedback with ID {} not found", id);
             throw new ServiceException("Feedback not found");
         }
         return entityMapper.fromEntityToDto(optionalFeedback.get(), FeedBackDto.class);
@@ -59,16 +59,15 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public boolean delete(FeedBackDto feedBackDto) {
-        log.info("delete feedback with id {}", feedBackDto.getId());
-        feedbackRepository.delete(feedBackDto.getId());
-        return feedbackRepository.getById(feedBackDto.getId()).isEmpty();
+    public boolean delete(Long id) {
+        log.info("delete feedback with id {}", id);
+        return feedbackRepository.delete(id);
     }
 
     @Override
-    public List<FeedBackDto> getAllFeedbackByAddressee(UserInfoDto userInfoDto) {
-        log.info("get ALL feedbacks for  {}", userInfoDto.getName());
-        UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
+    public List<FeedBackDto> getAllFeedbackByAddressee(Long id) {
+        log.info("get ALL feedbacks for ID {}", id);
+        UserInfo userInfo = UserInfo.builder().id(id).build();
         return feedbackRepository.getAllFeedbackByAddressee(userInfo).stream()
                 .map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class))
                 .toList();

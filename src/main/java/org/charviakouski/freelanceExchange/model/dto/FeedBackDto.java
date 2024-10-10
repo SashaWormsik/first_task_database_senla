@@ -1,14 +1,14 @@
 package org.charviakouski.freelanceExchange.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class FeedBackDto {
     private Long id;
     private Date createDate;

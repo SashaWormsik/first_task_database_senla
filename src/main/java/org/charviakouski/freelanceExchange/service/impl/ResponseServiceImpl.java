@@ -3,9 +3,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.ResponseDto;
-import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.model.entity.Response;
-import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.ResponseRepository;
 import org.charviakouski.freelanceExchange.service.ResponseService;
@@ -41,10 +39,10 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public ResponseDto getById(ResponseDto responseDto) {
-        Optional<Response> optionalResponse = responseRepository.getById(responseDto.getId());
+    public ResponseDto getById(Long id) {
+        Optional<Response> optionalResponse = responseRepository.getById(id);
         if (optionalResponse.isEmpty()) {
-            log.info("response with ID = {} not found", responseDto.getTask().getId());
+            log.info("response with ID = {} not found", id);
             throw new ServiceException("Response not found");
         }
         return entityMapper.fromEntityToDto(optionalResponse.get(), ResponseDto.class);
@@ -59,17 +57,15 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public boolean delete(ResponseDto responseDto) {
-        log.info("delete response with ID {}", responseDto.getId());
-        responseRepository.delete(responseDto.getId());
-        return responseRepository.getById(responseDto.getId()).isEmpty();
+    public boolean delete(Long id) {
+        log.info("delete response with ID {}", id);
+        return responseRepository.delete(id);
     }
 
     @Override
-    public List<ResponseDto> getAllResponsesByExecutor(UserInfoDto userInfodto) {
-        log.info("get ALL responses for Executor {}", userInfodto.getName());
-        UserInfo userInfo = entityMapper.fromDtoToEntity(userInfodto, UserInfo.class);
-        return responseRepository.getAllResponsesByExecutor(userInfo).stream()
+    public List<ResponseDto> getAllResponsesByExecutor(Long id) {
+        log.info("get ALL responses for Executor ID {}", id);
+        return responseRepository.getAllResponsesByExecutor(id).stream()
                 .map(response -> entityMapper.fromEntityToDto(response, ResponseDto.class))
                 .toList();
     }

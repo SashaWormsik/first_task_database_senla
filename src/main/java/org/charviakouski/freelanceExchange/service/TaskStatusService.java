@@ -7,11 +7,11 @@ import java.util.List;
 public interface TaskStatusService {
     List<TaskStatusDto> getAll();
 
-    TaskStatusDto getById(TaskStatusDto taskStatusDto);
+    TaskStatusDto getById(Long id);
 
     TaskStatusDto insert(TaskStatusDto taskStatusDto);
 
     TaskStatusDto update(TaskStatusDto taskStatusDto);
 
-    boolean delete(TaskStatusDto taskStatusDto);
+    boolean delete(Long id);
 }

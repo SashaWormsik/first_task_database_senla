@@ -1,38 +1,51 @@
 package org.charviakouski.freelanceExchange.controller;
 
 import org.charviakouski.freelanceExchange.model.dto.RoleDto;
-import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@RestController
+@RequestMapping("/roles")
 @Component
 public class RoleController {
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private EntityMapper entityMapper;
 
-    public String getAll() {
-        return entityMapper.fromDtoToJson(roleService.getAll());
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<RoleDto>> getAll() {
+        List<RoleDto> roles = roleService.getAll();
+        return ResponseEntity.ok().body(roles);
     }
 
-    public String getById(String jsonRoleId) {
-        RoleDto roleDto = roleService.getById(entityMapper.fromJsonToDto(jsonRoleId, RoleDto.class));
-        return entityMapper.fromDtoToJson(roleDto);
+    @GetMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public RoleDto getById(@PathVariable(name = "id") long id) {
+        return roleService.getById(id);
     }
 
-    public String insert(String jsonRole) {
-        RoleDto roleDto = roleService.insert(entityMapper.fromJsonToDto(jsonRole, RoleDto.class));
-        return entityMapper.fromDtoToJson(roleDto);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public RoleDto insert(@RequestBody RoleDto roleDto) {
+        return roleService.insert(roleDto);
     }
 
-    public String update(String jsonRole) {
-        RoleDto roleDto = roleService.update(entityMapper.fromJsonToDto(jsonRole, RoleDto.class));
-        return entityMapper.fromDtoToJson(roleDto);
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public RoleDto update(@PathVariable(name = "id") long id, @RequestBody RoleDto roleDto) {
+        roleDto.setId(id);
+        return roleService.update(roleDto);
     }
 
-    public boolean delete(String jsonRole) {
-        return roleService.delete(entityMapper.fromJsonToDto(jsonRole, RoleDto.class));
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(name = "id") long id) {
+        roleService.delete(id);
     }
 }

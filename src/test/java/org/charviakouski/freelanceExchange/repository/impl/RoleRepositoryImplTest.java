@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-@SpringJUnitConfig({TestConfig.class, RoleRepositoryImpl.class})
+@SpringJUnitWebConfig({TestConfig.class, RoleRepositoryImpl.class})
 public class RoleRepositoryImplTest {
 
     private final Role ROLE_WORKER = Role.builder()

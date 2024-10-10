@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,10 +40,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto getById(TaskDto taskDto) {
-        Optional<Task> optionalTask = taskRepository.getById(taskDto.getId());
+    public TaskDto getById(Long id) {
+        Optional<Task> optionalTask = taskRepository.getById(id);
         if (optionalTask.isEmpty()) {
-            log.info("task with ID {} not found", taskDto.getId());
+            log.info("task with ID {} not found", id);
             throw new ServiceException("Task not found");
         }
         return entityMapper.fromEntityToDto(optionalTask.get(), TaskDto.class);
@@ -58,25 +59,24 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public boolean delete(TaskDto taskDto) {
-        log.info("delete task with title {}", taskDto.getTitle());
-        taskRepository.delete(taskDto.getId());
-        return taskRepository.getById(taskDto.getId()).isEmpty();
+    public boolean delete(Long id) {
+        log.info("delete task with ID {}", id);
+        return taskRepository.delete(id);
     }
 
     @Override
-    public List<TaskDto> getAllTaskByTitle(TaskDto taskDto) {
-        log.info("get ALL task with title like as {}", taskDto.getTitle());
-        List<Task> taskList = taskRepository.getAllTasksByTitle(taskDto.getTitle());
+    public List<TaskDto> getAllTaskByTitle(String title) {
+        log.info("get ALL task with title like as {}", title);
+        List<Task> taskList = taskRepository.getAllTasksByTitle(title);
         return taskList.stream()
                 .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class))
                 .toList();
     }
 
     @Override
-    public List<TaskDto> getAllTaskByPrice(TaskDto taskDto) {
-        log.info("get ALL task with price = {}", taskDto.getPrice());
-        List<Task> taskList = taskRepository.getAllTasksByPrice(taskDto.getPrice());
+    public List<TaskDto> getAllTaskByPrice(BigDecimal price) {
+        log.info("get ALL task with price = {}", price);
+        List<Task> taskList = taskRepository.getAllTasksByPrice(price);
         return taskList.stream()
                 .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class))
                 .toList();

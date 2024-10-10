@@ -28,6 +28,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfoDto insert(UserInfoDto userInfoDto) {
         log.info("insert new UserInfo with name {}", userInfoDto.getName());
         UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
+        userInfo.getCredential().setUserInfo(userInfo);
         return entityMapper.fromEntityToDto(userInfoRepository.create(userInfo), UserInfoDto.class);
     }
 
@@ -35,14 +36,15 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfoDto update(UserInfoDto userInfoDto) {
         log.info("update UserInfo with name {}", userInfoDto.getName());
         UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
+        userInfo.getCredential().setUserInfo(userInfo);
         return entityMapper.fromEntityToDto(userInfoRepository.update(userInfo), UserInfoDto.class);
     }
 
     @Override
-    public UserInfoDto getById(UserInfoDto userInfoDto) {
-        Optional<UserInfo> optionalUserInfo = userInfoRepository.getById(userInfoDto.getId());
+    public UserInfoDto getById(Long id) {
+        Optional<UserInfo> optionalUserInfo = userInfoRepository.getById(id);
         if (optionalUserInfo.isEmpty()) {
-            log.info("userInfo with ID {} not found", userInfoDto.getId());
+            log.info("userInfo with ID {} not found", id);
             throw new ServiceException("User not found");
         }
         return entityMapper.fromEntityToDto(optionalUserInfo.get(), UserInfoDto.class);
@@ -57,24 +59,23 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public boolean delete(UserInfoDto userInfoDto) {
-        log.info("delete userInfo with name {}", userInfoDto.getName());
-        userInfoRepository.delete(userInfoDto.getId());
-        return userInfoRepository.getById(userInfoDto.getId()).isEmpty();
+    public boolean delete(Long id) {
+        log.info("delete userInfo with ID {}", id);
+        return userInfoRepository.delete(id);
     }
 
     @Override
-    public List<UserInfoDto> getAllUserInfoByName(UserInfoDto userInfoDto) {
-        log.info("get All UserInfo  with name {}", userInfoDto.getName());
-        List<UserInfo> userInfoList = userInfoRepository.getAllUserInfoByName(userInfoDto.getName());
+    public List<UserInfoDto> getAllUserInfoByName(String userName) {
+        log.info("get All UserInfo  with name {}", userName);
+        List<UserInfo> userInfoList = userInfoRepository.getAllUserInfoByName(userName);
         return userInfoList.stream()
                 .map(userI -> entityMapper.fromEntityToDto(userI, UserInfoDto.class))
                 .toList();
     }
 
     @Override
-    public UserInfoDto getUserInfoByEmail(UserInfoDto userInfoDto) {
-        String email = userInfoDto.getCredential().getEmail();
+    public UserInfoDto getUserInfoByEmail(String email) {
+        ;
         Optional<UserInfo> optionalUserInfo = userInfoRepository.getUserInfoByEmail(email);
         if (optionalUserInfo.isEmpty()) {
             log.info("userInfo with Email {} not found", email);

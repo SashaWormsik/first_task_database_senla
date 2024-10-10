@@ -1,14 +1,14 @@
 package org.charviakouski.freelanceExchange.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class CredentialDto {
     private Long id;
     private String email;
@@ -17,5 +17,4 @@ public class CredentialDto {
     private boolean active;
     private String token;
     private RoleDto role;
-    private UserInfoDto userInfo;
 }

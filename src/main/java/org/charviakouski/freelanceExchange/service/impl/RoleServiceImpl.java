@@ -39,10 +39,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleDto getById(RoleDto roleDto) {
-        Optional<Role> optionalRole = roleRepository.getById(roleDto.getId());
+    public RoleDto getById(Long id) {
+        Optional<Role> optionalRole = roleRepository.getById(id);
         if (optionalRole.isEmpty()) {
-            log.info("role with ID {} not found", roleDto.getId());
+            log.info("role with ID {} not found", id);
             throw new ServiceException("Role not found");
         }
         return entityMapper.fromEntityToDto(optionalRole.get(), RoleDto.class);
@@ -57,9 +57,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public boolean delete(RoleDto roleDto) {
-        log.info("delete role with name {}", roleDto.getName());
-        roleRepository.delete(roleDto.getId());
-        return roleRepository.getById(roleDto.getId()).isEmpty();
+    public boolean delete(Long id) {
+        log.info("delete role with ID {}", id);
+        return roleRepository.delete(id);
     }
 }

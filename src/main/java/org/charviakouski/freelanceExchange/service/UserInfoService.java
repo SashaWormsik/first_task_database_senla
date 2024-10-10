@@ -7,15 +7,15 @@ import java.util.List;
 public interface UserInfoService {
     List<UserInfoDto> getAll();
 
-    UserInfoDto getById(UserInfoDto userInfoDto);
+    UserInfoDto getById(Long id);
 
     UserInfoDto insert(UserInfoDto userInfoDto);
 
     UserInfoDto update(UserInfoDto userInfoDto);
 
-    boolean delete(UserInfoDto userInfoDto);
+    boolean delete(Long id);
 
-    List<UserInfoDto> getAllUserInfoByName(UserInfoDto userInfoDto);
+    List<UserInfoDto> getAllUserInfoByName(String userName);
 
-    UserInfoDto getUserInfoByEmail(UserInfoDto userInfoDto);
+    UserInfoDto getUserInfoByEmail(String email);
 }
