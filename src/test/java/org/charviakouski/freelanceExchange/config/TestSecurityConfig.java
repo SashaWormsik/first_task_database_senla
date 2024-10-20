@@ -1,6 +1,5 @@
 package org.charviakouski.freelanceExchange.config;
 
-import lombok.RequiredArgsConstructor;
 import org.charviakouski.freelanceExchange.security.JwtConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,11 +21,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class TestSecurityConfig {
     @Autowired
-    private  PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     @Autowired
-    private  JwtConfigurer jwtConfigurer;
+    private JwtConfigurer jwtConfigurer;
     @Autowired
-    private  UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {

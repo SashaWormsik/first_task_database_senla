@@ -2,7 +2,6 @@ package org.charviakouski.freelanceExchange.security;
 
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +19,7 @@ public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
 
     @Autowired
-    public JwtTokenProvider(@Value("${jwt.token.secret}")String secret, @Value("${jwt.token.expired}")long validityInMilliseconds, UserDetailsService userDetailsService) {
+    public JwtTokenProvider(@Value("${jwt.token.secret}") String secret, @Value("${jwt.token.expired}") long validityInMilliseconds, UserDetailsService userDetailsService) {
         this.secret = secret;
         this.validityInMilliseconds = validityInMilliseconds;
         this.userDetailsService = userDetailsService;
