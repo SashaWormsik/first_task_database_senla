@@ -8,7 +8,7 @@ import org.charviakouski.freelanceExchange.model.entity.Task;
 import org.charviakouski.freelanceExchange.model.entity.Task_;
 import org.charviakouski.freelanceExchange.repository.AbstractRepository;
 import org.charviakouski.freelanceExchange.repository.TaskRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Component
+@Repository
 public class TaskRepositoryImpl extends AbstractRepository<Long, Task> implements TaskRepository {
 
     @Override
@@ -43,7 +43,7 @@ public class TaskRepositoryImpl extends AbstractRepository<Long, Task> implement
     }
 
     @Override
-    public Optional<Task> getTaskByIdGraph(Long id){
+    public Optional<Task> getTaskByIdGraph(Long id) {
         EntityGraph<?> entityGraph = entityManager.getEntityGraph("task-entity-graph");
         Map<String, Object> hints = new HashMap<>();
         hints.put("jakarta.persistence.fetch", entityGraph);

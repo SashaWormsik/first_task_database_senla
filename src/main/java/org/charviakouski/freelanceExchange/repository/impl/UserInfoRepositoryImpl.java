@@ -4,12 +4,12 @@ import jakarta.persistence.TypedQuery;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.repository.AbstractRepository;
 import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Repository
 public class UserInfoRepositoryImpl extends AbstractRepository<Long, UserInfo> implements UserInfoRepository {
 
     @Override

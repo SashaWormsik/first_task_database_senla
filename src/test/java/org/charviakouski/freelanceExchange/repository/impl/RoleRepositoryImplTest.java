@@ -2,6 +2,7 @@ package org.charviakouski.freelanceExchange.repository.impl;
 
 
 import org.charviakouski.freelanceExchange.config.TestConfig;
+import org.charviakouski.freelanceExchange.config.TestRepositoryConfig;
 import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.charviakouski.freelanceExchange.repository.RoleRepository;
 import org.hibernate.exception.ConstraintViolationException;
@@ -10,9 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-@SpringJUnitWebConfig({TestConfig.class, RoleRepositoryImpl.class})
+@SpringJUnitWebConfig({TestConfig.class, TestRepositoryConfig.class})
 public class RoleRepositoryImplTest {
 
     private final Role ROLE_WORKER = Role.builder()

@@ -5,11 +5,11 @@ import org.charviakouski.freelanceExchange.model.entity.Feedback;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.repository.AbstractRepository;
 import org.charviakouski.freelanceExchange.repository.FeedbackRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
+@Repository
 public class FeedbackRepositoryImpl extends AbstractRepository<Long, Feedback> implements FeedbackRepository {
 
     @Override

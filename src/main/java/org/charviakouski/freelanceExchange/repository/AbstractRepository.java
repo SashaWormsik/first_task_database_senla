@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public abstract class AbstractRepository<K, T> {
 
     @PersistenceContext
@@ -17,7 +18,6 @@ public abstract class AbstractRepository<K, T> {
 
     protected abstract Class<T> getEntityClass();
 
-    @Transactional
     public T create(T entity) {
         entityManager.persist(entity);
         return entity;

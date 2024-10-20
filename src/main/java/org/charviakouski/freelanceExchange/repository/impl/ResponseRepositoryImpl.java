@@ -1,19 +1,17 @@
 package org.charviakouski.freelanceExchange.repository.impl;
 
 import jakarta.persistence.criteria.*;
-import lombok.extern.slf4j.Slf4j;
 import org.charviakouski.freelanceExchange.model.entity.Response;
 import org.charviakouski.freelanceExchange.model.entity.Response_;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo_;
 import org.charviakouski.freelanceExchange.repository.AbstractRepository;
 import org.charviakouski.freelanceExchange.repository.ResponseRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Slf4j
-@Component
+@Repository
 public class ResponseRepositoryImpl extends AbstractRepository<Long, Response> implements ResponseRepository {
 
     @Override
