@@ -17,38 +17,35 @@ public class TaskStatusController {
     private final TaskStatusService taskStatusService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<TaskStatusDto> getAll() {
         return taskStatusService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public TaskStatusDto getById(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public TaskStatusDto getById(@PathVariable long id) {
         return taskStatusService.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public TaskStatusDto insert(@RequestBody TaskStatusDto taskStatusDto) {
         return taskStatusService.insert(taskStatusDto);
     }
 
     @PutMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public TaskStatusDto update(@PathVariable(name = "id") long id, @RequestBody TaskStatusDto taskStatusDto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public TaskStatusDto update(@PathVariable long id, @RequestBody TaskStatusDto taskStatusDto) {
         taskStatusDto.setId(id);
         return taskStatusService.update(taskStatusDto);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public void delete(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void delete(@PathVariable long id) {
         taskStatusService.delete(id);
     }
 }

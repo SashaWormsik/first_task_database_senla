@@ -18,7 +18,6 @@ public class RoleController {
     private final RoleService roleService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<RoleDto>> getAll() {
         List<RoleDto> roles = roleService.getAll();
@@ -26,31 +25,29 @@ public class RoleController {
     }
 
     @GetMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public RoleDto getById(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public RoleDto getById(@PathVariable long id) {
         return roleService.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleDto insert(@RequestBody RoleDto roleDto) {
         return roleService.insert(roleDto);
     }
 
     @PutMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public RoleDto update(@PathVariable(name = "id") long id, @RequestBody RoleDto roleDto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public RoleDto update(@PathVariable long id, @RequestBody RoleDto roleDto) {
         roleDto.setId(id);
         return roleService.update(roleDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable(name = "id") long id) {
+    public void delete(@PathVariable long id) {
         roleService.delete(id);
     }
 }

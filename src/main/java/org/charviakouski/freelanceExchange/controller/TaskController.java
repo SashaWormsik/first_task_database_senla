@@ -19,52 +19,47 @@ public class TaskController {
 
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
     public List<TaskDto> getAll() {
         return taskService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('USER')")
-    public TaskDto getById(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
+    public TaskDto getById(@PathVariable long id) {
         return taskService.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasRole('USER')")
     public TaskDto insert(@RequestBody TaskDto taskDto) {
         return taskService.insert(taskDto);
     }
 
     @PutMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('USER')")
-    public TaskDto update(@PathVariable(name = "id") long id, @RequestBody TaskDto taskDto) {
+    @PreAuthorize("hasRole('USER')")
+    public TaskDto update(@PathVariable long id, @RequestBody TaskDto taskDto) {
         taskDto.setId(id);
         return taskService.update(taskDto);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('USER')")
-    public void delete(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasRole('USER')")
+    public void delete(@PathVariable long id) {
         taskService.delete(id);
     }
 
     @GetMapping(value = "/title")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('USER')")
-    public List<TaskDto> getAllTaskByTitle(@RequestParam(name = "title") String title) {
+    @PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
+    public List<TaskDto> getAllTaskByTitle(@RequestParam String title) {
         return taskService.getAllTaskByTitle(title);
     }
 
     @GetMapping(value = "/price")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('USER')")
-    public List<TaskDto> getAllTaskByPrice(@RequestParam(name = "price") String price) {
+    @PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
+    public List<TaskDto> getAllTaskByPrice(@RequestParam String price) {
         BigDecimal pr = new BigDecimal(price);
         return taskService.getAllTaskByPrice(pr);
     }

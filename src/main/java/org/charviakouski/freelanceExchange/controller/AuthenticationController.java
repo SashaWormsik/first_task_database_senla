@@ -16,7 +16,6 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
     public Map<Object, Object> login(@RequestBody AuthenticationRequestDto requestDto) {
         return authenticationService.login(requestDto);
     }

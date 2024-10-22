@@ -33,7 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     new UsernamePasswordAuthenticationToken(authDto.getEmail(), authDto.getPassword()));
             Optional<Credential> optionalCredential = credentialRepository.getCredentialByEmail(authDto.getEmail());
             Credential credential = optionalCredential.orElseThrow(() -> new BadCredentialsException("Bad credentials"));
-            String token = provider.createToken(credential.getId(), credential.getEmail(), credential.getRole().getName());
+            String token = provider.createToken(credential.getEmail(), credential.getRole().getName());
             Map<Object, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("email", credential.getEmail());

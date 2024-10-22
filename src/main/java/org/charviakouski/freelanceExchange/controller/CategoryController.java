@@ -17,38 +17,35 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<CategoryDto> getAll() {
         return categoryService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public CategoryDto getById(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public CategoryDto getById(@PathVariable long id) {
         return categoryService.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryDto insert(@RequestBody CategoryDto categoryDto) {
         return categoryService.insert(categoryDto);
     }
 
     @PutMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public CategoryDto update(@PathVariable(name = "id") long id, @RequestBody CategoryDto categoryDto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public CategoryDto update(@PathVariable long id, @RequestBody CategoryDto categoryDto) {
         categoryDto.setId(id);
         return categoryService.update(categoryDto);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public void delete(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void delete(@PathVariable long id) {
         categoryService.delete(id);
     }
 }

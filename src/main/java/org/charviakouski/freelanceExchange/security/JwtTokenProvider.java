@@ -14,20 +14,15 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-    private final String secret;
-    private final long validityInMilliseconds;
-    private final UserDetailsService userDetailsService;
-
+    @Value("${jwt.token.secret}")
+    private String secret;
+    @Value("${jwt.token.expired}")
+    private long validityInMilliseconds;
     @Autowired
-    public JwtTokenProvider(@Value("${jwt.token.secret}") String secret, @Value("${jwt.token.expired}") long validityInMilliseconds, UserDetailsService userDetailsService) {
-        this.secret = secret;
-        this.validityInMilliseconds = validityInMilliseconds;
-        this.userDetailsService = userDetailsService;
-    }
+    private UserDetailsService userDetailsService;
 
-    public String createToken(long id, String email, String role) {
+    public String createToken(String email, String role) {
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put("id", id);
         claims.put("role", role);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
@@ -55,7 +50,7 @@ public class JwtTokenProvider {
         return null;
     }
 
-    public boolean isValidateToken(String token) {
+    public boolean isValidToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return !claimsJws.getBody().getExpiration().before(new Date());

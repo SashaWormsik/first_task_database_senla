@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -87,7 +88,7 @@ public class UserInfoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"ADMIN"})
+    @WithMockUser(username = "user1", authorities = {"ROLE_ADMIN"})
     public void getAllTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/users")
                         .accept(MediaType.APPLICATION_JSON))
@@ -97,7 +98,7 @@ public class UserInfoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"ADMIN"})
+    @WithMockUser(username = "user1", authorities = {"ROLE_ADMIN"})
     public void getByIdTest() throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/users/{id}", USER.getId())
                         .accept(MediaType.APPLICATION_JSON))
@@ -112,7 +113,7 @@ public class UserInfoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"ADMIN"})
+    @WithMockUser(username = "user1", authorities = {"ROLE_ADMIN"})
     public void getUserInfoByEmail() throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/users/email?email={email}", USER.getCredential().getEmail())
                         .accept(MediaType.APPLICATION_JSON))
@@ -128,7 +129,17 @@ public class UserInfoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"USER"})
+    @WithMockUser(username = "user1", authorities = {"ROLE_USER"})
+    public void getUserInfoByEmailForbiddenTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/users/email?email={email}", USER.getCredential().getEmail())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError()); // FIXME почемуто статус 500 а не 403
+    }
+
+    @Test
+    @WithMockUser(username = "user1", authorities = {"ROLE_USER"})
     public void getUserInfoByName() throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/users/name")
                         .param("username", "NOT_EXIST_NAME")
@@ -141,7 +152,7 @@ public class UserInfoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"USER"})
+    @WithMockUser(username = "user1", authorities = {"ROLE_USER"})
     public void insertTest() throws Exception {
         NEW_USER.setCredential(NEW_CREDENTIAL);
         UserInfoDto userInfoDto = entityMapper.fromEntityToDto(NEW_USER, UserInfoDto.class);
@@ -154,7 +165,8 @@ public class UserInfoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"USER"})
+    @WithMockUser(username = "user1", authorities = {"ROLE_USER"})
+    @WithUserDetails()
     public void updateUserInfoTest() throws Exception {
         USER.setSurname("NEW SURNAME");
         UserInfoDto userInfoDto = entityMapper.fromDtoToEntity(USER, UserInfoDto.class);
@@ -167,7 +179,7 @@ public class UserInfoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"ADMIN"})
+    @WithMockUser(username = "user1", authorities = {"ROLE_ADMIN"})
     public void updateUserInfoTest2() throws Exception {
         USER.setSurname("NEW SURNAME");
         UserInfoDto userInfoDto = entityMapper.fromDtoToEntity(USER, UserInfoDto.class);
@@ -186,7 +198,7 @@ public class UserInfoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"ADMIN"})
+    @WithMockUser(username = "user1", authorities = {"ROLE_ADMIN"})
     public void updateUserInfoWithNotExistId() throws Exception {
         UserInfoDto userInfoDto = entityMapper.fromDtoToEntity(USER, UserInfoDto.class);
         userInfoDto.setId(5555L);
@@ -198,7 +210,7 @@ public class UserInfoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"ADMIN"})
+    @WithMockUser(username = "user1", authorities = {"ROLE_ADMIN"})
     public void deleteTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/users/{id}", USER.getId())
                         .accept(MediaType.APPLICATION_JSON))

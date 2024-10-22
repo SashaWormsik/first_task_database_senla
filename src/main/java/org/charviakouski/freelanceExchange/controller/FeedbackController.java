@@ -17,45 +17,41 @@ public class FeedbackController {
     private final FeedbackService feedbackService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasRole('USER')")
     public List<FeedBackDto> getAll() {
         return feedbackService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('USER')")
-    public FeedBackDto getById(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasRole('USER')")
+    public FeedBackDto getById(@PathVariable long id) {
         return feedbackService.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasRole('USER')")
     public FeedBackDto insert(@RequestBody FeedBackDto feedBackDto) {
         return feedbackService.insert(feedBackDto);
     }
 
     @PutMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('USER')")
-    public FeedBackDto update(@PathVariable(name = "id") long id, @RequestBody FeedBackDto feedBackDto) {
+    @PreAuthorize("hasRole('USER')")
+    public FeedBackDto update(@PathVariable long id, @RequestBody FeedBackDto feedBackDto) {
         feedBackDto.setId(id);
         return feedbackService.update(feedBackDto);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('USER')")
-    public void delete(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasRole('USER')")
+    public void delete(@PathVariable long id) {
         feedbackService.delete(id);
     }
 
     @GetMapping(value = "/addressee")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('USER')")
-    public List<FeedBackDto> getAllFeedbackByAddressee(@RequestParam(name = "addresseeId") long addresseeId) {
+    @PreAuthorize("hasRole('USER')")
+    public List<FeedBackDto> getAllFeedbackByAddressee(@RequestParam long addresseeId) {
         return feedbackService.getAllFeedbackByAddressee(addresseeId);
     }
 }
