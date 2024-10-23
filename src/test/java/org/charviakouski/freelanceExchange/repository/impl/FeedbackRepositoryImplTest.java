@@ -1,6 +1,7 @@
 package org.charviakouski.freelanceExchange.repository.impl;
 
 import org.charviakouski.freelanceExchange.config.TestConfig;
+import org.charviakouski.freelanceExchange.config.TestRepositoryConfig;
 import org.charviakouski.freelanceExchange.model.entity.Feedback;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.repository.FeedbackRepository;
@@ -10,9 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 
-@SpringJUnitWebConfig({TestConfig.class, FeedbackRepositoryImpl.class})
+@SpringJUnitWebConfig({TestConfig.class, TestRepositoryConfig.class})
 public class FeedbackRepositoryImplTest {
 
     private final UserInfo ADDRESSEE = UserInfo.builder()

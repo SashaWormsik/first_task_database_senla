@@ -1,59 +1,57 @@
 package org.charviakouski.freelanceExchange.controller;
 
-import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
+import lombok.RequiredArgsConstructor;
 import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
-import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
-import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.FeedbackService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/feedbacks")
+@RequiredArgsConstructor
 public class FeedbackController {
-    @Autowired
-    private FeedbackService feedbackService;
-    @Autowired
-    private EntityMapper entityMapper;
+
+    private final FeedbackService feedbackService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
     public List<FeedBackDto> getAll() {
         return feedbackService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public FeedBackDto getById(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasRole('USER')")
+    public FeedBackDto getById(@PathVariable long id) {
         return feedbackService.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('USER')")
     public FeedBackDto insert(@RequestBody FeedBackDto feedBackDto) {
         return feedbackService.insert(feedBackDto);
     }
 
     @PutMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public FeedBackDto update(@PathVariable(name = "id") long id, @RequestBody FeedBackDto feedBackDto) {
+    @PreAuthorize("hasRole('USER')")
+    public FeedBackDto update(@PathVariable long id, @RequestBody FeedBackDto feedBackDto) {
         feedBackDto.setId(id);
         return feedbackService.update(feedBackDto);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasRole('USER')")
+    public void delete(@PathVariable long id) {
         feedbackService.delete(id);
     }
 
     @GetMapping(value = "/addressee")
-    @ResponseStatus(HttpStatus.OK)
-    public List<FeedBackDto> getAllFeedbackByAddressee(@RequestParam(name = "addresseeId") long addresseeId) {
+    @PreAuthorize("hasRole('USER')")
+    public List<FeedBackDto> getAllFeedbackByAddressee(@RequestParam long addresseeId) {
         return feedbackService.getAllFeedbackByAddressee(addresseeId);
     }
 }

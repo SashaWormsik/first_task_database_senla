@@ -1,30 +1,28 @@
 package org.charviakouski.freelanceExchange.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
-import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.model.entity.Feedback;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.FeedbackRepository;
 import org.charviakouski.freelanceExchange.service.FeedbackService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Component
+@Service
 @Transactional
+@RequiredArgsConstructor
 public class FeedbackServiceImpl implements FeedbackService {
 
-    @Autowired
-    private FeedbackRepository feedbackRepository;
-    @Autowired
-    private EntityMapper entityMapper;
+    private final FeedbackRepository feedbackRepository;
+    private final EntityMapper entityMapper;
 
     @Override
     public FeedBackDto insert(FeedBackDto feedBackDto) {

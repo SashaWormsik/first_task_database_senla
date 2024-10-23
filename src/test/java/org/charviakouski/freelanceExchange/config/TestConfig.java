@@ -4,26 +4,24 @@ package org.charviakouski.freelanceExchange.config;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
-
-@EnableTransactionManagement
 @Configuration
+@EnableTransactionManagement
 @PropertySource("classpath:applicationTest.properties")
-@EnableWebMvc
-@ComponentScan(value = "org.charviakouski.freelanceExchange", excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Configuration.class)})
 public class TestConfig {
 
     @Value("${test.spring.datasource.driver}")
@@ -40,11 +38,11 @@ public class TestConfig {
     private String hibernateFormatSql;
     @Value("${test.hibernate.show_sql}")
     private String hibernateShowSql;
-    @Value("${hibernate.hbm2ddl.auto}")
+    @Value("${test.hibernate.hbm2ddl.auto}")
     private String autoDdlCreation;
 
     @Bean
-    public EntityMapper entityMapper (){
+    public EntityMapper entityMapper() {
         return new EntityMapper();
     }
 
@@ -59,6 +57,17 @@ public class TestConfig {
     }
 
     @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
+        entityManager.setDataSource(dataSource());
+        entityManager.setPackagesToScan("org.charviakouski.freelanceExchange.model.entity");
+        entityManager.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        entityManager.setPersistenceProvider(new HibernatePersistenceProvider());
+        entityManager.setJpaProperties(getHibernateProperties());
+        return entityManager;
+    }
+
+    @Bean
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
@@ -66,23 +75,8 @@ public class TestConfig {
     }
 
     @Bean
-    public HibernateJpaVendorAdapter hibernateJpaVendorAdapter() {
-        return new HibernateJpaVendorAdapter();
-    }
-
-    @Bean
-    public EntityManager entityManager(@Autowired EntityManagerFactory entityManagerFactory) {
+    public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
         return entityManagerFactory.createEntityManager();
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
-        entityManager.setDataSource(dataSource());
-        entityManager.setPackagesToScan("org.charviakouski.freelanceExchange.model.entity");
-        entityManager.setJpaVendorAdapter(hibernateJpaVendorAdapter());
-        entityManager.setJpaProperties(getHibernateProperties());
-        return entityManager;
     }
 
 

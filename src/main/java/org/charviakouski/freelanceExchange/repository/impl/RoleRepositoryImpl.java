@@ -3,9 +3,9 @@ package org.charviakouski.freelanceExchange.repository.impl;
 import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.charviakouski.freelanceExchange.repository.AbstractRepository;
 import org.charviakouski.freelanceExchange.repository.RoleRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class RoleRepositoryImpl extends AbstractRepository<Long, Role> implements RoleRepository {
 
     @Override

@@ -4,12 +4,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import liquibase.integration.spring.SpringLiquibase;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
+import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -24,15 +25,13 @@ import java.util.Properties;
 @ComponentScan("org.charviakouski.freelanceExchange")
 @PropertySource("classpath:application.properties")
 public class ApplicationConfig {
-    @Value("${spring.datasource.driver}")
-    private String driver;
     @Value("${spring.datasource.url}")
     private String url;
     @Value("${spring.datasource.username}")
     private String userName;
     @Value("${spring.datasource.password}")
     private String password;
-    @Value("${spring.liquibase.changeLog.file}")
+    @Value("${spring.liquibase.changelog.file}")
     private String changeLogFile;
     @Value("${spring.liquibase.schema.database}")
     private String liquibaseSchema;
@@ -42,6 +41,8 @@ public class ApplicationConfig {
     private String hibernateFormatSql;
     @Value("${hibernate.show_sql}")
     private String hibernateShowSql;
+    @Value("${hibernate.hbm2ddl.auto}")
+    private String hibernateHbm2ddl;
 
     @Bean
     public EntityMapper entityMapper() {
@@ -50,12 +51,31 @@ public class ApplicationConfig {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driver);
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setUrl(url);
-        dataSource.setUsername(userName);
+        dataSource.setUser(userName);
         dataSource.setPassword(password);
         return dataSource;
+    }
+
+    @Bean
+    public SpringLiquibase springLiquibase() {
+        SpringLiquibase springLiquibase = new SpringLiquibase();
+        springLiquibase.setChangeLog(changeLogFile);
+        springLiquibase.setDefaultSchema(liquibaseSchema);
+        springLiquibase.setDataSource(dataSource());
+        return springLiquibase;
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
+        entityManager.setDataSource(dataSource());
+        entityManager.setPackagesToScan("org.charviakouski.freelanceExchange");
+        entityManager.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        entityManager.setPersistenceProvider(new HibernatePersistenceProvider());
+        entityManager.setJpaProperties(getHibernateProperties());
+        return entityManager;
     }
 
     @Bean
@@ -66,39 +86,16 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public HibernateJpaVendorAdapter hibernateJpaVendorAdapter() {
-        return new HibernateJpaVendorAdapter();
-    }
-
-    @Bean
     public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
         return entityManagerFactory.createEntityManager();
     }
 
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
-        entityManager.setDataSource(dataSource());
-        entityManager.setPackagesToScan("org.charviakouski.freelanceExchange");
-        entityManager.setJpaVendorAdapter(hibernateJpaVendorAdapter());
-        entityManager.setJpaProperties(getHibernateProperties());
-        return entityManager;
-    }
-
-    @Bean
-    public SpringLiquibase springLiquibase(DataSource dataSource) {
-        SpringLiquibase springLiquibase = new SpringLiquibase();
-        springLiquibase.setChangeLog(changeLogFile);
-        springLiquibase.setDefaultSchema(liquibaseSchema);
-        springLiquibase.setDataSource(dataSource);
-        return springLiquibase;
-    }
-
     private Properties getHibernateProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.dialect", hibernateDialect);
-        properties.put("hibernate.show_sql", hibernateShowSql);
-        properties.put("hibernate.format_sql", hibernateFormatSql);
+        properties.setProperty("hibernate.dialect", hibernateDialect);
+        properties.setProperty("hibernate.show_sql", hibernateShowSql);
+        properties.setProperty("hibernate.format_sql", hibernateFormatSql);
+        properties.setProperty("hibernate.hbm2ddl.auto", hibernateHbm2ddl);
         return properties;
     }
 }

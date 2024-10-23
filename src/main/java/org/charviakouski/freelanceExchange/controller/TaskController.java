@@ -1,10 +1,10 @@
 package org.charviakouski.freelanceExchange.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
-import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.service.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -12,52 +12,54 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tasks")
+@RequiredArgsConstructor
 public class TaskController {
-    @Autowired
-    private TaskService taskService;
-    @Autowired
-    private EntityMapper entityMapper;
+
+    private final TaskService taskService;
+
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
     public List<TaskDto> getAll() {
         return taskService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public TaskDto getById(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
+    public TaskDto getById(@PathVariable long id) {
         return taskService.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('USER')")
     public TaskDto insert(@RequestBody TaskDto taskDto) {
         return taskService.insert(taskDto);
     }
 
     @PutMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public TaskDto update(@PathVariable(name = "id") long id, @RequestBody TaskDto taskDto) {
+    @PreAuthorize("hasRole('USER')")
+    public TaskDto update(@PathVariable long id, @RequestBody TaskDto taskDto) {
         taskDto.setId(id);
         return taskService.update(taskDto);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable(name = "id") long id) {
+    @PreAuthorize("hasRole('USER')")
+    public void delete(@PathVariable long id) {
         taskService.delete(id);
     }
 
     @GetMapping(value = "/title")
-    @ResponseStatus(HttpStatus.OK)
-    public List<TaskDto> getAllTaskByTitle(@RequestParam(name = "title") String title) {
+    @PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
+    public List<TaskDto> getAllTaskByTitle(@RequestParam String title) {
         return taskService.getAllTaskByTitle(title);
     }
 
     @GetMapping(value = "/price")
-    @ResponseStatus(HttpStatus.OK)
-    public List<TaskDto> getAllTaskByPrice(@RequestParam(name = "price") String price) {
+    @PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
+    public List<TaskDto> getAllTaskByPrice(@RequestParam String price) {
         BigDecimal pr = new BigDecimal(price);
         return taskService.getAllTaskByPrice(pr);
     }
