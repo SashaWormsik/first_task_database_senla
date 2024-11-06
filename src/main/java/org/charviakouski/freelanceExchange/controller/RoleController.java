@@ -18,7 +18,7 @@ public class RoleController {
     private final RoleService roleService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<RoleDto>> getAll() {
         List<RoleDto> roles = roleService.getAll();
         return ResponseEntity.ok().body(roles);
