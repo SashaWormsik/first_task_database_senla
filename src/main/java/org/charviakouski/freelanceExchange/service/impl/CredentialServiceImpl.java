@@ -29,19 +29,19 @@ public class CredentialServiceImpl implements CredentialService {
     public CredentialDto insert(CredentialDto credentialDto) {
         log.info("insert new Credential with email {}", credentialDto.getEmail());
         Credential credential = entityMapper.fromDtoToEntity(credentialDto, Credential.class);
-        return entityMapper.fromEntityToDto(credentialRepository.create(credential), CredentialDto.class);
+        return entityMapper.fromEntityToDto(credentialRepository.save(credential), CredentialDto.class);
     }
 
     @Override
     public CredentialDto update(CredentialDto credentialDto) {
         log.info("update Credential with email {}", credentialDto.getEmail());
         Credential credential = entityMapper.fromDtoToEntity(credentialDto, Credential.class);
-        return entityMapper.fromEntityToDto(credentialRepository.update(credential), CredentialDto.class);
+        return entityMapper.fromEntityToDto(credentialRepository.save(credential), CredentialDto.class);
     }
 
     @Override
     public CredentialDto getById(Long id) {
-        Optional<Credential> optionalCredential = credentialRepository.getById(id);
+        Optional<Credential> optionalCredential = credentialRepository.findById(id);
         if (optionalCredential.isEmpty()) {
             log.info("credential with ID {} not found", id);
             throw new ServiceException("Credential not found");
@@ -52,7 +52,7 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public List<CredentialDto> getAll() {
         log.info("get ALL credentials");
-        return credentialRepository.getAll().stream()
+        return credentialRepository.findAll().stream()
                 .map(credential -> entityMapper.fromEntityToDto(credential, CredentialDto.class))
                 .toList();
     }
@@ -60,13 +60,7 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public boolean delete(Long id) {
         log.info("delete credential with ID {}", id);
-        return credentialRepository.delete(id);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Credential> optionalCredential = credentialRepository.getCredentialByEmail(email);
-        return optionalCredential
-                .orElseThrow(() -> new UsernameNotFoundException("Credential with EMAIL :" + email + "not found"));
+        credentialRepository.deleteById(id);
+        return !credentialRepository.existsById(id);
     }
 }

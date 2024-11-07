@@ -28,19 +28,19 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto insert(CategoryDto categoryDto) {
         log.info("insert new Category with name {}", categoryDto.getName());
         Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
-        return entityMapper.fromEntityToDto(categoryRepository.create(category), CategoryDto.class);
+        return entityMapper.fromEntityToDto(categoryRepository.save(category), CategoryDto.class);
     }
 
     @Override
     public CategoryDto update(CategoryDto categoryDto) {
         log.info("update UserInfo with ID {}", categoryDto.getId());
         Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
-        return entityMapper.fromEntityToDto(categoryRepository.update(category), CategoryDto.class);
+        return entityMapper.fromEntityToDto(categoryRepository.save(category), CategoryDto.class);
     }
 
     @Override
     public CategoryDto getById(Long id) {
-        Optional<Category> optionalCategory = categoryRepository.getById(id);
+        Optional<Category> optionalCategory = categoryRepository.findById(id);
         if (optionalCategory.isEmpty()) {
             log.info("category with ID {} not found", id);
             throw new ServiceException("Category not found");
@@ -51,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDto> getAll() {
         log.info("get ALL category");
-        return categoryRepository.getAll().stream()
+        return categoryRepository.findAll().stream()
                 .map(category -> entityMapper.fromEntityToDto(category, CategoryDto.class))
                 .toList();
     }
@@ -59,6 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public boolean delete(Long id) {
         log.info("delete category with ID {}", id);
-        return categoryRepository.delete(id);
+        categoryRepository.deleteById(id);
+        return !categoryRepository.existsById(id);
     }
 }

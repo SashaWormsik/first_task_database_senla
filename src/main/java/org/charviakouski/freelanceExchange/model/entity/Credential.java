@@ -17,14 +17,9 @@ import java.util.List;
 @EqualsAndHashCode(of = {"id"})
 @Entity
 @Table(name = "credential")
-public class Credential implements UserDetails {
+public class Credential {
     @Id
     private Long id;
-
-    @MapsId
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
-    private UserInfo userInfo;
 
     @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
@@ -39,45 +34,13 @@ public class Credential implements UserDetails {
     @Column(name = "active", nullable = false)
     private boolean active;
 
-    @Column(name = "token", length = 250)
-    private String token;
+    @MapsId
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id")
+    private UserInfo userInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return active;
-    }
 }

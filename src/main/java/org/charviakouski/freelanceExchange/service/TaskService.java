@@ -21,5 +21,4 @@ public interface TaskService {
 
     List<TaskDto> getAllTaskByPrice(BigDecimal price);
 
-    TaskDto getTaskByIdGraph(TaskDto taskDto);
 }

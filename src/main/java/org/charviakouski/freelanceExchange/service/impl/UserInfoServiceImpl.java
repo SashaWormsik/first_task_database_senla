@@ -28,7 +28,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         log.info("insert new UserInfo with name {}", userInfoDto.getName());
         UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
         userInfo.getCredential().setUserInfo(userInfo);
-        return entityMapper.fromEntityToDto(userInfoRepository.create(userInfo), UserInfoDto.class);
+        return entityMapper.fromEntityToDto(userInfoRepository.save(userInfo), UserInfoDto.class);
     }
 
     @Override
@@ -36,12 +36,12 @@ public class UserInfoServiceImpl implements UserInfoService {
         log.info("update UserInfo with name {}", userInfoDto.getName());
         UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
         userInfo.getCredential().setUserInfo(userInfo);
-        return entityMapper.fromEntityToDto(userInfoRepository.update(userInfo), UserInfoDto.class);
+        return entityMapper.fromEntityToDto(userInfoRepository.save(userInfo), UserInfoDto.class);
     }
 
     @Override
     public UserInfoDto getById(Long id) {
-        Optional<UserInfo> optionalUserInfo = userInfoRepository.getById(id);
+        Optional<UserInfo> optionalUserInfo = userInfoRepository.findById(id);
         if (optionalUserInfo.isEmpty()) {
             log.info("userInfo with ID {} not found", id);
             throw new ServiceException("User not found");
@@ -52,7 +52,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public List<UserInfoDto> getAll() {
         log.info("get ALL userInfo");
-        return userInfoRepository.getAll().stream()
+        return userInfoRepository.findAll().stream()
                 .map(userInfo -> entityMapper.fromEntityToDto(userInfo, UserInfoDto.class))
                 .toList();
     }
@@ -60,7 +60,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public boolean delete(Long id) {
         log.info("delete userInfo with ID {}", id);
-        return userInfoRepository.delete(id);
+        userInfoRepository.deleteById(id);
+        return !userInfoRepository.existsById(id);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfoDto getUserInfoByEmail(String email) {
-        Optional<UserInfo> optionalUserInfo = userInfoRepository.getUserInfoByEmail(email);
+        Optional<UserInfo> optionalUserInfo = userInfoRepository.getUserInfoByCredential_Email(email);
         if (optionalUserInfo.isEmpty()) {
             log.info("userInfo with Email {} not found", email);
             throw new ServiceException("User not found");

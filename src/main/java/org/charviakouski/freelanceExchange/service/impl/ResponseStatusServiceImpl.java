@@ -27,19 +27,19 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
     public ResponseStatusDto insert(ResponseStatusDto responseStatusDto) {
         log.info("insert new ResponseStatus with status {}", responseStatusDto.getStatus());
         ResponseStatus responseStatus = entityMapper.fromDtoToEntity(responseStatusDto, ResponseStatus.class);
-        return entityMapper.fromEntityToDto(responseStatusRepository.create(responseStatus), ResponseStatusDto.class);
+        return entityMapper.fromEntityToDto(responseStatusRepository.save(responseStatus), ResponseStatusDto.class);
     }
 
     @Override
     public ResponseStatusDto update(ResponseStatusDto responseStatusDto) {
         log.info("update ResponseStatus with status {}", responseStatusDto.getStatus());
         ResponseStatus responseStatus = entityMapper.fromDtoToEntity(responseStatusDto, ResponseStatus.class);
-        return entityMapper.fromEntityToDto(responseStatusRepository.update(responseStatus), ResponseStatusDto.class);
+        return entityMapper.fromEntityToDto(responseStatusRepository.save(responseStatus), ResponseStatusDto.class);
     }
 
     @Override
     public ResponseStatusDto getById(Long id) {
-        Optional<ResponseStatus> optionalResponseStatus = responseStatusRepository.getById(id);
+        Optional<ResponseStatus> optionalResponseStatus = responseStatusRepository.findById(id);
         if (optionalResponseStatus.isEmpty()) {
             log.info("responseStatus with ID {} not found", id);
             throw new ServiceException("ResponseStatus not found");
@@ -50,7 +50,7 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
     @Override
     public List<ResponseStatusDto> getAll() {
         log.info("get ALL responseStatus");
-        return responseStatusRepository.getAll().stream()
+        return responseStatusRepository.findAll().stream()
                 .map(responseStatus -> entityMapper.fromEntityToDto(responseStatus, ResponseStatusDto.class))
                 .toList();
     }
@@ -58,6 +58,7 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
     @Override
     public boolean delete(Long id) {
         log.info("delete responseStatus with ID {}", id);
-        return responseStatusRepository.delete(id);
+        responseStatusRepository.deleteById(id);
+        return responseStatusRepository.existsById(id);
     }
 }

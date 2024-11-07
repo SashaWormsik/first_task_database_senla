@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface CredentialService extends UserDetailsService {
+public interface CredentialService {
     List<CredentialDto> getAll();
 
     CredentialDto getById(Long id);

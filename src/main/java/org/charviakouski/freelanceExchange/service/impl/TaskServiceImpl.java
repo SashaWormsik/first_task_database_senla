@@ -28,19 +28,19 @@ public class TaskServiceImpl implements TaskService {
     public TaskDto insert(TaskDto taskDto) {
         log.info("insert new Task with title {}", taskDto.getTitle());
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        return entityMapper.fromEntityToDto(taskRepository.create(task), TaskDto.class);
+        return entityMapper.fromEntityToDto(taskRepository.save(task), TaskDto.class);
     }
 
     @Override
     public TaskDto update(TaskDto taskDto) {
         log.info("update Task with title {}", taskDto.getTitle());
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        return entityMapper.fromEntityToDto(taskRepository.update(task), TaskDto.class);
+        return entityMapper.fromEntityToDto(taskRepository.save(task), TaskDto.class);
     }
 
     @Override
     public TaskDto getById(Long id) {
-        Optional<Task> optionalTask = taskRepository.getById(id);
+        Optional<Task> optionalTask = taskRepository.findById(id);
         if (optionalTask.isEmpty()) {
             log.info("task with ID {} not found", id);
             throw new ServiceException("Task not found");
@@ -51,7 +51,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskDto> getAll() {
         log.info("get ALL task");
-        return taskRepository.getAll().stream()
+        return taskRepository.findAll().stream()
                 .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class))
                 .toList();
     }
@@ -60,7 +60,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public boolean delete(Long id) {
         log.info("delete task with ID {}", id);
-        return taskRepository.delete(id);
+        taskRepository.deleteById(id);
+        return taskRepository.existsById(id);
     }
 
     @Override
@@ -79,16 +80,5 @@ public class TaskServiceImpl implements TaskService {
         return taskList.stream()
                 .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class))
                 .toList();
-    }
-
-    @Override
-    public TaskDto getTaskByIdGraph(TaskDto taskDto) {
-        log.info("get task by ID with GRAPH= {}", taskDto.getId());
-        Optional<Task> optionalTask = taskRepository.getTaskByIdGraph(taskDto.getId());
-        if (optionalTask.isEmpty()) {
-            log.info("task with ID {} not found (GRAPH)", taskDto.getId());
-            throw new ServiceException("Task not found");
-        }
-        return entityMapper.fromEntityToDto(optionalTask.get(), TaskDto.class);
     }
 }

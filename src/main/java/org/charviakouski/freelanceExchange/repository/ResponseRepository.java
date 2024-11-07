@@ -1,10 +1,10 @@
 package org.charviakouski.freelanceExchange.repository;
 
 import org.charviakouski.freelanceExchange.model.entity.Response;
-import org.charviakouski.freelanceExchange.model.entity.UserInfo;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ResponseRepository extends CrudRepository<Long, Response> {
-    List<Response> getAllResponsesByExecutor(Long id);
+public interface ResponseRepository extends JpaRepository<Response, Long> {
+    List<Response> getAllResponsesByExecutor_Id(Long id);
 }

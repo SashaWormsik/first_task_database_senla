@@ -28,19 +28,19 @@ public class FeedbackServiceImpl implements FeedbackService {
     public FeedBackDto insert(FeedBackDto feedBackDto) {
         log.info("insert new Feedback from {} to {}", feedBackDto.getSender().getName(), feedBackDto.getAddressee().getName());
         Feedback feedback = entityMapper.fromDtoToEntity(feedBackDto, Feedback.class);
-        return entityMapper.fromEntityToDto(feedbackRepository.create(feedback), FeedBackDto.class);
+        return entityMapper.fromEntityToDto(feedbackRepository.save(feedback), FeedBackDto.class);
     }
 
     @Override
     public FeedBackDto update(FeedBackDto feedBackDto) {
         log.info("update new Feedback from {} to {}", feedBackDto.getSender().getName(), feedBackDto.getAddressee().getName());
         Feedback feedback = entityMapper.fromDtoToEntity(feedBackDto, Feedback.class);
-        return entityMapper.fromEntityToDto(feedbackRepository.update(feedback), FeedBackDto.class);
+        return entityMapper.fromEntityToDto(feedbackRepository.save(feedback), FeedBackDto.class);
     }
 
     @Override
     public FeedBackDto getById(Long id) {
-        Optional<Feedback> optionalFeedback = feedbackRepository.getById(id);
+        Optional<Feedback> optionalFeedback = feedbackRepository.findById(id);
         if (optionalFeedback.isEmpty()) {
             log.info("feedback with ID {} not found", id);
             throw new ServiceException("Feedback not found");
@@ -51,7 +51,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public List<FeedBackDto> getAll() {
         log.info("get ALL feedbacks");
-        return feedbackRepository.getAll().stream()
+        return feedbackRepository.findAll().stream()
                 .map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class))
                 .toList();
     }
@@ -59,7 +59,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public boolean delete(Long id) {
         log.info("delete feedback with id {}", id);
-        return feedbackRepository.delete(id);
+        feedbackRepository.deleteById(id);
+        return !feedbackRepository.existsById(id);
     }
 
     @Override

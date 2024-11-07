@@ -55,7 +55,7 @@ public class JwtTokenProvider {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return !claimsJws.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtException("JWT token is expired or invalid");
+            throw new JwtException("JWT token is expired or invalid"); // TODO сделать мою ошибку тип токен не валидный
         }
     }
 

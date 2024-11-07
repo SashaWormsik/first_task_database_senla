@@ -27,19 +27,19 @@ public class RoleServiceImpl implements RoleService {
     public RoleDto insert(RoleDto roleDto) {
         log.info("insert new Role with name {}", roleDto.getName());
         Role role = entityMapper.fromDtoToEntity(roleDto, Role.class);
-        return entityMapper.fromEntityToDto(roleRepository.create(role), RoleDto.class);
+        return entityMapper.fromEntityToDto(roleRepository.save(role), RoleDto.class);
     }
 
     @Override
     public RoleDto update(RoleDto roleDto) {
         log.info("update Role with name {}", roleDto.getName());
         Role role = entityMapper.fromDtoToEntity(roleDto, Role.class);
-        return entityMapper.fromEntityToDto(roleRepository.update(role), RoleDto.class);
+        return entityMapper.fromEntityToDto(roleRepository.save(role), RoleDto.class);
     }
 
     @Override
     public RoleDto getById(Long id) {
-        Optional<Role> optionalRole = roleRepository.getById(id);
+        Optional<Role> optionalRole = roleRepository.findById(id);
         if (optionalRole.isEmpty()) {
             log.info("role with ID {} not found", id);
             throw new ServiceException("Role not found");
@@ -50,7 +50,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<RoleDto> getAll() {
         log.info("get ALL role");
-        return roleRepository.getAll().stream()
+        return roleRepository.findAll().stream()
                 .map(role -> entityMapper.fromEntityToDto(role, RoleDto.class))
                 .toList();
     }
@@ -58,6 +58,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public boolean delete(Long id) {
         log.info("delete role with ID {}", id);
-        return roleRepository.delete(id);
+        roleRepository.deleteById(id);
+        return roleRepository.existsById(id);
     }
 }
