@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: 15
+      author: charviakouski
+      changes:
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: name
+                  value: "ART"
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: name
+                  value: "UX/UI"
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: name
+                  value: "IT"
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: name
+                  value: "JAVA"
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  value: "5"
+              - column:
+                  name: name
+                  value: "CONSTRUCTION"
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  value: "6"
+              - column:
+                  name: name
+                  value: "ARCHITECTURE"

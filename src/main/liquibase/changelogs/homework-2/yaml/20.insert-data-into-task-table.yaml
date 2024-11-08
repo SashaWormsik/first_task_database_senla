@@ -1,0 +1,86 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20
+      author: charviakouski
+      changes:
+        - insert:
+            tableName: task
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: title
+                  value: "JAVA APP"
+              - column:
+                  name: description
+                  value: "Develop an online store"
+              - column:
+                  name: price
+                  value: "1500.00"
+              - column:
+                  name: deadline
+                  value: "2024-12-30"
+              - column:
+                  name: create_date
+                  value: "2024-10-10"
+              - column:
+                  name: customer_id
+                  value: "6"
+              - column:
+                  name: status_id
+                  value: "1"
+        - insert:
+            tableName: task
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: title
+                  value: "BANK APP"
+              - column:
+                  name: description
+                  value: "Design and develop a banking application"
+              - column:
+                  name: price
+                  value: "2500.00"
+              - column:
+                  name: deadline
+                  value: "2024-12-30"
+              - column:
+                  name: create_date
+                  value: "2024-10-10"
+              - column:
+                  name: customer_id
+                  value: "6"
+              - column:
+                  name: status_id
+                  value: "1"
+        - insert:
+            tableName: task
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: title
+                  value: "Building design"
+              - column:
+                  name: description
+                  value: "Develop drawings of a high-rise building (150m) in Revit program"
+              - column:
+                  name: price
+                  value: "500.00"
+              - column:
+                  name: deadline
+                  value: "2025-05-30"
+              - column:
+                  name: create_date
+                  value: "2024-10-10"
+              - column:
+                  name: customer_id
+                  value: "5"
+              - column:
+                  name: status_id
+                  value: "1"

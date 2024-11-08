@@ -1,0 +1,107 @@
+databaseChangeLog:
+  - changeSet:
+      id: 18
+      author: charviakouski
+      changes:
+        - insert:
+            tableName: user_info
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: name
+                  value: "ALEX"
+              - column:
+                  name: surname
+                  value: "WORMSKIY"
+              - column:
+                  name: profession
+                  value: "Structural Engineer"
+              - column:
+                  name: work_experience
+                  value: "9"
+              - column:
+                  name: description
+                  value: "very good engineer"
+        - insert:
+            tableName: user_info
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: name
+                  value: "Anton"
+              - column:
+                  name: surname
+                  value: "Chehov"
+              - column:
+                  name: profession
+                  value: "Java Developer"
+              - column:
+                  name: work_experience
+                  value: "6"
+              - column:
+                  name: description
+                  value: "I've worked at Google and Microsoft. I wrote code for NASA"
+        - insert:
+            tableName: user_info
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: name
+                  value: "Lera"
+              - column:
+                  name: surname
+                  value: "Eshkova"
+              - column:
+                  name: profession
+                  value: "Artist"
+              - column:
+                  name: work_experience
+                  value: "8"
+              - column:
+                  name: description
+                  value: "I paint better than Van Gogh"
+        - insert:
+            tableName: user_info
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: name
+                  value: "ADMIN"
+              - column:
+                  name: surname
+                  value: "ADMIN"
+              - column:
+                  name: profession
+                  value: "admin"
+        - insert:
+            tableName: user_info
+            columns:
+              - column:
+                  name: id
+                  value: "5"
+              - column:
+                  name: name
+                  value: "BIG-COMPANY"
+              - column:
+                  name: description
+                  value: "The company conducts business in various fields"
+        - insert:
+            tableName: user_info
+            columns:
+              - column:
+                  name: id
+                  value: "6"
+              - column:
+                  name: name
+                  value: "SMALL"
+              - column:
+                  name: description
+                  value: "We are looking for cool developers and designers"

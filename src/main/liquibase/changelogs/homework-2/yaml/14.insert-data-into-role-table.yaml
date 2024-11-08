@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 14
+      author: charviakouski
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: "ADMIN"
+              - column:
+                  name: id
+                  value: "1"
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: "CUSTOMER"
+              - column:
+                  name: id
+                  value: "2"
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: "EXECUTOR"
+              - column:
+                  name: id
+                  value: "3"

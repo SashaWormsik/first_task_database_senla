@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 16
+      author: charviakouski
+      changes:
+        - insert:
+            tableName: response_status
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: status
+                  value: "ACCEPTED"
+        - insert:
+            tableName: response_status
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: status
+                  value: "REJECTED"
+        - insert:
+            tableName: response_status
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: status
+                  value: "WAITING"

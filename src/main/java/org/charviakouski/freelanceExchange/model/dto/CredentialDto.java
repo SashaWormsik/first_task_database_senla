@@ -15,6 +15,5 @@ public class CredentialDto {
     private String password;
     private Date createDate;
     private boolean active;
-    private String token;
     private RoleDto role;
 }

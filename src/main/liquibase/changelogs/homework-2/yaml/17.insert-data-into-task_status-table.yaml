@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 17
+      author: charviakouski
+      changes:
+        - insert:
+            tableName: task_status
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: status
+                  value: "ACTUAL"
+        - insert:
+            tableName: task_status
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: status
+                  value: "NOT ACTUAL"
+        - insert:
+            tableName: task_status
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: status
+                  value: "EXECUTED"

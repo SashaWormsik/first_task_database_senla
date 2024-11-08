@@ -34,13 +34,12 @@ public class Credential {
     @Column(name = "active", nullable = false)
     private boolean active;
 
-    @MapsId
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
-    private UserInfo userInfo;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @MapsId
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id")
+    private UserInfo userInfo;
 }
