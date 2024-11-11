@@ -34,7 +34,7 @@ public class UserInfo {
     @Column(name = "description", length = 500)
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "userInfo", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private Credential credential;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "executor", cascade = CascadeType.ALL)

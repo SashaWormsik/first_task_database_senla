@@ -3,8 +3,6 @@ package org.charviakouski.freelanceExchange.service;
 import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
-
 public interface CategoryService {
     Page<CategoryDto> getAll(int page, int size, String sort);
 

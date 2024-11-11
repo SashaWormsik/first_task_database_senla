@@ -5,7 +5,6 @@ import org.charviakouski.freelanceExchange.model.dto.TaskDto;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public interface TaskService {
     Page<TaskDto> getAll(int page, int size, String sort);

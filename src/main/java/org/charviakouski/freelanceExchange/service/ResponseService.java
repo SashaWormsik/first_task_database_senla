@@ -1,7 +1,6 @@
 package org.charviakouski.freelanceExchange.service;
 
 import org.charviakouski.freelanceExchange.model.dto.ResponseDto;
-import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
 import org.charviakouski.freelanceExchange.model.entity.Feedback;
-import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.FeedbackRepository;
@@ -18,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -76,7 +74,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
 
         return null;//feedbackRepository.findAllFeedbackByAddressee(//).stream()
-                //.map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class))
-                //.toList();
+        //.map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class))
+        //.toList();
     }
 }

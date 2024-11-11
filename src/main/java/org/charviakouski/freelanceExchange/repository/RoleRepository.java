@@ -2,7 +2,6 @@ package org.charviakouski.freelanceExchange.repository;
 
 import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 

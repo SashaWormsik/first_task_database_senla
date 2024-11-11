@@ -2,9 +2,6 @@ package org.charviakouski.freelanceExchange.service;
 
 import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.userdetails.UserDetailsService;
-
-import java.util.List;
 
 public interface CredentialService {
     Page<CredentialDto> getAll(int page, int size, String sort);
