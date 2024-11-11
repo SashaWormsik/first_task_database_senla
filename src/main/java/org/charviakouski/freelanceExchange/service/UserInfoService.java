@@ -18,4 +18,6 @@ public interface UserInfoService {
     Page<UserInfoDto> getAllUserInfoByName(String userName, int page, int size, String sort);
 
     UserInfoDto getUserInfoByEmail(String email);
+
+    Page<UserInfoDto> getAllCompanyByLikeName(String userName, int page, int size);
 }

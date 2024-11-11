@@ -65,4 +65,12 @@ public class UserInfoController {
     public UserInfoDto getUserInfoByEmail(@RequestParam String email) {
         return userInfoService.getUserInfoByEmail(email);
     }
+
+    @GetMapping("/search_company")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
+    public Page<UserInfoDto> searchCompany(@RequestParam String companyName,
+                                           @RequestParam(name = "page", defaultValue = "1") int page,
+                                           @RequestParam(name = "size", defaultValue = "2") int size) {
+        return userInfoService.getAllCompanyByLikeName(companyName, page, size);
+    }
 }

@@ -12,4 +12,6 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
     Page<UserInfo> findAllUserInfoByName(String username, Pageable pageable);
 
     Optional<UserInfo> findUserInfoByCredential_Email(String email);
+
+    Page<UserInfo> findAllUserInfoByNameContainingIgnoreCaseAndCredential_Role_Name(String username, Pageable pageable, String role);
 }

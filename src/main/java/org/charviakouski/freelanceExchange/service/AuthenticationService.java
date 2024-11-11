@@ -7,6 +7,8 @@ import org.charviakouski.freelanceExchange.model.dto.authentication.Registration
 import java.util.Map;
 
 public interface AuthenticationService {
+
     Map<Object, Object> login(AuthenticationRequestDto authenticationRequestDto);
+
     UserInfoDto createNewUser(RegistrationRequestDto requestDto);
 }
