@@ -3,15 +3,27 @@ package org.charviakouski.freelanceExchange.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
+import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
+import org.charviakouski.freelanceExchange.model.entity.Credential;
+import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
+import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
+import org.charviakouski.freelanceExchange.repository.CredentialRepository;
+import org.charviakouski.freelanceExchange.repository.RoleRepository;
 import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.charviakouski.freelanceExchange.service.UserInfoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -21,19 +33,35 @@ import java.util.Optional;
 public class UserInfoServiceImpl implements UserInfoService {
 
     private final UserInfoRepository userInfoRepository;
+    private final CredentialRepository credentialRepository;
+    private final RoleRepository roleRepository;
     private final EntityMapper entityMapper;
 
     @Override
-    public UserInfoDto insert(UserInfoDto userInfoDto) {
-        log.info("insert new UserInfo with name {}", userInfoDto.getName());
-        UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
-        userInfo.getCredential().setUserInfo(userInfo);
+    public UserInfoDto insert(CredentialDto credentialDto) {
+        log.info("insert new UserInfo with email {}", credentialDto.getEmail());
+        if (credentialRepository.existsCredentialByEmail(credentialDto.getEmail())) {
+            throw new BadCredentialsException("This email address already exists");
+        }
+        Role roleAdmin = roleRepository.findByName("ADMIN"); // TODO
+        UserInfo userInfo = new UserInfo();
+        Credential credential = Credential.builder()
+                .email(credentialDto.getEmail())
+                .password(credentialDto.getPassword())
+                .role(roleAdmin)
+                .userInfo(userInfo)
+                .build();
+        userInfo.setCredential(credential);
         return entityMapper.fromEntityToDto(userInfoRepository.save(userInfo), UserInfoDto.class);
     }
 
     @Override
-    public UserInfoDto update(UserInfoDto userInfoDto) {
+    public UserInfoDto update(long id, UserInfoDto userInfoDto) {
         log.info("update UserInfo with name {}", userInfoDto.getName());
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        if(!credentialUserDetails.getId().equals(id)){
+            throw new AccessDeniedException("You cannot change other people's data");
+        }
         UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
         userInfo.getCredential().setUserInfo(userInfo);
         return entityMapper.fromEntityToDto(userInfoRepository.save(userInfo), UserInfoDto.class);
@@ -50,32 +78,37 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public List<UserInfoDto> getAll() {
+    public Page<UserInfoDto> getAll(int page, int size, String sort) {
         log.info("get ALL userInfo");
-        return userInfoRepository.findAll().stream()
-                .map(userInfo -> entityMapper.fromEntityToDto(userInfo, UserInfoDto.class))
-                .toList();
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
+        return userInfoRepository
+                .findAll(pageable)
+                .map(user -> entityMapper.fromEntityToDto(user, UserInfoDto.class));
     }
 
     @Override
     public boolean delete(Long id) {
         log.info("delete userInfo with ID {}", id);
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        if(!credentialUserDetails.getId().equals(id)){
+            throw new AccessDeniedException("You cannot change other people's data");
+        }
         userInfoRepository.deleteById(id);
         return !userInfoRepository.existsById(id);
     }
 
     @Override
-    public List<UserInfoDto> getAllUserInfoByName(String userName) {
+    public Page<UserInfoDto> getAllUserInfoByName(String userName, int page, int size, String sort) {
         log.info("get All UserInfo  with name {}", userName);
-        List<UserInfo> userInfoList = userInfoRepository.getAllUserInfoByName(userName);
-        return userInfoList.stream()
-                .map(userI -> entityMapper.fromEntityToDto(userI, UserInfoDto.class))
-                .toList();
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
+        return userInfoRepository
+                .findAllUserInfoByName(userName, pageable)
+                .map(userI -> entityMapper.fromEntityToDto(userI, UserInfoDto.class));
     }
 
     @Override
     public UserInfoDto getUserInfoByEmail(String email) {
-        Optional<UserInfo> optionalUserInfo = userInfoRepository.getUserInfoByCredential_Email(email);
+        Optional<UserInfo> optionalUserInfo = userInfoRepository.findUserInfoByCredential_Email(email);
         if (optionalUserInfo.isEmpty()) {
             log.info("userInfo with Email {} not found", email);
             throw new ServiceException("User not found");

@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "1"
+                  value: "-1"
               - column:
                   name: name
                   value: "ART"
@@ -17,7 +17,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "2"
+                  value: "-2"
               - column:
                   name: name
                   value: "UX/UI"
@@ -26,7 +26,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "3"
+                  value: "-3"
               - column:
                   name: name
                   value: "IT"
@@ -35,7 +35,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "4"
+                  value: "-4"
               - column:
                   name: name
                   value: "JAVA"
@@ -44,7 +44,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "5"
+                  value: "-5"
               - column:
                   name: name
                   value: "CONSTRUCTION"
@@ -53,7 +53,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "6"
+                  value: "-6"
               - column:
                   name: name
                   value: "ARCHITECTURE"

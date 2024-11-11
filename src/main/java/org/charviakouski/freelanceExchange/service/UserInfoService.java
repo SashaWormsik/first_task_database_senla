@@ -1,21 +1,23 @@
 package org.charviakouski.freelanceExchange.service;
 
+import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface UserInfoService {
-    List<UserInfoDto> getAll();
+    Page<UserInfoDto> getAll(int page, int size, String sort);
 
     UserInfoDto getById(Long id);
 
-    UserInfoDto insert(UserInfoDto userInfoDto);
+    UserInfoDto insert(CredentialDto credentialDto);
 
-    UserInfoDto update(UserInfoDto userInfoDto);
+    UserInfoDto update(long id, UserInfoDto userInfoDto);
 
     boolean delete(Long id);
 
-    List<UserInfoDto> getAllUserInfoByName(String userName);
+    Page<UserInfoDto> getAllUserInfoByName(String userName, int page, int size, String sort);
 
     UserInfoDto getUserInfoByEmail(String email);
 }

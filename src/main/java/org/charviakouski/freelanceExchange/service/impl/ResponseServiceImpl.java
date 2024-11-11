@@ -8,6 +8,10 @@ import org.charviakouski.freelanceExchange.model.entity.Response;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.ResponseRepository;
 import org.charviakouski.freelanceExchange.service.ResponseService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,11 +52,12 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public List<ResponseDto> getAll() {
+    public Page<ResponseDto> getAll(int page, int size, String sort) {
         log.info("get ALL response");
-        return responseRepository.findAll().stream()
-                .map(response -> entityMapper.fromEntityToDto(response, ResponseDto.class))
-                .toList();
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
+        return responseRepository
+                .findAll(pageable)
+                .map(response -> entityMapper.fromEntityToDto(response, ResponseDto.class));
     }
 
     @Override
@@ -65,7 +70,7 @@ public class ResponseServiceImpl implements ResponseService {
     @Override
     public List<ResponseDto> getAllResponsesByExecutor(Long id) {
         log.info("get ALL responses for Executor ID {}", id);
-        return responseRepository.getAllResponsesByExecutor_Id(id).stream()
+        return responseRepository.findAllResponsesByExecutor_Id(id).stream()
                 .map(response -> entityMapper.fromEntityToDto(response, ResponseDto.class))
                 .toList();
     }

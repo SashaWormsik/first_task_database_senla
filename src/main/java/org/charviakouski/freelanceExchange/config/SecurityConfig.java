@@ -55,8 +55,8 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/**", "/authentication").permitAll()
-                .anyRequest().permitAll()
+                .requestMatchers("/", "/sign-in", "/sign-up").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .apply(jwtConfigurer);
         return httpSecurity.build();

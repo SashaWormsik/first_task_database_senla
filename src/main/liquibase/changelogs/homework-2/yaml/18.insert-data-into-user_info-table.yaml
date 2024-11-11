@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "1"
+                  value: "-1"
               - column:
                   name: name
                   value: "ALEX"
@@ -29,7 +29,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "2"
+                  value: "-2"
               - column:
                   name: name
                   value: "Anton"
@@ -50,7 +50,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "3"
+                  value: "-3"
               - column:
                   name: name
                   value: "Lera"
@@ -71,7 +71,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "4"
+                  value: "-4"
               - column:
                   name: name
                   value: "ADMIN"
@@ -86,7 +86,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "5"
+                  value: "-5"
               - column:
                   name: name
                   value: "BIG-COMPANY"
@@ -98,7 +98,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "6"
+                  value: "-6"
               - column:
                   name: name
                   value: "SMALL"

@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "1"
+                  value: "-1"
               - column:
                   name: suggested_price
                   value: "1200.50"
@@ -20,19 +20,19 @@ databaseChangeLog:
                   value: "2024-10-15"
               - column:
                   name: task_id
-                  value: "1"
+                  value: "-1"
               - column:
                   name: executor_id
-                  value: "2"
+                  value: "-2"
               - column:
                   name: response_status_id
-                  value: "3"
+                  value: "-3"
         - insert:
             tableName: response
             columns:
               - column:
                   name: id
-                  value: "2"
+                  value: "-2"
               - column:
                   name: suggested_price
                   value: "1000.50"
@@ -44,19 +44,19 @@ databaseChangeLog:
                   value: "2024-10-16"
               - column:
                   name: task_id
-                  value: "1"
+                  value: "-1"
               - column:
                   name: executor_id
-                  value: "3"
+                  value: "-3"
               - column:
                   name: response_status_id
-                  value: "3"
+                  value: "-3"
         - insert:
             tableName: response
             columns:
               - column:
                   name: id
-                  value: "3"
+                  value: "-3"
               - column:
                   name: suggested_price
                   value: "1000.50"
@@ -68,10 +68,10 @@ databaseChangeLog:
                   value: "2024-10-16"
               - column:
                   name: task_id
-                  value: "3"
+                  value: "-3"
               - column:
                   name: executor_id
-                  value: "1"
+                  value: "-1"
               - column:
                   name: response_status_id
-                  value: "3"
+                  value: "-3"

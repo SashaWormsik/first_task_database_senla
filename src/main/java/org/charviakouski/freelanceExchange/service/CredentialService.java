@@ -1,18 +1,19 @@
 package org.charviakouski.freelanceExchange.service;
 
 import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
 public interface CredentialService {
-    List<CredentialDto> getAll();
+    Page<CredentialDto> getAll(int page, int size, String sort);
 
     CredentialDto getById(Long id);
 
     CredentialDto insert(CredentialDto credentialDto);
 
-    CredentialDto update(CredentialDto credentialDto);
+    CredentialDto update(long id, CredentialDto credentialDto);
 
     boolean delete(Long id);
 }

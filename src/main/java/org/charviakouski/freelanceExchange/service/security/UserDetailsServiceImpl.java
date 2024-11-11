@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Credential> optionalCredential = credentialRepository.getCredentialByEmail(email);
+        Optional<Credential> optionalCredential = credentialRepository.findCredentialByEmail(email);
         Credential credential = optionalCredential.orElseThrow(() -> new UsernameNotFoundException("Credential with EMAIL :" + email + "not found"));
         Role role = Role.builder()
                 .id(credential.getRole().getId())

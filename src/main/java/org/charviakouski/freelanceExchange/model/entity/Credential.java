@@ -14,6 +14,7 @@ import java.util.Date;
 @Table(name = "credential")
 public class Credential {
     @Id
+    @Column
     private Long id;
 
     @Column(name = "email", length = 100, nullable = false, unique = true)

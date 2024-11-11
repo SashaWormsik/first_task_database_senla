@@ -2,6 +2,16 @@ package org.charviakouski.freelanceExchange.repository;
 
 import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+
+    List<Category> findByNameIn(List<String> names);
+
+    boolean existsByName(String name);
+
+    @Query(value = "SELECT name FROM category", nativeQuery = true)
+    List<String> getNames();
 }

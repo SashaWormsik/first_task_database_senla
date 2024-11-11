@@ -8,61 +8,61 @@ databaseChangeLog:
             columns:
               - column:
                   name: category_id
-                  value: "4"
+                  value: "-4"
               - column:
                   name: task_id
-                  value: "1"
+                  value: "-1"
         - insert:
             tableName: task_category
             columns:
               - column:
                   name: category_id
-                  value: "3"
+                  value: "-3"
               - column:
                   name: task_id
-                  value: "1"
+                  value: "-1"
         - insert:
             tableName: task_category
             columns:
               - column:
                   name: category_id
-                  value: "2"
+                  value: "-2"
               - column:
                   name: task_id
-                  value: "1"
+                  value: "-1"
         - insert:
             tableName: task_category
             columns:
               - column:
                   name: category_id
-                  value: "2"
+                  value: "-2"
               - column:
                   name: task_id
-                  value: "2"
+                  value: "-2"
         - insert:
             tableName: task_category
             columns:
               - column:
                   name: category_id
-                  value: "1"
+                  value: "-1"
               - column:
                   name: task_id
-                  value: "2"
+                  value: "-2"
         - insert:
             tableName: task_category
             columns:
               - column:
                   name: category_id
-                  value: "5"
+                  value: "-5"
               - column:
                   name: task_id
-                  value: "3"
+                  value: "-3"
         - insert:
             tableName: task_category
             columns:
               - column:
                   name: category_id
-                  value: "6"
+                  value: "-6"
               - column:
                   name: task_id
-                  value: "3"
+                  value: "-3"

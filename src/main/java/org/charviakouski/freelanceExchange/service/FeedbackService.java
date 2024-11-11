@@ -2,11 +2,12 @@ package org.charviakouski.freelanceExchange.service;
 
 import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface FeedbackService {
-    List<FeedBackDto> getAll();
+    Page<FeedBackDto> getAll(int page, int size, String sort);
 
     FeedBackDto getById(Long id);
 
@@ -16,5 +17,5 @@ public interface FeedbackService {
 
     boolean delete(Long id);
 
-    List<FeedBackDto> getAllFeedbackByAddressee(Long id);
+    Page<FeedBackDto> getAllFeedbackByAddressee(int page, int size);
 }

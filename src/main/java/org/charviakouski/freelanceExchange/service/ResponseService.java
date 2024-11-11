@@ -2,11 +2,12 @@ package org.charviakouski.freelanceExchange.service;
 
 import org.charviakouski.freelanceExchange.model.dto.ResponseDto;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface ResponseService {
-    List<ResponseDto> getAll();
+    Page<ResponseDto> getAll(int page, int size, String sort);
 
     ResponseDto getById(Long id);
 

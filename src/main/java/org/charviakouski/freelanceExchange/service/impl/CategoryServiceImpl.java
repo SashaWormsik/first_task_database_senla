@@ -8,10 +8,13 @@ import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.CategoryRepository;
 import org.charviakouski.freelanceExchange.service.CategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -49,11 +52,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getAll() {
+    public Page<CategoryDto> getAll(int page, int size, String sort) {
         log.info("get ALL category");
-        return categoryRepository.findAll().stream()
-                .map(category -> entityMapper.fromEntityToDto(category, CategoryDto.class))
-                .toList();
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
+        return categoryRepository
+                .findAll(pageable)
+                .map(category -> entityMapper.fromEntityToDto(category, CategoryDto.class));
     }
 
     @Override

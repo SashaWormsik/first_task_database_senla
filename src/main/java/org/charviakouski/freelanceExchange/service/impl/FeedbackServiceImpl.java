@@ -6,9 +6,15 @@ import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
 import org.charviakouski.freelanceExchange.model.entity.Feedback;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
+import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.FeedbackRepository;
 import org.charviakouski.freelanceExchange.service.FeedbackService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,11 +55,12 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<FeedBackDto> getAll() {
+    public Page<FeedBackDto> getAll(int page, int size, String sort) {
         log.info("get ALL feedbacks");
-        return feedbackRepository.findAll().stream()
-                .map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class))
-                .toList();
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
+        return feedbackRepository
+                .findAll(pageable)
+                .map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class));
     }
 
     @Override
@@ -64,11 +71,12 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<FeedBackDto> getAllFeedbackByAddressee(Long id) {
-        log.info("get ALL feedbacks for ID {}", id);
-        UserInfo userInfo = UserInfo.builder().id(id).build();
-        return feedbackRepository.getAllFeedbackByAddressee(userInfo).stream()
-                .map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class))
-                .toList();
+    public Page<FeedBackDto> getAllFeedbackByAddressee(int page, int size) {
+        //log.info("get ALL feedbacks for ID {}", id);
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+
+        return null;//feedbackRepository.findAllFeedbackByAddressee(//).stream()
+                //.map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class))
+                //.toList();
     }
 }

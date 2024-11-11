@@ -15,7 +15,8 @@ import java.util.Date;
 public class Feedback {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "feedback_id_seq")
+    @SequenceGenerator(name = "feedback_id_seq", sequenceName = "feedback_id_seq")
     private Long id;
 
     @Column(name = "create_date", nullable = false)

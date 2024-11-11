@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "1"
+                  value: "-1"
               - column:
                   name: title
                   value: "JAVA APP"
@@ -26,16 +26,16 @@ databaseChangeLog:
                   value: "2024-10-10"
               - column:
                   name: customer_id
-                  value: "6"
+                  value: "-6"
               - column:
                   name: status_id
-                  value: "1"
+                  value: "-1"
         - insert:
             tableName: task
             columns:
               - column:
                   name: id
-                  value: "2"
+                  value: "-2"
               - column:
                   name: title
                   value: "BANK APP"
@@ -53,16 +53,16 @@ databaseChangeLog:
                   value: "2024-10-10"
               - column:
                   name: customer_id
-                  value: "6"
+                  value: "-6"
               - column:
                   name: status_id
-                  value: "1"
+                  value: "-1"
         - insert:
             tableName: task
             columns:
               - column:
                   name: id
-                  value: "3"
+                  value: "-3"
               - column:
                   name: title
                   value: "Building design"
@@ -80,7 +80,7 @@ databaseChangeLog:
                   value: "2024-10-10"
               - column:
                   name: customer_id
-                  value: "5"
+                  value: "-5"
               - column:
                   name: status_id
-                  value: "1"
+                  value: "-1"

@@ -45,3 +45,5 @@ databaseChangeLog:
       file: changelogs/homework-2/yaml/22.insert-data-into-response-table.yaml
   - include:
       file: changelogs/homework-2/yaml/23.insert-data-into-task_category-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/24.create-alert-sequence.yaml

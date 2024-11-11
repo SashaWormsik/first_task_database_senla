@@ -1,11 +1,12 @@
 package org.charviakouski.freelanceExchange.service;
 
 import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface CategoryService {
-    List<CategoryDto> getAll();
+    Page<CategoryDto> getAll(int page, int size, String sort);
 
     CategoryDto getById(Long id);
 
