@@ -14,5 +14,9 @@ public interface FeedbackService {
 
     boolean delete(Long id);
 
-    Page<FeedBackDto> getAllFeedbackByAddressee(int page, int size);
+    Page<FeedBackDto> getAllGivenFeedbacks(int page, int size);
+
+    Page<FeedBackDto> getAllGotFeedbacks(int page, int size);
+
+    Page<FeedBackDto> getAllFeedbacksByAddresseeId(long id, int page, int size);
 }

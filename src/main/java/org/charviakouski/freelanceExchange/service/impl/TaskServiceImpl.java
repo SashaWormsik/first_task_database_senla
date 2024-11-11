@@ -72,6 +72,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDto getById(Long id) {
+        log.info("get Task with ID {}", id);
         Optional<Task> optionalTask = taskRepository.findById(id);
         if (optionalTask.isEmpty()) {
             log.info("task with ID {} not found", id);

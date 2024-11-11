@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +31,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public FeedBackDto insert(FeedBackDto feedBackDto) {
-        log.info("insert new Feedback from {} to {}", feedBackDto.getSender().getName(), feedBackDto.getAddressee().getName());
+        log.info("insert new Feedback to {}", feedBackDto.getAddressee().getId());
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        feedBackDto.setId(credentialUserDetails.getId());
         Feedback feedback = entityMapper.fromDtoToEntity(feedBackDto, Feedback.class);
         return entityMapper.fromEntityToDto(feedbackRepository.save(feedback), FeedBackDto.class);
     }
@@ -38,12 +41,17 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public FeedBackDto update(FeedBackDto feedBackDto) {
         log.info("update new Feedback from {} to {}", feedBackDto.getSender().getName(), feedBackDto.getAddressee().getName());
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        if (!credentialUserDetails.getId().equals(feedBackDto.getSender().getId())) {
+            throw new AccessDeniedException("You cannot change other people's data");
+        }
         Feedback feedback = entityMapper.fromDtoToEntity(feedBackDto, Feedback.class);
         return entityMapper.fromEntityToDto(feedbackRepository.save(feedback), FeedBackDto.class);
     }
 
     @Override
     public FeedBackDto getById(Long id) {
+        log.info("get feedback with ID {}", id);
         Optional<Feedback> optionalFeedback = feedbackRepository.findById(id);
         if (optionalFeedback.isEmpty()) {
             log.info("feedback with ID {} not found", id);
@@ -64,17 +72,38 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public boolean delete(Long id) {
         log.info("delete feedback with id {}", id);
+        Feedback feedback = feedbackRepository.getReferenceById(id);
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        if (!credentialUserDetails.getId().equals(feedback.getSender().getId())) {
+            throw new AccessDeniedException("You cannot change other people's data");
+        }
         feedbackRepository.deleteById(id);
         return !feedbackRepository.existsById(id);
     }
 
     @Override
-    public Page<FeedBackDto> getAllFeedbackByAddressee(int page, int size) {
-        //log.info("get ALL feedbacks for ID {}", id);
+    public Page<FeedBackDto> getAllGivenFeedbacks(int page, int size) {
+        log.info("get ALL given feedbacks");
         CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return feedbackRepository.findAllFeedbackBySender_Id(credentialUserDetails.getId(), pageable)
+                .map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class));
+    }
 
-        return null;//feedbackRepository.findAllFeedbackByAddressee(//).stream()
-        //.map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class))
-        //.toList();
+    @Override
+    public Page<FeedBackDto> getAllGotFeedbacks(int page, int size) {
+        log.info("get ALL got feedbacks");
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return feedbackRepository.findAllFeedbackByAddressee_Id(credentialUserDetails.getId(), pageable)
+                .map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class));
+    }
+
+    @Override
+    public Page<FeedBackDto> getAllFeedbacksByAddresseeId(long id, int page, int size) {
+        log.info("get ALL feedbacks for Users with id {} ", id);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return feedbackRepository.findAllFeedbackByAddressee_Id(id, pageable)
+                .map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class));
     }
 }

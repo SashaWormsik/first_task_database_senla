@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/feedbacks")
 @RequiredArgsConstructor
@@ -40,8 +38,7 @@ public class FeedbackController {
 
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole({'CUSTOMER', 'EXECUTOR'})")
-    public FeedBackDto update(@PathVariable long id, @RequestBody FeedBackDto feedBackDto) {
-        feedBackDto.setId(id);
+    public FeedBackDto update(@RequestBody FeedBackDto feedBackDto) {
         return feedbackService.update(feedBackDto);
     }
 
@@ -52,16 +49,25 @@ public class FeedbackController {
         feedbackService.delete(id);
     }
 
-    @GetMapping(value = "/left feedback")
-    @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
-    public Page<FeedBackDto> getAllUserFeedback(@RequestParam(name = "page", defaultValue = "1") int page,
-                                                @RequestParam(name = "size", defaultValue = "2") int size) {
-        return feedbackService.getAllFeedbackByAddressee(page, size);
+    @GetMapping(value = "/given feedback")
+    @PreAuthorize("hasAnyRole({'CUSTOMER', 'EXECUTOR'})")
+    public Page<FeedBackDto> getAllGivenFeedbacks(@RequestParam(name = "page", defaultValue = "1") int page,
+                                                  @RequestParam(name = "size", defaultValue = "2") int size) {
+        return feedbackService.getAllGivenFeedbacks(page, size);
     }
 
-    @GetMapping(value = "/written_feedback")
+    @GetMapping(value = "/got_feedback")
+    @PreAuthorize("hasAnyRole({'CUSTOMER', 'EXECUTOR'})")
+    public Page<FeedBackDto> getAllGotFeedbacks(@RequestParam(name = "page", defaultValue = "1") int page,
+                                                @RequestParam(name = "size", defaultValue = "2") int size) {
+        return feedbackService.getAllGotFeedbacks(page, size);
+    }
+
+    @GetMapping("/addressee/{id}")
     @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
-    public List<FeedBackDto> getAllUserFeedback() {
-        return null; // feedbackService.getAllFeedbackBySender();
+    public Page<FeedBackDto> getAllFeedbacksByAddresseeId(@PathVariable long id,
+                                                          @RequestParam(name = "page", defaultValue = "1") int page,
+                                                          @RequestParam(name = "size", defaultValue = "2") int size) {
+        return feedbackService.getAllFeedbacksByAddresseeId(id, page, size);
     }
 }
