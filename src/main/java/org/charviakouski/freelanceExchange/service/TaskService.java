@@ -2,10 +2,8 @@ package org.charviakouski.freelanceExchange.service;
 
 
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
-import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.springframework.data.domain.Page;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface TaskService {

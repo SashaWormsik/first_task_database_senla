@@ -8,9 +8,7 @@ import org.charviakouski.freelanceExchange.model.entity.Task;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
-import org.charviakouski.freelanceExchange.repository.CategoryRepository;
 import org.charviakouski.freelanceExchange.repository.TaskRepository;
-import org.charviakouski.freelanceExchange.repository.TaskStatusRepository;
 import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.charviakouski.freelanceExchange.service.TaskService;
 import org.springframework.data.domain.Page;
@@ -22,7 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +31,6 @@ import java.util.Optional;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
-    private final TaskStatusRepository taskStatusRepository;
-    private final CategoryRepository categoryRepository;
     private final UserInfoRepository userInfoRepository;
     private final EntityMapper entityMapper;
 
@@ -97,7 +92,7 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.deleteById(id);
         return taskRepository.existsById(id);
     }
-    
+
     @Override
     public Page<TaskDto> searchTask(String title, List<String> categoriesName, int page, int size) {
         log.info("get ALL task with title = {} and categories = {}", title, categoriesName);
