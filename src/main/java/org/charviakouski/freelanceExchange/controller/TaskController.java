@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tasks")
@@ -52,19 +52,21 @@ public class TaskController {
         taskService.delete(id);
     }
 
-    @GetMapping(value = "/title")
+    @GetMapping(value = "/search")
     @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
-    public Page<TaskDto> getAllTaskByTitle(@RequestParam String title,
-                                           @RequestParam(name = "page", defaultValue = "1") int page,
-                                           @RequestParam(name = "size", defaultValue = "2") int size) {
-        return taskService.getAllTaskByTitle(title, page, size);
+    public Page<TaskDto> searchTask(@RequestParam(required = false) String title,
+                                    @RequestParam(required = false) List<String> category,
+                                    @RequestParam(name = "page", defaultValue = "1") int page,
+                                    @RequestParam(name = "size", defaultValue = "2") int size) {
+        return taskService.searchTask(title, category, page, size);
     }
 
-    @GetMapping(value = "/price")
-    @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
-    public Page<TaskDto> getAllTaskByPrice(@RequestParam BigDecimal price,
-                                           @RequestParam(name = "page", defaultValue = "1") int page,
-                                           @RequestParam(name = "size", defaultValue = "2") int size) {
-        return taskService.getAllTaskByPrice(price, page, size);
+    @GetMapping(value = "/company_tasks/{id}")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public Page<TaskDto> getUsersTasks(@RequestParam(name = "page", defaultValue = "1") int page,
+                                       @RequestParam(name = "size", defaultValue = "2") int size,
+                                       @PathVariable long id) {
+        return taskService.getUsersTasks(id, page, size);
     }
+
 }

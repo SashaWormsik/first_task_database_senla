@@ -2,10 +2,8 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.BadRequest;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
-import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.charviakouski.freelanceExchange.model.entity.Task;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
@@ -52,8 +50,6 @@ public class TaskServiceImpl implements TaskService {
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
         task.setCustomer(optionalUserInfo.get());
         task.setCreateDate(new Date());
-        insertActualCategoryIntoTask(task);
-        task.setStatus(taskStatusRepository.findByStatus("ACTUAL")); // TODO
         return entityMapper.fromEntityToDto(taskRepository.save(task), TaskDto.class);
     }
 
@@ -65,7 +61,6 @@ public class TaskServiceImpl implements TaskService {
             throw new AccessDeniedException("You cannot change other people's data");
         }
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        insertActualCategoryIntoTask(task);
         task.setCreateDate(new Date());
         return entityMapper.fromEntityToDto(taskRepository.save(task), TaskDto.class);
     }
@@ -102,36 +97,28 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.deleteById(id);
         return taskRepository.existsById(id);
     }
-
+    
     @Override
-    public Page<TaskDto> getAllTaskByTitle(String title, int page, int size) {
-        log.info("get ALL task with title like as {}", title);
+    public Page<TaskDto> searchTask(String title, List<String> categoriesName, int page, int size) {
+        log.info("get ALL task with title = {} and categories = {}", title, categoriesName);
         Pageable pageable = PageRequest.of(page - 1, size);
-        return taskRepository
-                .findAllTasksByTitleContainingIgnoreCase(title, pageable)
-                .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
-    }
-
-    @Override
-    public Page<TaskDto> getAllTaskByPrice(BigDecimal price, int page, int size) {
-        log.info("get ALL task with price = {}", price);
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return taskRepository
-                .findAllTasksByPrice(price, pageable)
-                .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
-
-    }
-
-    private void insertActualCategoryIntoTask(Task task) {
-        List<String> categoriesInNewTask = task.getCategories().stream()
-                .map(Category::getName)
-                .toList();
-        List<String> allCategoryInDB = categoryRepository.getNames();
-        for (String categoryName : categoriesInNewTask) {
-            if (!allCategoryInDB.contains(categoryName)) {
-                throw new BadRequest("There is no category named " + categoryName);
-            }
+        if (title == null) {
+            title = ""; // todo
         }
-        task.setCategories(categoryRepository.findByNameIn(categoriesInNewTask));
+        if (categoriesName == null || categoriesName.isEmpty()) {
+            return taskRepository.findAllTasksByTitleContainingIgnoreCase(title, pageable)
+                    .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
+        }
+        return taskRepository
+                .findAllByTitleAndCategory(title, categoriesName, pageable)
+                .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
+    }
+
+    @Override
+    public Page<TaskDto> getUsersTasks(long id, int page, int size) {
+        log.info("Get all tasks Company");
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return taskRepository.findAllByCustomerId(id, pageable)
+                .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
     }
 }

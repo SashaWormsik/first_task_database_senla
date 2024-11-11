@@ -17,6 +17,7 @@ public class TaskDto {
     @NotBlank(message = "Title cannot be empty")
     @Size(min = 5, max = 50, message = "The title should be between 5 and 50 characters long")
     private String title;
+    @Size(max = 500, message = "The description should be no more than 500 characters long")
     private String description;
     @DecimalMin(value = "0.00", message = "The price should not be less than 0.00")
     @Digits(integer = 10, fraction = 2, message = "The number must be in the format XXX.XX (maximum 10 digits before the decimal point, and two digits after)")

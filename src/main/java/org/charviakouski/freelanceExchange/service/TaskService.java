@@ -2,9 +2,11 @@ package org.charviakouski.freelanceExchange.service;
 
 
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
+import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface TaskService {
     Page<TaskDto> getAll(int page, int size, String sort);
@@ -17,8 +19,7 @@ public interface TaskService {
 
     boolean delete(Long id);
 
-    Page<TaskDto> getAllTaskByTitle(String title, int page, int size);
+    Page<TaskDto> searchTask(String title, List<String> categoriesName, int page, int size);
 
-    Page<TaskDto> getAllTaskByPrice(BigDecimal price, int page, int size);
-
+    Page<TaskDto> getUsersTasks(long id, int page, int size);
 }
