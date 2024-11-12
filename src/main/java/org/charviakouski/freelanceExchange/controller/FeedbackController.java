@@ -49,21 +49,21 @@ public class FeedbackController {
         feedbackService.delete(id);
     }
 
-    @GetMapping(value = "/given feedback")
+    @GetMapping(value = "/given feedbacks")
     @PreAuthorize("hasAnyRole({'CUSTOMER', 'EXECUTOR'})")
     public Page<FeedBackDto> getAllGivenFeedbacks(@RequestParam(name = "page", defaultValue = "1") int page,
                                                   @RequestParam(name = "size", defaultValue = "2") int size) {
         return feedbackService.getAllGivenFeedbacks(page, size);
     }
 
-    @GetMapping(value = "/got_feedback")
+    @GetMapping(value = "/got_feedbacks")
     @PreAuthorize("hasAnyRole({'CUSTOMER', 'EXECUTOR'})")
     public Page<FeedBackDto> getAllGotFeedbacks(@RequestParam(name = "page", defaultValue = "1") int page,
                                                 @RequestParam(name = "size", defaultValue = "2") int size) {
         return feedbackService.getAllGotFeedbacks(page, size);
     }
 
-    @GetMapping("/addressee/{id}")
+    @GetMapping("/user/{id}")
     @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
     public Page<FeedBackDto> getAllFeedbacksByAddresseeId(@PathVariable long id,
                                                           @RequestParam(name = "page", defaultValue = "1") int page,

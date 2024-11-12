@@ -97,11 +97,8 @@ public class TaskServiceImpl implements TaskService {
     public Page<TaskDto> searchTask(String title, List<String> categoriesName, int page, int size) {
         log.info("get ALL task with title = {} and categories = {}", title, categoriesName);
         Pageable pageable = PageRequest.of(page - 1, size);
-        if (title == null) {
-            title = ""; // todo
-        }
-        if (categoriesName == null || categoriesName.isEmpty()) {
-            return taskRepository.findAllTasksByTitleContainingIgnoreCase(title, pageable)
+        if (categoriesName.isEmpty()) {
+            return taskRepository.findAllTasksByTitle(title, pageable)
                     .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
         }
         return taskRepository

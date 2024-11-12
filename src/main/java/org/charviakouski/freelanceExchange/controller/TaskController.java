@@ -62,7 +62,7 @@ public class TaskController {
     }
 
     @GetMapping(value = "/company_tasks/{id}")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
     public Page<TaskDto> getUsersTasks(@RequestParam(name = "page", defaultValue = "1") int page,
                                        @RequestParam(name = "size", defaultValue = "2") int size,
                                        @PathVariable long id) {

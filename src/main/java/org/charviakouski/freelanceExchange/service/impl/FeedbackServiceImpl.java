@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
 import org.charviakouski.freelanceExchange.model.entity.Feedback;
+import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.FeedbackRepository;
+import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.charviakouski.freelanceExchange.service.FeedbackService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Slf4j
@@ -27,14 +30,20 @@ import java.util.Optional;
 public class FeedbackServiceImpl implements FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
+    private final UserInfoRepository userInfoRepository;
     private final EntityMapper entityMapper;
 
     @Override
     public FeedBackDto insert(FeedBackDto feedBackDto) {
         log.info("insert new Feedback to {}", feedBackDto.getAddressee().getId());
         CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
-        feedBackDto.setId(credentialUserDetails.getId());
+        Optional<UserInfo> optionalUserInfo = userInfoRepository.findById(credentialUserDetails.getId());
+        if (optionalUserInfo.isEmpty()) {
+            throw new ServiceException("Something has happened! User not found");
+        }
         Feedback feedback = entityMapper.fromDtoToEntity(feedBackDto, Feedback.class);
+        feedback.setSender(optionalUserInfo.get());
+        feedback.setCreateDate(new Date());
         return entityMapper.fromEntityToDto(feedbackRepository.save(feedback), FeedBackDto.class);
     }
 
