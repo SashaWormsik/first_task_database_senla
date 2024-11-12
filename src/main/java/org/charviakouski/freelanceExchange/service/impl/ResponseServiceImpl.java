@@ -2,16 +2,23 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.ResponseDto;
+import org.charviakouski.freelanceExchange.model.dto.ResponseStatusDto;
 import org.charviakouski.freelanceExchange.model.entity.Response;
+import org.charviakouski.freelanceExchange.model.entity.ResponseStatus;
+import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.ResponseRepository;
+import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.charviakouski.freelanceExchange.service.ResponseService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,13 +43,19 @@ public class ResponseServiceImpl implements ResponseService {
 
     @Override
     public ResponseDto update(ResponseDto responseDto) {
-        log.info("update Response with Task ID = {}", responseDto.getTask().getId());
+        // TODO проверка только собственные отклики
+        log.info("update Response with ID = {}", responseDto.getId());
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        if (!credentialUserDetails.getId().equals(responseDto.getExecutor().getId())) {
+            throw new AccessDeniedException("You cannot change other people's data");
+        }
         Response response = entityMapper.fromDtoToEntity(responseDto, Response.class);
         return entityMapper.fromEntityToDto(responseRepository.save(response), ResponseDto.class);
     }
 
     @Override
     public ResponseDto getById(Long id) {
+        log.info("get response with ID = {}", id);
         Optional<Response> optionalResponse = responseRepository.findById(id);
         if (optionalResponse.isEmpty()) {
             log.info("response with ID = {} not found", id);
@@ -62,16 +75,51 @@ public class ResponseServiceImpl implements ResponseService {
 
     @Override
     public boolean delete(Long id) {
+        // TODO проверка только собственные отклики
         log.info("delete response with ID {}", id);
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        if (!credentialUserDetails.getId().equals(id)) {
+            throw new AccessDeniedException("You cannot change other people's data");
+        }
         responseRepository.deleteById(id);
         return !responseRepository.existsById(id);
     }
 
     @Override
     public List<ResponseDto> getAllResponsesByExecutor(Long id) {
+        // TODO проверка только собственные отклики
         log.info("get ALL responses for Executor ID {}", id);
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        if (!credentialUserDetails.getId().equals(id)) {
+            throw new AccessDeniedException("You cannot see other people's data");
+        }
         return responseRepository.findAllResponsesByExecutor_Id(id).stream()
                 .map(response -> entityMapper.fromEntityToDto(response, ResponseDto.class))
                 .toList();
+    }
+
+    @Override
+    public Page<ResponseDto> getAllResponsesByTaskId(Long taskId, int page, int size) {
+        log.info("get ALL responses for Task ID {}", taskId);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return responseRepository.findAllResponsesByTask_Id(taskId, pageable)
+                .map(response -> entityMapper.fromEntityToDto(response, ResponseDto.class));
+    }
+
+    @Override
+    public ResponseDto changeResponseStatus(Long responseId, ResponseStatusDto responseStatusDto) {
+        log.info("change Response Status with ID {} and Status {}", responseId, responseStatusDto.getStatus());
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        Long currentUserId = credentialUserDetails.getId();
+        Optional<Response> optionalResponse = responseRepository.findById(responseId);
+        if (optionalResponse.isEmpty()) {
+            throw new MyBadRequestExseption("Response not found with ID " + responseId);
+        }
+        Response response = optionalResponse.get();
+        if (!currentUserId.equals(response.getTask().getCustomer().getId())) {
+            throw new AccessDeniedException("You cannot change other people's data");
+        }
+        response.setResponseStatus(entityMapper.fromDtoToEntity(responseStatusDto, ResponseStatus.class));
+        return entityMapper.fromEntityToDto(responseRepository.save(response), ResponseDto.class);
     }
 }

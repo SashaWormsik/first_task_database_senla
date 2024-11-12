@@ -30,6 +30,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
+    private final String ACTUAL_STATUS = "ACTUAL";
+
     private final TaskRepository taskRepository;
     private final UserInfoRepository userInfoRepository;
     private final EntityMapper entityMapper;
@@ -110,7 +112,16 @@ public class TaskServiceImpl implements TaskService {
     public Page<TaskDto> getUsersTasks(long id, int page, int size) {
         log.info("Get all tasks Company");
         Pageable pageable = PageRequest.of(page - 1, size);
-        return taskRepository.findAllByCustomerId(id, pageable)
+        return taskRepository.findAllByCustomerIdAndStatusStatus(id, ACTUAL_STATUS, pageable)
+                .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
+    }
+
+    @Override
+    public Page<TaskDto> getCurrentUsersTasks(int page, int size) {
+        log.info("Get all tasks current Company");
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return taskRepository.findAllByCustomerId(credentialUserDetails.getId(), pageable)
                 .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
     }
 }

@@ -53,7 +53,7 @@ public class UserInfoController {
 
     @GetMapping(value = "/name")
     @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
-    public Page<UserInfoDto> getAllUserInfoByName(@RequestParam String username,
+    public Page<UserInfoDto> getAllUserInfoByName(@RequestParam(defaultValue = "", required = false) String username,
                                                   @RequestParam(name = "page", defaultValue = "1") int page,
                                                   @RequestParam(name = "size", defaultValue = "2") int size,
                                                   @RequestParam(name = "sort", defaultValue = "name") String sort) {
@@ -68,7 +68,7 @@ public class UserInfoController {
 
     @GetMapping("/search_company")
     @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
-    public Page<UserInfoDto> searchCompany(@RequestParam String companyName,
+    public Page<UserInfoDto> searchCompany(@RequestParam(defaultValue = "", required = false) String companyName,
                                            @RequestParam(name = "page", defaultValue = "1") int page,
                                            @RequestParam(name = "size", defaultValue = "2") int size) {
         return userInfoService.getAllCompanyByLikeName(companyName, page, size);

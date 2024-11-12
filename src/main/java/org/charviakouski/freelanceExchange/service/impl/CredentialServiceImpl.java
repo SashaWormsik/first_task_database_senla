@@ -49,6 +49,7 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public CredentialDto getById(Long id) {
+        log.info("update Credential with ID {}", id);
         Optional<Credential> optionalCredential = credentialRepository.findById(id);
         if (optionalCredential.isEmpty()) {
             log.info("credential with ID {} not found", id);

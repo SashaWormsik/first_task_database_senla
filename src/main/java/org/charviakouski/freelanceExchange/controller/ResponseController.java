@@ -2,6 +2,7 @@ package org.charviakouski.freelanceExchange.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.charviakouski.freelanceExchange.model.dto.ResponseDto;
+import org.charviakouski.freelanceExchange.model.dto.ResponseStatusDto;
 import org.charviakouski.freelanceExchange.service.ResponseService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -56,5 +57,19 @@ public class ResponseController {
     @PreAuthorize("hasRole('EXECUTOR')")
     public List<ResponseDto> getAllResponsesByExecutor(@RequestParam(name = "executorId") Long executorId) {
         return responseService.getAllResponsesByExecutor(executorId);
+    }
+
+    @GetMapping(value = "/task")
+    @PreAuthorize("hasAnyRole({'EXECUTOR', 'ADMIN', 'CUSTOMER'})")
+    public Page<ResponseDto> getAllResponsesByTask(@RequestParam(name = "taskId") Long taskId,
+                                                   @RequestParam(name = "page", defaultValue = "1") int page,
+                                                   @RequestParam(name = "size", defaultValue = "2") int size) {
+        return responseService.getAllResponsesByTaskId(taskId, page, size);
+    }
+
+    @PutMapping(value = "/change_response_status/{response_id}")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseDto changeResponseStatus(@PathVariable Long response_id, @RequestBody ResponseStatusDto responseStatusDto) {
+        return responseService.changeResponseStatus(response_id, responseStatusDto);
     }
 }

@@ -15,6 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskController {
 
+    private final String ACTUAL_STATUS = "ACTUAL";
+
     private final TaskService taskService;
 
     @GetMapping
@@ -63,10 +65,16 @@ public class TaskController {
 
     @GetMapping(value = "/company_tasks/{id}")
     @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
-    public Page<TaskDto> getUsersTasks(@RequestParam(name = "page", defaultValue = "1") int page,
+    public Page<TaskDto> getCompanyTasks(@RequestParam(name = "page", defaultValue = "1") int page,
                                        @RequestParam(name = "size", defaultValue = "2") int size,
                                        @PathVariable long id) {
         return taskService.getUsersTasks(id, page, size);
     }
 
+    @GetMapping(value = "/my_Tasks")
+    @PreAuthorize("hasAnyRole({'CUSTOMER'})")
+    public Page<TaskDto> getOwnersTasks(@RequestParam(name = "page", defaultValue = "1") int page,
+                                       @RequestParam(name = "size", defaultValue = "2") int size) {
+        return taskService.getCurrentUsersTasks(page, size);
+    }
 }

@@ -20,4 +20,6 @@ public interface TaskService {
     Page<TaskDto> searchTask(String title, List<String> categoriesName, int page, int size);
 
     Page<TaskDto> getUsersTasks(long id, int page, int size);
+
+    Page<TaskDto> getCurrentUsersTasks(int page, int size);
 }

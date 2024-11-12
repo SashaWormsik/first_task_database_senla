@@ -3,9 +3,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
-import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
-import org.charviakouski.freelanceExchange.model.entity.Credential;
 import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
@@ -44,20 +42,18 @@ public class UserInfoServiceImpl implements UserInfoService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserInfoDto insert(CredentialDto credentialDto) {
-        log.info("insert new UserInfo with email {}", credentialDto.getEmail());
-        if (credentialRepository.existsCredentialByEmail(credentialDto.getEmail())) {
+    public UserInfoDto insert(UserInfoDto userInfoDto) {
+        log.info("insert new UserInfo with email {}", userInfoDto.getCredential().getEmail());
+        if (credentialRepository.existsCredentialByEmail(userInfoDto.getCredential().getEmail())) {
             throw new BadCredentialsException("This email address already exists");
         }
         Role role = roleRepository.findByName(ROLE_ADMIN);
-        UserInfo userInfo = new UserInfo();
-        Credential credential = entityMapper.fromDtoToEntity(credentialDto, Credential.class);
-        credential.setUserInfo(userInfo);
-        credential.setPassword(passwordEncoder.encode(credential.getPassword()));
-        credential.setCreateDate(new Date());
-        credential.setActive(true);
-        credential.setRole(role);
-        userInfo.setCredential(credential);
+        UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
+        userInfo.getCredential().setUserInfo(userInfo);
+        userInfo.getCredential().setRole(role);
+        userInfo.getCredential().setActive(true);
+        userInfo.getCredential().setCreateDate(new Date());
+        userInfo.getCredential().setPassword(passwordEncoder.encode(userInfoDto.getCredential().getPassword()));
         return entityMapper.fromEntityToDto(userInfoRepository.save(userInfo), UserInfoDto.class);
     }
 
@@ -125,7 +121,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Page<UserInfoDto> getAllCompanyByLikeName(String userName, int page, int size){
+    public Page<UserInfoDto> getAllCompanyByLikeName(String userName, int page, int size) {
         log.info("get All Company by Like Name {}", userName);
         Pageable pageable = PageRequest.of(page - 1, size);
         return userInfoRepository.findAllUserInfoByNameContainingIgnoreCaseAndCredential_Role_Name(userName, pageable, ROLE_COMPANY)
