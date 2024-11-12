@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,7 @@ import java.util.Optional;
 public class CredentialServiceImpl implements CredentialService {
 
     private final CredentialRepository credentialRepository;
+    private final PasswordEncoder passwordEncoder;
     private final EntityMapper entityMapper;
 
     @Override
@@ -44,6 +46,7 @@ public class CredentialServiceImpl implements CredentialService {
             throw new AccessDeniedException("You cannot change other people's data");
         }
         Credential credential = entityMapper.fromDtoToEntity(credentialDto, Credential.class);
+        credential.setPassword(passwordEncoder.encode(credentialDto.getPassword()));
         return entityMapper.fromEntityToDto(credentialRepository.save(credential), CredentialDto.class);
     }
 

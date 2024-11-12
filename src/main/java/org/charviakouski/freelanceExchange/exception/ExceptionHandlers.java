@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionHandlers {
 
+    // TODO add BadCredentialsException
+    //TODO add MyBadRequestException
+
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<?> handleServiceException(ServiceException exception) {
         log.error(exception.getMessage(), exception);

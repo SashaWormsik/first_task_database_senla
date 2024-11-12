@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 public class CategoryDto {
+
     private Long id;
     private String name;
 }

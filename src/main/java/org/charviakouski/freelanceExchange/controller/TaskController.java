@@ -66,13 +66,13 @@ public class TaskController {
     public Page<TaskDto> getCompanyTasks(@RequestParam(name = "page", defaultValue = "1") int page,
                                        @RequestParam(name = "size", defaultValue = "2") int size,
                                        @PathVariable long id) {
-        return taskService.getUsersTasks(id, page, size);
+        return taskService.getCompanyTasks(id, page, size);
     }
 
     @GetMapping(value = "/my_Tasks")
     @PreAuthorize("hasAnyRole({'CUSTOMER'})")
     public Page<TaskDto> getOwnersTasks(@RequestParam(name = "page", defaultValue = "1") int page,
                                        @RequestParam(name = "size", defaultValue = "2") int size) {
-        return taskService.getCurrentUsersTasks(page, size);
+        return taskService.getCurrentCompanyTasks(page, size);
     }
 }

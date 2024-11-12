@@ -11,14 +11,14 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 public class UserInfoDto {
+
     private Long id;
     private String name;
     private String surname;
     private String profession;
-
     @Positive(message = "Work experience cannot be negative")
     @Max(value = 90, message = "Work experience cannot be more than 90 years")
-    @Min(value = 0, message = "Work experience cannot be less than 90 years")
+    @Min(value = 0, message = "Work experience cannot be less than 0 years")
     private Integer workExperience;
     private String description;
     private CredentialDto credential;

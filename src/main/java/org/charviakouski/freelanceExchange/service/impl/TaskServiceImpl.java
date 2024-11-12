@@ -30,7 +30,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
-    private final String ACTUAL_STATUS = "ACTUAL";
+    private final String TASK_ACTUAL_STATUS = "ACTUAL";
 
     private final TaskRepository taskRepository;
     private final UserInfoRepository userInfoRepository;
@@ -109,15 +109,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Page<TaskDto> getUsersTasks(long id, int page, int size) {
+    public Page<TaskDto> getCompanyTasks(long id, int page, int size) {
+        //TODO может запилить реп findAllByCustomerIdAndStatusStatusIN где можно передавать список статусов
+        //TODO и может получить роли с принципала и проверять что может получить кастомер и исполнитель
         log.info("Get all tasks Company");
         Pageable pageable = PageRequest.of(page - 1, size);
-        return taskRepository.findAllByCustomerIdAndStatusStatus(id, ACTUAL_STATUS, pageable)
+        return taskRepository.findAllByCustomerIdAndStatusStatus(id, TASK_ACTUAL_STATUS, pageable)
                 .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
     }
 
     @Override
-    public Page<TaskDto> getCurrentUsersTasks(int page, int size) {
+    public Page<TaskDto> getCurrentCompanyTasks(int page, int size) {
         log.info("Get all tasks current Company");
         CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
         Pageable pageable = PageRequest.of(page - 1, size);

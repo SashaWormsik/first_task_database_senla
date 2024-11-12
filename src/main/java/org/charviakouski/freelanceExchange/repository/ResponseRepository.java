@@ -11,7 +11,6 @@ public interface ResponseRepository extends JpaRepository<Response, Long> {
 
     List<Response> findAllResponsesByExecutor_Id(Long id);
 
-
     Page<Response> findAllResponsesByTask_Id(Long id, Pageable pageable);
 
 

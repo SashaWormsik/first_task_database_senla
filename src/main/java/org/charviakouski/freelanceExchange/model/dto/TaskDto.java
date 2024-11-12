@@ -1,5 +1,6 @@
 package org.charviakouski.freelanceExchange.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 public class TaskDto {
+
     private Long id;
     @NotBlank(message = "Title cannot be empty")
     @Size(min = 5, max = 50, message = "The title should be between 5 and 50 characters long")
@@ -23,7 +25,9 @@ public class TaskDto {
     @Digits(integer = 10, fraction = 2, message = "The number must be in the format XXX.XX (maximum 10 digits before the decimal point, and two digits after)")
     private BigDecimal price;
     @Future(message = "The date should be in the future")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date deadline;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date createDate;
     private UserInfoDto customer;
     private TaskStatusDto status;
