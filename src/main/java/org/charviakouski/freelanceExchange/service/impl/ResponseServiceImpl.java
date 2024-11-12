@@ -11,7 +11,6 @@ import org.charviakouski.freelanceExchange.model.entity.ResponseStatus;
 import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.ResponseRepository;
-import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.charviakouski.freelanceExchange.service.ResponseService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

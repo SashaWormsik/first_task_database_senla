@@ -15,8 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskController {
 
-    private final String ACTUAL_STATUS = "ACTUAL";
-
     private final TaskService taskService;
 
     @GetMapping

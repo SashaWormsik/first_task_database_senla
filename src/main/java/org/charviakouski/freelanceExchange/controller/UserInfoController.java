@@ -34,8 +34,8 @@ public class UserInfoController {
     @PostMapping("/new_admin")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole({'ADMIN'})")
-    public UserInfoDto insert(@Valid @RequestBody CredentialDto credentialDto) {
-        return userInfoService.insert(credentialDto);
+    public UserInfoDto insert(@Valid @RequestBody UserInfoDto userInfoDto) {
+        return userInfoService.insert(userInfoDto);
     }
 
     @PutMapping(value = "/{id}")
