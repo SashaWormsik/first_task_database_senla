@@ -2,7 +2,6 @@ package org.charviakouski.freelanceExchange.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.service.UserInfoService;
 import org.springframework.data.domain.Page;
