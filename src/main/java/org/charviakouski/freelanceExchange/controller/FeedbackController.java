@@ -1,5 +1,8 @@
 package org.charviakouski.freelanceExchange.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
 import org.charviakouski.freelanceExchange.service.FeedbackService;
@@ -17,9 +20,10 @@ public class FeedbackController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
-    public Page<FeedBackDto> getAll(@RequestParam(name = "page", defaultValue = "1") int page,
-                                    @RequestParam(name = "size", defaultValue = "2") int size,
-                                    @RequestParam(name = "sort", defaultValue = "create_date") String sort) {
+    public Page<FeedBackDto> getAll(@RequestParam(name = "page", defaultValue = "1") @Min(1) int page,
+                                    @RequestParam(name = "size", defaultValue = "2") @Min(1) int size,
+                                    @RequestParam(name = "sort", defaultValue = "create_date")
+                                    @Pattern(regexp = "create_date") String sort) {
         return feedbackService.getAll(page, size, sort);
     }
 
@@ -32,13 +36,13 @@ public class FeedbackController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole({'CUSTOMER', 'EXECUTOR'})")
-    public FeedBackDto insert(@RequestBody FeedBackDto feedBackDto) {
+    public FeedBackDto insert(@Valid @RequestBody FeedBackDto feedBackDto) {
         return feedbackService.insert(feedBackDto);
     }
 
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole({'CUSTOMER', 'EXECUTOR'})")
-    public FeedBackDto update(@RequestBody FeedBackDto feedBackDto) {
+    public FeedBackDto update(@PathVariable long id, @Valid @RequestBody FeedBackDto feedBackDto) {
         return feedbackService.update(feedBackDto);
     }
 
@@ -51,23 +55,23 @@ public class FeedbackController {
 
     @GetMapping(value = "/given feedbacks")
     @PreAuthorize("hasAnyRole({'CUSTOMER', 'EXECUTOR'})")
-    public Page<FeedBackDto> getAllGivenFeedbacks(@RequestParam(name = "page", defaultValue = "1") int page,
-                                                  @RequestParam(name = "size", defaultValue = "2") int size) {
+    public Page<FeedBackDto> getAllGivenFeedbacks(@RequestParam(name = "page", defaultValue = "1") @Min(1) int page,
+                                                  @RequestParam(name = "size", defaultValue = "2") @Min(1) int size) {
         return feedbackService.getAllGivenFeedbacks(page, size);
     }
 
     @GetMapping(value = "/got_feedbacks")
     @PreAuthorize("hasAnyRole({'CUSTOMER', 'EXECUTOR'})")
-    public Page<FeedBackDto> getAllGotFeedbacks(@RequestParam(name = "page", defaultValue = "1") int page,
-                                                @RequestParam(name = "size", defaultValue = "2") int size) {
+    public Page<FeedBackDto> getAllGotFeedbacks(@RequestParam(name = "page", defaultValue = "1") @Min(1) int page,
+                                                @RequestParam(name = "size", defaultValue = "2") @Min(1) int size) {
         return feedbackService.getAllGotFeedbacks(page, size);
     }
 
     @GetMapping("/user/{id}")
     @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
     public Page<FeedBackDto> getAllFeedbacksByAddresseeId(@PathVariable long id,
-                                                          @RequestParam(name = "page", defaultValue = "1") int page,
-                                                          @RequestParam(name = "size", defaultValue = "2") int size) {
+                                                          @RequestParam(name = "page", defaultValue = "1") @Min(1) int page,
+                                                          @RequestParam(name = "size", defaultValue = "2") @Min(1) int size) {
         return feedbackService.getAllFeedbacksByAddresseeId(id, page, size);
     }
 }

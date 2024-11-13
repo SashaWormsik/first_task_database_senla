@@ -14,7 +14,7 @@ public interface UserInfoService {
 
     boolean delete(Long id);
 
-    Page<UserInfoDto> getAllUserInfoByName(String userName, int page, int size, String sort);
+    Page<UserInfoDto> getAllExecutorByLikeName(String userName, int page, int size, String sort);
 
     UserInfoDto getUserInfoByEmail(String email);
 

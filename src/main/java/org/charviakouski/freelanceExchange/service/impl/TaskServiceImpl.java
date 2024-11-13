@@ -2,6 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
 import org.charviakouski.freelanceExchange.model.entity.Task;
@@ -30,7 +31,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
-    private final String TASK_ACTUAL_STATUS = "ACTUAL";
+    private final String TASK_ACTUAL = "ACTUAL";
+    private final String TASK_NOT_ACTUAL = "NOT_ACTUAL";
+    private final String TASK_EXECUTED = "EXECUTED";
 
     private final TaskRepository taskRepository;
     private final UserInfoRepository userInfoRepository;
@@ -51,14 +54,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto update(TaskDto taskDto) {
-        log.info("update Task with title {}", taskDto.getTitle());
+    public TaskDto update(long id, TaskDto taskDto) {
+        log.info("update Task with ID {}", id);
+        if(taskRepository.existsById(id)){
+            throw new MyBadRequestExseption("Task not found with ID " + id);
+        }
         CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
         if (!credentialUserDetails.getId().equals(taskDto.getCustomer().getId())) {
             throw new AccessDeniedException("You cannot change other people's data");
         }
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        task.setCreateDate(new Date());
         return entityMapper.fromEntityToDto(taskRepository.save(task), TaskDto.class);
     }
 
@@ -96,9 +101,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Page<TaskDto> searchTask(String title, List<String> categoriesName, int page, int size) {
+    public Page<TaskDto> searchTask(String title, List<String> categoriesName, int page, int size, String sort) {
         log.info("get ALL task with title = {} and categories = {}", title, categoriesName);
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
         if (categoriesName.isEmpty()) {
             return taskRepository.findAllTasksByTitle(title, pageable)
                     .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
@@ -109,21 +114,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Page<TaskDto> getCompanyTasks(long id, int page, int size) {
-        //TODO может запилить реп findAllByCustomerIdAndStatusStatusIN где можно передавать список статусов
-        //TODO и может получить роли с принципала и проверять что может получить кастомер и исполнитель
-        log.info("Get all tasks Company");
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return taskRepository.findAllByCustomerIdAndStatusStatus(id, TASK_ACTUAL_STATUS, pageable)
+    public Page<TaskDto> getCompanyTasks(long id, int page, int size, String sort) {
+        log.info("Get all tasks Company with ID {}", id);
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
+        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
+        if(credentialUserDetails.getId().equals(id)){
+            return taskRepository.findAllByCustomerIdAndStatusStatusIn(id, List.of(TASK_ACTUAL, TASK_EXECUTED, TASK_NOT_ACTUAL), pageable)
+                    .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
+        }
+        return taskRepository.findAllByCustomerIdAndStatusStatusIn(id, List.of(TASK_ACTUAL), pageable)
                 .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
     }
 
-    @Override
-    public Page<TaskDto> getCurrentCompanyTasks(int page, int size) {
-        log.info("Get all tasks current Company");
-        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return taskRepository.findAllByCustomerId(credentialUserDetails.getId(), pageable)
-                .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
-    }
 }

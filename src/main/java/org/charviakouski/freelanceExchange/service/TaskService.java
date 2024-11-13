@@ -13,13 +13,12 @@ public interface TaskService {
 
     TaskDto insert(TaskDto taskDto);
 
-    TaskDto update(TaskDto taskDto);
+    TaskDto update(long id, TaskDto taskDto);
 
     boolean delete(Long id);
 
-    Page<TaskDto> searchTask(String title, List<String> categoriesName, int page, int size);
+    Page<TaskDto> searchTask(String title, List<String> categoriesName, int page, int size, String sort);
 
-    Page<TaskDto> getCompanyTasks(long id, int page, int size);
+    Page<TaskDto> getCompanyTasks(long id, int page, int size, String sort);
 
-    Page<TaskDto> getCurrentCompanyTasks(int page, int size);
 }

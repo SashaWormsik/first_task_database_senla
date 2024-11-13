@@ -11,9 +11,7 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    Page<Task> findAllByCustomerIdAndStatusStatus(Long customer_id, String status, Pageable pageable);
-
-    Page<Task> findAllByCustomerId(Long customer_id, Pageable pageable);
+    Page<Task> findAllByCustomerIdAndStatusStatusIn(Long customer_id, List<String> status, Pageable pageable);
 
     @Query("SELECT t FROM Task t " +
             "WHERE (upper(t.title) LIKE upper(concat('%', :title, '%'))OR t.title IS null) " +

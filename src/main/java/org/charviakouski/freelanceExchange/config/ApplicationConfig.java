@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import liquibase.integration.spring.SpringLiquibase;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
+import org.charviakouski.freelanceExchange.util.PrincipalUtil;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +46,11 @@ public class ApplicationConfig {
     private String hibernateShowSql;
     @Value("${hibernate.hbm2ddl.auto}")
     private String hibernateHbm2ddl;
+
+    @Bean
+    public PrincipalUtil principalUtil(){
+        return new PrincipalUtil();
+    }
 
     @Bean
     public EntityMapper entityMapper() {

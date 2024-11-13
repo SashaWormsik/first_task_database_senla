@@ -2,6 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
 import org.charviakouski.freelanceExchange.model.entity.Category;
@@ -29,31 +30,36 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto insert(CategoryDto categoryDto) {
-        log.info("insert new Category with name {}", categoryDto.getName());
+        log.info("Insert new Category with name {}", categoryDto.getName());
         Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
         return entityMapper.fromEntityToDto(categoryRepository.save(category), CategoryDto.class);
     }
 
     @Override
-    public CategoryDto update(CategoryDto categoryDto) {
-        log.info("update UserInfo with ID {}", categoryDto.getId());
+    public CategoryDto update(Long id, CategoryDto categoryDto) {
+        log.info("Update Category with ID {}", categoryDto.getId());
+        if (categoryRepository.existsById(id)) {
+            log.info("Category with ID {} already exists", id);
+            throw new MyBadRequestExseption("Category with ID " + id + " already exists");
+        }
         Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
         return entityMapper.fromEntityToDto(categoryRepository.save(category), CategoryDto.class);
     }
 
     @Override
     public CategoryDto getById(Long id) {
+        log.info("Get Category with ID {}", id);
         Optional<Category> optionalCategory = categoryRepository.findById(id);
         if (optionalCategory.isEmpty()) {
-            log.info("category with ID {} not found", id);
-            throw new ServiceException("Category not found");
+            log.info("Category with ID {} not found", id);
+            throw new MyBadRequestExseption("Category with ID " + id + " not found");
         }
         return entityMapper.fromEntityToDto(optionalCategory.get(), CategoryDto.class);
     }
 
     @Override
     public Page<CategoryDto> getAll(int page, int size, String sort) {
-        log.info("get ALL category");
+        log.info("Get ALL category");
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
         return categoryRepository
                 .findAll(pageable)
@@ -62,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean delete(Long id) {
-        log.info("delete category with ID {}", id);
+        log.info("Delete category with ID {}", id);
         categoryRepository.deleteById(id);
         return !categoryRepository.existsById(id);
     }

@@ -10,7 +10,7 @@ public interface CategoryService {
 
     CategoryDto insert(CategoryDto categoryDto);
 
-    CategoryDto update(CategoryDto categoryDto);
+    CategoryDto update(Long id, CategoryDto categoryDto);
 
     boolean delete(Long id);
 }
