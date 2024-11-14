@@ -3,7 +3,6 @@ package org.charviakouski.freelanceExchange.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
-import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
 import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
