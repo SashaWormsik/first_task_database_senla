@@ -46,7 +46,7 @@ public class RoleServiceImpl implements RoleService {
         log.info("Get Role with ID {}", id);
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.info("role with ID {} not found", id);
+                    log.info("Role with ID {} not found", id);
                     return new ServiceException("Role not found");
                 });
         return entityMapper.fromEntityToDto(role, RoleDto.class);
@@ -54,7 +54,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<RoleDto> getAll() {
-        log.info("get ALL role");
+        log.info("Get ALL role");
         return roleRepository.findAll().stream()
                 .map(role -> entityMapper.fromEntityToDto(role, RoleDto.class))
                 .toList();

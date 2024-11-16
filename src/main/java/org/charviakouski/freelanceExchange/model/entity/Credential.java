@@ -25,10 +25,10 @@ public class Credential {
 
     @Column(name = "create_date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date createDate;
+    private Date createDate = new Date();
 
     @Column(name = "active", nullable = false)
-    private boolean active;
+    private boolean active = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")

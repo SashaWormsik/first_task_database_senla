@@ -64,16 +64,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!requestDto.getPassword().equals(requestDto.getConfirmPassword())) {
             throw new BadCredentialsException("Invalid confirm password");
         }
-        Role role = roleRepository.findByName(requestDto.getRoleName());
         UserInfo userInfo = new UserInfo();
-        Credential credential = Credential.builder()
-                .email(requestDto.getEmail())
-                .password(passwordEncoder.encode(requestDto.getPassword()))
-                .createDate(new Date())
-                .active(true)
-                .role(role)
-                .userInfo(userInfo)
-                .build();
+        Credential credential = entityMapper.fromDtoToEntity(requestDto, Credential.class);
+        Role role = roleRepository.findByName(credential.getRole().getName());
+        credential.setRole(role);
+        credential.setUserInfo(userInfo);
+        credential.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         userInfo.setCredential(credential);
         return entityMapper.fromEntityToDto(userInfoRepository.save(userInfo), UserInfoDto.class);
     }

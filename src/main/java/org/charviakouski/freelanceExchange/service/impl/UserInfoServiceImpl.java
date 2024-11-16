@@ -50,8 +50,6 @@ public class UserInfoServiceImpl implements UserInfoService {
         Credential credential = entityMapper.fromDtoToEntity(credentialDto, Credential.class);
         credential.setPassword(passwordEncoder.encode(credentialDto.getPassword()));
         credential.setUserInfo(userInfo);
-        credential.setActive(true);
-        credential.setCreateDate(new Date());
         userInfo.setCredential(credential);
         return entityMapper.fromEntityToDto(userInfoRepository.save(userInfo), UserInfoDto.class);
     }

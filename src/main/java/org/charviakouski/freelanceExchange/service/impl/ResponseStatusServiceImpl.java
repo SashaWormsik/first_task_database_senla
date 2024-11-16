@@ -46,7 +46,7 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
         log.info("Get ResponseStatus with ID {}", id);
         ResponseStatus responseStatus = responseStatusRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.info("responseStatus with ID {} not found", id);
+                    log.info("ResponseStatus with ID {} not found", id);
                     return new ServiceException("ResponseStatus not found");
                 });
         return entityMapper.fromEntityToDto(responseStatus, ResponseStatusDto.class);
@@ -54,7 +54,7 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
 
     @Override
     public List<ResponseStatusDto> getAll() {
-        log.info("get ALL responseStatus");
+        log.info("Get ALL ResponseStatus");
         return responseStatusRepository.findAll().stream()
                 .map(responseStatus -> entityMapper.fromEntityToDto(responseStatus, ResponseStatusDto.class))
                 .toList();

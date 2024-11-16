@@ -43,6 +43,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 
     @Override
     public TaskStatusDto getById(Long id) {
+        log.info("Get TaskStatus with ID {}", id);
         TaskStatus taskStatus = taskStatusRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("TaskStatus with ID {} not found", id);

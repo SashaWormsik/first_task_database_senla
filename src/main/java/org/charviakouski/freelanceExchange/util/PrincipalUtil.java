@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PrincipalUtil {
 
-    private final AuthenticationManager manager;
-
     public Long getCurrentUserId() {
         CredentialUserDetails user = (CredentialUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()

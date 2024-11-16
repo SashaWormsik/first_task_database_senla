@@ -20,8 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-
 @Slf4j
 @Service
 @Transactional
@@ -43,8 +41,6 @@ public class CredentialServiceImpl implements CredentialService {
         Credential credential = entityMapper.fromDtoToEntity(credentialDto, Credential.class);
         credential.setPassword(passwordEncoder.encode(credentialDto.getPassword()));
         credential.setUserInfo(userInfo);
-        credential.setActive(true);
-        credential.setCreateDate(new Date());
         userInfo.setCredential(credential);
         return entityMapper.fromEntityToDto(credentialRepository.save(credential), CredentialDto.class);
     }
