@@ -47,7 +47,7 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
         ResponseStatus responseStatus = responseStatusRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("ResponseStatus with ID {} not found", id);
-                    return new ServiceException("ResponseStatus not found");
+                    return new MyBadRequestExseption("ResponseStatus not found");
                 });
         return entityMapper.fromEntityToDto(responseStatus, ResponseStatusDto.class);
     }

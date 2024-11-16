@@ -47,7 +47,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
         TaskStatus taskStatus = taskStatusRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("TaskStatus with ID {} not found", id);
-                    return new ServiceException("TaskStatus not found");
+                    return new MyBadRequestExseption("TaskStatus not found");
                 });
         return entityMapper.fromEntityToDto(taskStatus, TaskStatusDto.class);
     }

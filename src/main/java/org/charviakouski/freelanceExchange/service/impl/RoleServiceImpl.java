@@ -47,7 +47,7 @@ public class RoleServiceImpl implements RoleService {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Role with ID {} not found", id);
-                    return new ServiceException("Role not found");
+                    return new MyBadRequestExseption("Role not found");
                 });
         return entityMapper.fromEntityToDto(role, RoleDto.class);
     }
