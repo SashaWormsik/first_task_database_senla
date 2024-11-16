@@ -3,7 +3,6 @@ package org.charviakouski.freelanceExchange.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
-import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.model.entity.Credential;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
@@ -16,12 +15,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -37,6 +36,9 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public CredentialDto insert(CredentialDto credentialDto) {
         log.info("Insert new credential with email {}", credentialDto.getEmail());
+        if (credentialRepository.existsCredentialByEmail(credentialDto.getEmail())) {
+            throw new BadCredentialsException("This email address already exists");
+        }
         UserInfo userInfo = new UserInfo();
         Credential credential = entityMapper.fromDtoToEntity(credentialDto, Credential.class);
         credential.setPassword(passwordEncoder.encode(credentialDto.getPassword()));
@@ -50,11 +52,11 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public CredentialDto update(long id, CredentialDto credentialDto) {
         log.info("Update credential with email {}", credentialDto.getEmail());
-        if (!principalUtil.checkId(id)) {
-            throw new AccessDeniedException("You cannot change other people's login details");
-        }
         if (!credentialRepository.existsById(id)) {
             throw new MyBadRequestExseption("Credential with id " + id + " does not exist");
+        }
+        if (!principalUtil.checkId(id)) {
+            throw new AccessDeniedException("You cannot change other people's login details");
         }
         Credential credential = entityMapper.fromDtoToEntity(credentialDto, Credential.class);
         credential.setPassword(passwordEncoder.encode(credentialDto.getPassword()));
@@ -67,12 +69,12 @@ public class CredentialServiceImpl implements CredentialService {
         if (!principalUtil.checkId(id)) {
             throw new AccessDeniedException("You cannot view other people's login information");
         }
-        Optional<Credential> optionalCredential = credentialRepository.findById(id);
-        if (optionalCredential.isEmpty()) {
-            log.info("Credential with ID {} not found", id);
-            throw new ServiceException("Credential not found with id " + id);
-        }
-        return entityMapper.fromEntityToDto(optionalCredential.get(), CredentialDto.class);
+        Credential credential = credentialRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("Credential with ID {} not found", id);
+                    return new MyBadRequestExseption("Credential not found with id " + id);
+                });
+        return entityMapper.fromEntityToDto(credential, CredentialDto.class);
     }
 
     @Override

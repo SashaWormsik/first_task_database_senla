@@ -13,9 +13,9 @@ public class TaskResponseDto {
     private String title;
     private String description;
     private BigDecimal price;
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date deadline;
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createDate;
     private UserInfoResponseDto customer;
     private TaskStatusDto status;

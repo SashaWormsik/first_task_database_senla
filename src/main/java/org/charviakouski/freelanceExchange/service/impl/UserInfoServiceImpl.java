@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -43,7 +42,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfoDto insert(CredentialDto credentialDto) {
-        log.info("insert new UserInfo with email {}", credentialDto.getEmail());
+        log.info("Insert new UserInfo with email {}", credentialDto.getEmail());
         if (credentialRepository.existsCredentialByEmail(credentialDto.getEmail())) {
             throw new BadCredentialsException("This email address already exists");
         }
@@ -59,12 +58,12 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfoDto update(long id, UserInfoDto userInfoDto) {
-        log.info("update UserInfo with Id {}", id);
+        log.info("Update UserInfo with Id {}", id);
         if (!principalUtil.checkId(id)) {
             throw new AccessDeniedException("You cannot change other people's data");
         }
         if (!userInfoRepository.existsById(id)) {
-            throw new MyBadRequestExseption("User with id " + id + " does not exist");
+            throw new MyBadRequestExseption("UserInfo with id " + id + " does not exist");
         }
         UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
         return entityMapper.fromEntityToDto(userInfoRepository.save(userInfo), UserInfoDto.class);
@@ -72,18 +71,18 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfoDto getById(Long id) {
-        log.info("get userInfo with ID {}", id);
-        Optional<UserInfo> optionalUserInfo = userInfoRepository.findById(id);
-        if (optionalUserInfo.isEmpty()) {
-            log.info("userInfo with ID {} not found", id);
-            throw new MyBadRequestExseption("userInfo not found with ID " + id);
-        }
-        return entityMapper.fromEntityToDto(optionalUserInfo.get(), UserInfoDto.class);
+        log.info("Get UserInfo with ID {}", id);
+        UserInfo userInfo = userInfoRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("UserInfo with ID {} not found", id);
+                    return new MyBadRequestExseption("UserInfo with ID " + id + " not found");
+                });
+        return entityMapper.fromEntityToDto(userInfo, UserInfoDto.class);
     }
 
     @Override
     public Page<UserInfoDto> getAll(int page, int size, String sort) {
-        log.info("get ALL userInfo");
+        log.info("Get ALL userInfo");
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
         return userInfoRepository
                 .findAll(pageable)
@@ -92,7 +91,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public boolean delete(Long id) {
-        log.info("delete userInfo with ID {}", id);
+        log.info("Delete UserInfo with ID {}", id);
         if (!principalUtil.checkId(id)) {
             throw new AccessDeniedException("You cannot change other people's data");
         }
@@ -102,7 +101,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public Page<UserInfoDto> getAllExecutorByLikeName(String userName, int page, int size, String sort) {
-        log.info("get All UserInfo  with name like {}", userName);
+        log.info("Get All UserInfo  with name like {}", userName);
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
         return userInfoRepository
                 .findAllUserInfoByNameContainingIgnoreCaseAndCredential_Role_NameIn(userName, List.of(ROLE_EXECUTOR), pageable)
@@ -111,18 +110,18 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfoDto getUserInfoByEmail(String email) {
-        log.info("get UserInfo  with email {}", email);
-        Optional<UserInfo> optionalUserInfo = userInfoRepository.findUserInfoByCredential_Email(email);
-        if (optionalUserInfo.isEmpty()) {
-            log.info("userInfo with Email {} not found", email);
-            throw new MyBadRequestExseption("userInfo not found with email " + email);
-        }
-        return entityMapper.fromEntityToDto(optionalUserInfo.get(), UserInfoDto.class);
+        log.info("Get UserInfo  with email {}", email);
+        UserInfo userInfo = userInfoRepository.findUserInfoByCredential_Email(email)
+                .orElseThrow(() -> {
+                    log.info("UserInfo with Email {} not found", email);
+                    return new MyBadRequestExseption("UserInfo with Email " + email + " not found");
+                });
+        return entityMapper.fromEntityToDto(userInfo, UserInfoDto.class);
     }
 
     @Override
     public Page<UserInfoDto> getAllCompanyByLikeName(String userName, int page, int size) {
-        log.info("get All Company by Like Name {}", userName);
+        log.info("Get All Company by Like Name {}", userName);
         Pageable pageable = PageRequest.of(page - 1, size);
         return userInfoRepository.findAllUserInfoByNameContainingIgnoreCaseAndCredential_Role_NameIn(userName, List.of(ROLE_COMPANY), pageable)
                 .map(userInfo -> entityMapper.fromEntityToDto(userInfo, UserInfoDto.class));

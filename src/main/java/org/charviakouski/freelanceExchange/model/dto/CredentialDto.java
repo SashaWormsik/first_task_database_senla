@@ -22,8 +22,8 @@ public class CredentialDto {
     @NotBlank(message = "Password cannot be empty")
     @Size(min = 5, max = 20)
     private String password;
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date createDate;
-    private boolean active;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date createDate = new Date();
+    private boolean active = true;
     private RoleDto role;
 }

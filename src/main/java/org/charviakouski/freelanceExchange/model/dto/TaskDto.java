@@ -25,9 +25,9 @@ public class TaskDto {
     @Digits(integer = 10, fraction = 2, message = "The number must be in the format XXX.XX (maximum 10 digits before the decimal point, and two digits after)")
     private BigDecimal price;
     @Future(message = "The date should be in the future")
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date deadline;
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createDate;
     private UserInfoDto customer;
     private TaskStatusDto status;

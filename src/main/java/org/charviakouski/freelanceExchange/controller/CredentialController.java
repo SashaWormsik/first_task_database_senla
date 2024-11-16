@@ -8,11 +8,13 @@ import org.charviakouski.freelanceExchange.service.CredentialService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/credentials")
 @RequiredArgsConstructor
+@Validated
 public class CredentialController {
 
     private final CredentialService credentialService;

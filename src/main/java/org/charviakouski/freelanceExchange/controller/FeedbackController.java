@@ -9,11 +9,13 @@ import org.charviakouski.freelanceExchange.service.FeedbackService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/feedbacks")
 @RequiredArgsConstructor
+@Validated
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
@@ -43,7 +45,7 @@ public class FeedbackController {
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole({'CUSTOMER', 'EXECUTOR'})")
     public FeedBackDto update(@PathVariable long id, @Valid @RequestBody FeedBackDto feedBackDto) {
-        return feedbackService.update(feedBackDto);
+        return feedbackService.update(id, feedBackDto);
     }
 
     @DeleteMapping(value = "/{id}")

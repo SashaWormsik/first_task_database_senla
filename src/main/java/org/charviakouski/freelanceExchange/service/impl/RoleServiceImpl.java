@@ -2,6 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.RoleDto;
 import org.charviakouski.freelanceExchange.model.entity.Role;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -25,26 +25,31 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDto insert(RoleDto roleDto) {
-        log.info("insert new Role with name {}", roleDto.getName());
+        log.info("Insert new Role with name {}", roleDto.getName());
         Role role = entityMapper.fromDtoToEntity(roleDto, Role.class);
         return entityMapper.fromEntityToDto(roleRepository.save(role), RoleDto.class);
     }
 
     @Override
-    public RoleDto update(RoleDto roleDto) {
-        log.info("update Role with name {}", roleDto.getName());
+    public RoleDto update(long id, RoleDto roleDto) {
+        log.info("Update Role with ID {}", id);
+        if (!roleRepository.existsById(id)) {
+            log.info("Role with ID {} does not exist", id);
+            throw new MyBadRequestExseption("Role with ID " + id + " does not exist");
+        }
         Role role = entityMapper.fromDtoToEntity(roleDto, Role.class);
         return entityMapper.fromEntityToDto(roleRepository.save(role), RoleDto.class);
     }
 
     @Override
     public RoleDto getById(Long id) {
-        Optional<Role> optionalRole = roleRepository.findById(id);
-        if (optionalRole.isEmpty()) {
-            log.info("role with ID {} not found", id);
-            throw new ServiceException("Role not found");
-        }
-        return entityMapper.fromEntityToDto(optionalRole.get(), RoleDto.class);
+        log.info("Get Role with ID {}", id);
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("role with ID {} not found", id);
+                    return new ServiceException("Role not found");
+                });
+        return entityMapper.fromEntityToDto(role, RoleDto.class);
     }
 
     @Override
@@ -57,7 +62,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public boolean delete(Long id) {
-        log.info("delete role with ID {}", id);
+        log.info("Delete role with ID {}", id);
         roleRepository.deleteById(id);
         return roleRepository.existsById(id);
     }

@@ -13,7 +13,7 @@ public interface ResponseService {
 
     ResponseDto insert(ResponseDto responseDto);
 
-    ResponseDto update(ResponseDto responseDto);
+    ResponseDto update(long id, ResponseDto responseDto);
 
     boolean delete(Long id);
 

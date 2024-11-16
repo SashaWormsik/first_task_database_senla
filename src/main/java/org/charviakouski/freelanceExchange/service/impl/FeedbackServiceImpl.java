@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -36,9 +35,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public FeedBackDto insert(FeedBackDto feedBackDto) {
-        log.info("insert new Feedback to {}", feedBackDto.getAddressee().getId());
+        log.info("Insert new Feedback to {}", feedBackDto.getAddressee().getId());
         UserInfo userInfo = userInfoRepository.findById(principalUtil.getCurrentUserId())
-                .orElseThrow(() -> new MyBadRequestExseption("User not found"));
+                .orElseThrow(() -> new ServiceException("User not found with ID " + principalUtil.getCurrentUserId()));
         Feedback feedback = entityMapper.fromDtoToEntity(feedBackDto, Feedback.class);
         feedback.setSender(userInfo);
         feedback.setCreateDate(new Date());
@@ -46,8 +45,12 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public FeedBackDto update(FeedBackDto feedBackDto) {
-        log.info("update new Feedback from {} to {}", feedBackDto.getSender().getName(), feedBackDto.getAddressee().getName());
+    public FeedBackDto update(long id, FeedBackDto feedBackDto) {
+        log.info("Update new Feedback with ID{}", id);
+        if (!feedbackRepository.existsById(id)) {
+            log.info("FeedBack with ID {} does not exist", id);
+            throw new MyBadRequestExseption("FeedBack with ID " + id + " does not exist");
+        }
         if (!principalUtil.checkId(feedBackDto.getSender().getId())) {
             throw new AccessDeniedException("You cannot change other people's data");
         }
@@ -57,18 +60,18 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public FeedBackDto getById(Long id) {
-        log.info("get feedback with ID {}", id);
-        Optional<Feedback> optionalFeedback = feedbackRepository.findById(id);
-        if (optionalFeedback.isEmpty()) {
-            log.info("feedback with ID {} not found", id);
-            throw new ServiceException("Feedback not found");
-        }
-        return entityMapper.fromEntityToDto(optionalFeedback.get(), FeedBackDto.class);
+        log.info("Get feedback with ID {}", id);
+        Feedback feedback = feedbackRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("FeedBack with ID {} not found", id);
+                    return new MyBadRequestExseption("FeedBack with ID " + id + " not found");
+                });
+        return entityMapper.fromEntityToDto(feedback, FeedBackDto.class);
     }
 
     @Override
     public Page<FeedBackDto> getAll(int page, int size, String sort) {
-        log.info("get ALL feedbacks");
+        log.info("Get ALL feedbacks");
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
         return feedbackRepository
                 .findAll(pageable)
@@ -77,10 +80,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public boolean delete(Long id) {
-        log.info("delete feedback with id {}", id);
-        Feedback feedback = feedbackRepository.getReferenceById(id);
+        log.info("Delete feedback with id {}", id);
+        Feedback feedback = feedbackRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("FeedBack with ID {} not found", id);
+                    return new MyBadRequestExseption("FeedBack with ID " + id + " not found");
+                });
         if (!principalUtil.checkId(feedback.getSender().getId())) {
-            throw new AccessDeniedException("You cannot change other people's data");
+            throw new AccessDeniedException("You cannot delete other people's data");
         }
         feedbackRepository.deleteById(id);
         return !feedbackRepository.existsById(id);
@@ -96,7 +103,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public Page<FeedBackDto> getAllGotFeedbacks(int page, int size) {
-        log.info("get ALL got feedbacks");
+        log.info("Get ALL got feedbacks");
         Pageable pageable = PageRequest.of(page - 1, size);
         return feedbackRepository.findAllFeedbackByAddressee_Id(principalUtil.getCurrentUserId(), pageable)
                 .map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class));
@@ -104,7 +111,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public Page<FeedBackDto> getAllFeedbacksByAddresseeId(long id, int page, int size) {
-        log.info("get ALL feedbacks for Users with id {} ", id);
+        log.info("Get ALL feedbacks for Users with id {} ", id);
         Pageable pageable = PageRequest.of(page - 1, size);
         return feedbackRepository.findAllFeedbackByAddressee_Id(id, pageable)
                 .map(feedback -> entityMapper.fromEntityToDto(feedback, FeedBackDto.class));

@@ -6,9 +6,7 @@ import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
 import org.charviakouski.freelanceExchange.model.entity.Task;
-import org.charviakouski.freelanceExchange.model.entity.TaskStatus;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
-import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.TaskRepository;
 import org.charviakouski.freelanceExchange.repository.TaskStatusRepository;
@@ -20,13 +18,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -46,13 +42,11 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDto insert(TaskDto taskDto) {
-        log.info("insert new Task with title {}", taskDto.getTitle());
-        Optional<UserInfo> optionalUserInfo = userInfoRepository.findById(principalUtil.getCurrentUserId());
-        if (optionalUserInfo.isEmpty()) {
-            throw new ServiceException("Something has happened! User not found");
-        }
+        log.info("Insert new Task with title {}", taskDto.getTitle());
+        UserInfo userInfo = userInfoRepository.findById(principalUtil.getCurrentUserId())
+                .orElseThrow(() -> new ServiceException("User not found with ID " + principalUtil.getCurrentUserId()));
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
-        task.setCustomer(optionalUserInfo.get());
+        task.setCustomer(userInfo);
         task.setCreateDate(new Date());
         task.setStatus(taskStatusRepository.findByStatus(TASK_ACTUAL));
         return entityMapper.fromEntityToDto(taskRepository.save(task), TaskDto.class);
@@ -73,13 +67,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDto getById(Long id) {
-        log.info("get Task with ID {}", id);
-        Optional<Task> optionalTask = taskRepository.findById(id);
-        if (optionalTask.isEmpty()) {
-            log.info("task with ID {} not found", id);
-            throw new ServiceException("Task not found");
-        }
-        return entityMapper.fromEntityToDto(optionalTask.get(), TaskDto.class);
+        log.info("Get Task with ID {}", id);
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("Task with ID {} not found", id);
+                    return new MyBadRequestExseption("Task with ID " + id + " not found");
+                });
+        return entityMapper.fromEntityToDto(task, TaskDto.class);
     }
 
     @Override
@@ -94,10 +88,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public boolean delete(Long id) {
-        log.info("delete task with ID {}", id);
-        Task task = taskRepository.getReferenceById(id);
+        log.info("Delete task with ID {}", id);
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("Task with ID {} not found", id);
+                    return new MyBadRequestExseption("Task with ID " + id + " not found");
+                });
         if (!principalUtil.checkId(task.getCustomer().getId())) {
-            throw new AccessDeniedException("You cannot change other people's data");
+            throw new AccessDeniedException("You cannot delete other people's data");
         }
         taskRepository.deleteById(id);
         return taskRepository.existsById(id);
@@ -105,7 +103,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Page<TaskDto> searchTask(String title, List<String> categoriesName, int page, int size, String sort) {
-        log.info("get ALL task with title = {} and categories = {}", title, categoriesName);
+        log.info("Get ALL task with title = {} and categories = {}", title, categoriesName);
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
         if (categoriesName.isEmpty()) {
             return taskRepository.findAllTasksByTitle(title, pageable)
@@ -120,7 +118,7 @@ public class TaskServiceImpl implements TaskService {
     public Page<TaskDto> getCompanyTasks(long id, int page, int size, String sort) {
         log.info("Get all tasks Company with ID {}", id);
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
-       if (principalUtil.checkId(id)) {
+        if (principalUtil.checkId(id)) {
             return taskRepository.findAllByCustomerIdAndStatusStatusIn(id, List.of(TASK_ACTUAL, TASK_EXECUTED, TASK_NOT_ACTUAL), pageable)
                     .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
         }

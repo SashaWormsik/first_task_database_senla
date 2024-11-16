@@ -48,8 +48,7 @@ public class ResponseController {
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasRole('EXECUTOR')")
     public ResponseDto update(@PathVariable long id, @Valid @RequestBody ResponseDto responseDto) {
-        responseDto.setId(id);
-        return responseService.update(responseDto);
+        return responseService.update(id, responseDto);
     }
 
     @DeleteMapping(value = "/{id}")

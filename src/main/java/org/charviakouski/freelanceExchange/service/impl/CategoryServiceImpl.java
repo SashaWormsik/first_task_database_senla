@@ -15,8 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Slf4j
 @Service
 @Transactional
@@ -48,12 +46,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto getById(Long id) {
         log.info("Get Category with ID {}", id);
-        Optional<Category> optionalCategory = categoryRepository.findById(id);
-        if (optionalCategory.isEmpty()) {
-            log.info("Category with ID {} not found", id);
-            throw new MyBadRequestExseption("Category with ID " + id + " not found");
-        }
-        return entityMapper.fromEntityToDto(optionalCategory.get(), CategoryDto.class);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("Category with ID {} not found", id);
+                    return new MyBadRequestExseption("Category with ID " + id + " not found");
+                });
+        return entityMapper.fromEntityToDto(category, CategoryDto.class);
     }
 
     @Override

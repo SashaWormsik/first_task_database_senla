@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.charviakouski.freelanceExchange.model.dto.RoleDto;
 import org.charviakouski.freelanceExchange.service.RoleService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +18,8 @@ public class RoleController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<RoleDto>> getAll() {
-        List<RoleDto> roles = roleService.getAll();
-        return ResponseEntity.ok().body(roles);
+    public List<RoleDto> getAll() {
+        return roleService.getAll();
     }
 
     @GetMapping(value = "/{id}")
@@ -40,8 +38,7 @@ public class RoleController {
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public RoleDto update(@PathVariable long id, @RequestBody RoleDto roleDto) {
-        roleDto.setId(id);
-        return roleService.update(roleDto);
+        return roleService.update(id, roleDto);
     }
 
     @DeleteMapping(value = "/{id}")

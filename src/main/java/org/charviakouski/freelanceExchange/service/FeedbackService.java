@@ -10,7 +10,7 @@ public interface FeedbackService {
 
     FeedBackDto insert(FeedBackDto feedBackDto);
 
-    FeedBackDto update(FeedBackDto feedBackDto);
+    FeedBackDto update(long id, FeedBackDto feedBackDto);
 
     boolean delete(Long id);
 

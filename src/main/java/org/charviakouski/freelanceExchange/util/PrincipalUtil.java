@@ -1,9 +1,6 @@
 package org.charviakouski.freelanceExchange.util;
 
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.charviakouski.freelanceExchange.model.entity.Credential;
 import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
@@ -29,7 +26,7 @@ public class PrincipalUtil {
         return id.equals(getCurrentUserId());
     }
 
-    public void updatePrincipal(Credential credential){
+    public void updatePrincipal(Credential credential) {
         manager.authenticate(
                 new UsernamePasswordAuthenticationToken(credential.getEmail(), credential.getPassword()));
     }
