@@ -44,7 +44,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskDto insert(TaskDto taskDto) {
         log.info("Insert new Task with title {}", taskDto.getTitle());
         UserInfo userInfo = userInfoRepository.findById(principalUtil.getCurrentUserId())
-                .orElseThrow(() -> new ServiceException("User not found with ID " + principalUtil.getCurrentUserId()));
+                .orElseThrow(() -> new ServiceException("User not found with ID " + principalUtil.getCurrentUserId())); // TODO serex
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
         task.setCustomer(userInfo);
         task.setCreateDate(new Date());

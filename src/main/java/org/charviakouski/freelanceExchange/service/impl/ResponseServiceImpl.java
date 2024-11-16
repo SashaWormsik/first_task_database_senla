@@ -44,7 +44,7 @@ public class ResponseServiceImpl implements ResponseService {
     public ResponseDto insert(ResponseDto responseDto) {
         log.info("Insert new Response with Task ID = {}", responseDto.getTask().getId());
         UserInfo userInfo = userInfoRepository.findById(principalUtil.getCurrentUserId())
-                .orElseThrow(() -> new ServiceException("User not found with ID " + principalUtil.getCurrentUserId()));
+                .orElseThrow(() -> new ServiceException("User not found with ID " + principalUtil.getCurrentUserId())); // TODO serEx
         Response response = entityMapper.fromDtoToEntity(responseDto, Response.class);
         response.setCreateDate(new Date());
         response.setExecutor(userInfo);
@@ -72,7 +72,7 @@ public class ResponseServiceImpl implements ResponseService {
         Response response = responseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Response with ID = {} not found", id);
-                    return new ServiceException("Response not found");
+                    return new MyBadRequestExseption("Response not found");
                 });
         return entityMapper.fromEntityToDto(response, ResponseDto.class);
     }

@@ -1,6 +1,7 @@
 package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.charviakouski.freelanceExchange.exception.RegistrationException;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.model.dto.authentication.AuthenticationRequestDto;
 import org.charviakouski.freelanceExchange.model.dto.authentication.RegistrationRequestDto;
@@ -58,10 +59,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public UserInfoDto createNewUser(RegistrationRequestDto requestDto) {
         if (credentialRepository.existsCredentialByEmail(requestDto.getEmail())) {
-            throw new BadCredentialsException("This email address already exists");
+            throw new RegistrationException("This email address already exists");
         }
         if (!requestDto.getPassword().equals(requestDto.getConfirmPassword())) {
-            throw new BadCredentialsException("Invalid confirm password");
+            throw new RegistrationException("Invalid confirm password");
         }
         UserInfo userInfo = new UserInfo();
         Credential credential = entityMapper.fromDtoToEntity(requestDto, Credential.class);
