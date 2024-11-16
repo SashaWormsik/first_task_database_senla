@@ -1,6 +1,5 @@
 package org.charviakouski.freelanceExchange;
 
-import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.model.dto.authentication.RegistrationRequestDto;
 import org.charviakouski.freelanceExchange.model.entity.Credential;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
