@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.service.UserInfoService;
 import org.springframework.data.domain.Page;
@@ -39,8 +40,8 @@ public class UserInfoController {
     @PostMapping("/new_admin")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole({'ADMIN'})")
-    public UserInfoDto insert(@Valid @RequestBody UserInfoDto userInfoDto) {
-        return userInfoService.insert(userInfoDto);
+    public UserInfoDto insert(@Valid @RequestBody CredentialDto credentialDto) {
+        return userInfoService.insert(credentialDto);
     }
 
     @PutMapping(value = "/{id}")

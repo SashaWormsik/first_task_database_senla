@@ -59,10 +59,10 @@ public class ResponseController {
         responseService.delete(id);
     }
 
-    @GetMapping(value = "/executor")
+    @GetMapping(value = "/my")
     @PreAuthorize("hasRole('EXECUTOR')")
-    public List<ResponseDto> getAllResponsesByExecutor(@RequestParam(name = "executorId") Long executorId) {
-        return responseService.getAllResponsesByExecutor(executorId);
+    public List<ResponseDto> getAllResponsesByExecutor() {
+        return responseService.getAllResponsesByExecutor();
     }
 
     @GetMapping(value = "/task/{id}")

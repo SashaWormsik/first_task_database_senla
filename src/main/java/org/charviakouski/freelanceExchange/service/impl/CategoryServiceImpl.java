@@ -37,9 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto update(Long id, CategoryDto categoryDto) {
         log.info("Update Category with ID {}", categoryDto.getId());
-        if (categoryRepository.existsById(id)) {
-            log.info("Category with ID {} already exists", id);
-            throw new MyBadRequestExseption("Category with ID " + id + " already exists");
+        if (!categoryRepository.existsById(id)) {
+            log.info("Category with ID {} does not exist", id);
+            throw new MyBadRequestExseption("Category with ID " + id + " does not exist");
         }
         Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
         return entityMapper.fromEntityToDto(categoryRepository.save(category), CategoryDto.class);

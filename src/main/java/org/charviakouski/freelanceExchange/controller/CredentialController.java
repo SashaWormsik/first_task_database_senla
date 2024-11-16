@@ -1,5 +1,7 @@
 package org.charviakouski.freelanceExchange.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.service.CredentialService;
@@ -19,7 +21,8 @@ public class CredentialController {
     @PreAuthorize("hasRole('ADMIN')")
     public Page<CredentialDto> getAll(@RequestParam(name = "page", defaultValue = "1") int page,
                                       @RequestParam(name = "size", defaultValue = "2") int size,
-                                      @RequestParam(name = "sort", defaultValue = "email") String sort) {
+                                      @RequestParam(name = "sort", defaultValue = "email")
+                                      @Pattern(regexp = "active|create_date|email") String sort) {
         return credentialService.getAll(page, size, sort);
     }
 
@@ -31,14 +34,14 @@ public class CredentialController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
-    public CredentialDto insert(@RequestBody CredentialDto credentialDto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public CredentialDto insert(@Valid @RequestBody CredentialDto credentialDto) {
         return credentialService.insert(credentialDto);
     }
 
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
-    public CredentialDto update(@PathVariable long id, @RequestBody CredentialDto credentialDto) {
+    public CredentialDto update(@PathVariable long id, @Valid @RequestBody CredentialDto credentialDto) {
         return credentialService.update(id, credentialDto);
     }
 

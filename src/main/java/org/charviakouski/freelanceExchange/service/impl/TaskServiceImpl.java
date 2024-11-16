@@ -6,12 +6,15 @@ import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
 import org.charviakouski.freelanceExchange.model.entity.Task;
+import org.charviakouski.freelanceExchange.model.entity.TaskStatus;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.model.entity.security.CredentialUserDetails;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.TaskRepository;
+import org.charviakouski.freelanceExchange.repository.TaskStatusRepository;
 import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
 import org.charviakouski.freelanceExchange.service.TaskService;
+import org.charviakouski.freelanceExchange.util.PrincipalUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,30 +40,31 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final UserInfoRepository userInfoRepository;
+    private final TaskStatusRepository taskStatusRepository;
     private final EntityMapper entityMapper;
+    private final PrincipalUtil principalUtil;
 
     @Override
     public TaskDto insert(TaskDto taskDto) {
         log.info("insert new Task with title {}", taskDto.getTitle());
-        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
-        Optional<UserInfo> optionalUserInfo = userInfoRepository.findById(credentialUserDetails.getId());
+        Optional<UserInfo> optionalUserInfo = userInfoRepository.findById(principalUtil.getCurrentUserId());
         if (optionalUserInfo.isEmpty()) {
             throw new ServiceException("Something has happened! User not found");
         }
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
         task.setCustomer(optionalUserInfo.get());
         task.setCreateDate(new Date());
+        task.setStatus(taskStatusRepository.findByStatus(TASK_ACTUAL));
         return entityMapper.fromEntityToDto(taskRepository.save(task), TaskDto.class);
     }
 
     @Override
     public TaskDto update(long id, TaskDto taskDto) {
         log.info("update Task with ID {}", id);
-        if(taskRepository.existsById(id)){
+        if (taskRepository.existsById(id)) {
             throw new MyBadRequestExseption("Task not found with ID " + id);
         }
-        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
-        if (!credentialUserDetails.getId().equals(taskDto.getCustomer().getId())) {
+        if (!principalUtil.checkId(taskDto.getCustomer().getId())) {
             throw new AccessDeniedException("You cannot change other people's data");
         }
         Task task = entityMapper.fromDtoToEntity(taskDto, Task.class);
@@ -92,8 +96,7 @@ public class TaskServiceImpl implements TaskService {
     public boolean delete(Long id) {
         log.info("delete task with ID {}", id);
         Task task = taskRepository.getReferenceById(id);
-        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
-        if (!credentialUserDetails.getId().equals(task.getCustomer().getId())) {
+        if (!principalUtil.checkId(task.getCustomer().getId())) {
             throw new AccessDeniedException("You cannot change other people's data");
         }
         taskRepository.deleteById(id);
@@ -117,8 +120,7 @@ public class TaskServiceImpl implements TaskService {
     public Page<TaskDto> getCompanyTasks(long id, int page, int size, String sort) {
         log.info("Get all tasks Company with ID {}", id);
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
-        CredentialUserDetails credentialUserDetails = (CredentialUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // TODO
-        if(credentialUserDetails.getId().equals(id)){
+       if (principalUtil.checkId(id)) {
             return taskRepository.findAllByCustomerIdAndStatusStatusIn(id, List.of(TASK_ACTUAL, TASK_EXECUTED, TASK_NOT_ACTUAL), pageable)
                     .map(task -> entityMapper.fromEntityToDto(task, TaskDto.class));
         }

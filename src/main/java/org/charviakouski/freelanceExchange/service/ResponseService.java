@@ -17,7 +17,7 @@ public interface ResponseService {
 
     boolean delete(Long id);
 
-    List<ResponseDto> getAllResponsesByExecutor(Long id);
+    List<ResponseDto> getAllResponsesByExecutor();
 
     Page<ResponseDto> getAllResponsesByTaskId(Long taskId, int page, int size);
 

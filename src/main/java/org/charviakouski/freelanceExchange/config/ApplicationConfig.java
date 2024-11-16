@@ -48,11 +48,6 @@ public class ApplicationConfig {
     private String hibernateHbm2ddl;
 
     @Bean
-    public PrincipalUtil principalUtil(){
-        return new PrincipalUtil();
-    }
-
-    @Bean
     public EntityMapper entityMapper() {
         return new EntityMapper();
     }
