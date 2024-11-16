@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.model.dto.ResponseStatusDto;
 import org.charviakouski.freelanceExchange.model.entity.ResponseStatus;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
@@ -34,7 +34,7 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
         log.info("Update ResponseStatus with ID {}", id);
         if (!responseStatusRepository.existsById(id)) {
             log.info("ResponseStatus with ID {} does not exist", id);
-            throw new MyBadRequestExseption("ResponseStatus with ID " + id + " does not exist");
+            throw new MyBadRequestException("ResponseStatus with ID " + id + " does not exist");
         }
         ResponseStatus responseStatus = entityMapper.fromDtoToEntity(responseStatusDto, ResponseStatus.class);
         return entityMapper.fromEntityToDto(responseStatusRepository.save(responseStatus), ResponseStatusDto.class);
@@ -46,7 +46,7 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
         ResponseStatus responseStatus = responseStatusRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("ResponseStatus with ID {} not found", id);
-                    return new MyBadRequestExseption("ResponseStatus not found");
+                    return new MyBadRequestException("ResponseStatus not found");
                 });
         return entityMapper.fromEntityToDto(responseStatus, ResponseStatusDto.class);
     }

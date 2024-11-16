@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.model.entity.Credential;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
@@ -49,7 +49,7 @@ public class CredentialServiceImpl implements CredentialService {
     public CredentialDto update(long id, CredentialDto credentialDto) {
         log.info("Update credential with email {}", credentialDto.getEmail());
         if (!credentialRepository.existsById(id)) {
-            throw new MyBadRequestExseption("Credential with id " + id + " does not exist");
+            throw new MyBadRequestException("Credential with id " + id + " does not exist");
         }
         if (!principalUtil.checkId(id)) {
             throw new AccessDeniedException("You cannot change other people's login details");
@@ -68,7 +68,7 @@ public class CredentialServiceImpl implements CredentialService {
         Credential credential = credentialRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Credential with ID {} not found", id);
-                    return new MyBadRequestExseption("Credential not found with id " + id);
+                    return new MyBadRequestException("Credential not found with id " + id);
                 });
         return entityMapper.fromEntityToDto(credential, CredentialDto.class);
     }

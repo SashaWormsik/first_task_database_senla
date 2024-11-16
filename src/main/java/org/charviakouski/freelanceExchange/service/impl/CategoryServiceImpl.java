@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
 import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
@@ -37,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("Update Category with ID {}", categoryDto.getId());
         if (!categoryRepository.existsById(id)) {
             log.info("Category with ID {} does not exist", id);
-            throw new MyBadRequestExseption("Category with ID " + id + " does not exist");
+            throw new MyBadRequestException("Category with ID " + id + " does not exist");
         }
         Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
         return entityMapper.fromEntityToDto(categoryRepository.save(category), CategoryDto.class);
@@ -49,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Category with ID {} not found", id);
-                    return new MyBadRequestExseption("Category with ID " + id + " not found");
+                    return new MyBadRequestException("Category with ID " + id + " not found");
                 });
         return entityMapper.fromEntityToDto(category, CategoryDto.class);
     }

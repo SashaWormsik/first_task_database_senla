@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.FeedBackDto;
 import org.charviakouski.freelanceExchange.model.entity.Feedback;
@@ -49,7 +49,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         log.info("Update new Feedback with ID{}", id);
         if (!feedbackRepository.existsById(id)) {
             log.info("FeedBack with ID {} does not exist", id);
-            throw new MyBadRequestExseption("FeedBack with ID " + id + " does not exist");
+            throw new MyBadRequestException("FeedBack with ID " + id + " does not exist");
         }
         if (!principalUtil.checkId(feedBackDto.getSender().getId())) {
             throw new AccessDeniedException("You cannot change other people's data");
@@ -64,7 +64,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         Feedback feedback = feedbackRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("FeedBack with ID {} not found", id);
-                    return new MyBadRequestExseption("FeedBack with ID " + id + " not found");
+                    return new MyBadRequestException("FeedBack with ID " + id + " not found");
                 });
         return entityMapper.fromEntityToDto(feedback, FeedBackDto.class);
     }
@@ -84,7 +84,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         Feedback feedback = feedbackRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("FeedBack with ID {} not found", id);
-                    return new MyBadRequestExseption("FeedBack with ID " + id + " not found");
+                    return new MyBadRequestException("FeedBack with ID " + id + " not found");
                 });
         if (!principalUtil.checkId(feedback.getSender().getId())) {
             throw new AccessDeniedException("You cannot delete other people's data");

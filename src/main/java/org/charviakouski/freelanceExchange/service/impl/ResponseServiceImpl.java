@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.ResponseDto;
 import org.charviakouski.freelanceExchange.model.dto.ResponseStatusDto;
@@ -57,7 +57,7 @@ public class ResponseServiceImpl implements ResponseService {
         log.info("Update Response with ID {}", id);
         if (!responseRepository.existsById(id)) {
             log.info("Response with ID {} does not exist", id);
-            throw new MyBadRequestExseption("Response with ID " + id + " does not exist");
+            throw new MyBadRequestException("Response with ID " + id + " does not exist");
         }
         if (!principalUtil.checkId(responseDto.getExecutor().getId())) {
             throw new AccessDeniedException("You cannot change other people's data");
@@ -72,7 +72,7 @@ public class ResponseServiceImpl implements ResponseService {
         Response response = responseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Response with ID = {} not found", id);
-                    return new MyBadRequestExseption("Response not found");
+                    return new MyBadRequestException("Response not found");
                 });
         return entityMapper.fromEntityToDto(response, ResponseDto.class);
     }
@@ -92,7 +92,7 @@ public class ResponseServiceImpl implements ResponseService {
         Response response = responseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Response with ID = {} not found", id);
-                    return new MyBadRequestExseption("Response not found with ID" + id);
+                    return new MyBadRequestException("Response not found with ID" + id);
                 });
         if (!principalUtil.checkId(response.getExecutor().getId())) {
             throw new AccessDeniedException("You cannot change other people's data");
@@ -123,7 +123,7 @@ public class ResponseServiceImpl implements ResponseService {
         Response response = responseRepository.findById(responseId)
                 .orElseThrow(() -> {
                     log.info("Response with ID = {} not found", responseId);
-                    return new MyBadRequestExseption("Response not found with ID" + responseId);
+                    return new MyBadRequestException("Response not found with ID" + responseId);
                 });
         if (!principalUtil.checkId(response.getTask().getCustomer().getId())) {
             throw new AccessDeniedException("You cannot change other people's data");

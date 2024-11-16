@@ -28,8 +28,9 @@ public class ExceptionHandlers {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 
-    @ExceptionHandler(MyBadRequestExseption.class)
-    public ResponseEntity<?> handleBadCredentialsException(MyBadRequestExseption exception) {
+    @ExceptionHandler(MyBadRequestException.class)
+
+    public ResponseEntity<?> handleMyBadRequestExceptionException(MyBadRequestException exception) {
         log.error(exception.getMessage(), exception);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }

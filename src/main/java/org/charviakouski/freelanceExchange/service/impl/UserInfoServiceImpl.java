@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.model.entity.Credential;
@@ -60,7 +60,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             throw new AccessDeniedException("You cannot change other people's data");
         }
         if (!userInfoRepository.existsById(id)) {
-            throw new MyBadRequestExseption("UserInfo with id " + id + " does not exist");
+            throw new MyBadRequestException("UserInfo with id " + id + " does not exist");
         }
         UserInfo userInfo = entityMapper.fromDtoToEntity(userInfoDto, UserInfo.class);
         return entityMapper.fromEntityToDto(userInfoRepository.save(userInfo), UserInfoDto.class);
@@ -72,7 +72,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfo userInfo = userInfoRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("UserInfo with ID {} not found", id);
-                    return new MyBadRequestExseption("UserInfo with ID " + id + " not found");
+                    return new MyBadRequestException("UserInfo with ID " + id + " not found");
                 });
         return entityMapper.fromEntityToDto(userInfo, UserInfoDto.class);
     }
@@ -111,7 +111,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfo userInfo = userInfoRepository.findUserInfoByCredential_Email(email)
                 .orElseThrow(() -> {
                     log.info("UserInfo with Email {} not found", email);
-                    return new MyBadRequestExseption("UserInfo with Email " + email + " not found");
+                    return new MyBadRequestException("UserInfo with Email " + email + " not found");
                 });
         return entityMapper.fromEntityToDto(userInfo, UserInfoDto.class);
     }

@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.model.dto.RoleDto;
 import org.charviakouski.freelanceExchange.model.entity.Role;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
@@ -34,7 +34,7 @@ public class RoleServiceImpl implements RoleService {
         log.info("Update Role with ID {}", id);
         if (!roleRepository.existsById(id)) {
             log.info("Role with ID {} does not exist", id);
-            throw new MyBadRequestExseption("Role with ID " + id + " does not exist");
+            throw new MyBadRequestException("Role with ID " + id + " does not exist");
         }
         Role role = entityMapper.fromDtoToEntity(roleDto, Role.class);
         return entityMapper.fromEntityToDto(roleRepository.save(role), RoleDto.class);
@@ -46,7 +46,7 @@ public class RoleServiceImpl implements RoleService {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Role with ID {} not found", id);
-                    return new MyBadRequestExseption("Role not found");
+                    return new MyBadRequestException("Role not found");
                 });
         return entityMapper.fromEntityToDto(role, RoleDto.class);
     }

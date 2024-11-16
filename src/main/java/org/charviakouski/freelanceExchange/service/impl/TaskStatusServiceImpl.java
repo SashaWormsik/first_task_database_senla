@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.model.dto.TaskStatusDto;
 import org.charviakouski.freelanceExchange.model.entity.TaskStatus;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
@@ -34,7 +34,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
         log.info("Update TaskStatus with ID {}", id);
         if (!taskStatusRepository.existsById(id)) {
             log.info("TaskStatus with ID {} does not exist", id);
-            throw new MyBadRequestExseption("TaskStatus with ID " + id + " does not exist");
+            throw new MyBadRequestException("TaskStatus with ID " + id + " does not exist");
         }
         TaskStatus taskStatus = entityMapper.fromDtoToEntity(taskStatusDto, TaskStatus.class);
         return entityMapper.fromEntityToDto(taskStatusRepository.save(taskStatus), TaskStatusDto.class);
@@ -46,7 +46,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
         TaskStatus taskStatus = taskStatusRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("TaskStatus with ID {} not found", id);
-                    return new MyBadRequestExseption("TaskStatus not found");
+                    return new MyBadRequestException("TaskStatus not found");
                 });
         return entityMapper.fromEntityToDto(taskStatus, TaskStatusDto.class);
     }

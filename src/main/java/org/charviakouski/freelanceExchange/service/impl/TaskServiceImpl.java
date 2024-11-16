@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.MyBadRequestExseption;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.exception.ServiceException;
 import org.charviakouski.freelanceExchange.model.dto.TaskDto;
 import org.charviakouski.freelanceExchange.model.entity.Task;
@@ -56,7 +56,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskDto update(long id, TaskDto taskDto) {
         log.info("update Task with ID {}", id);
         if (taskRepository.existsById(id)) {
-            throw new MyBadRequestExseption("Task not found with ID " + id);
+            throw new MyBadRequestException("Task not found with ID " + id);
         }
         if (!principalUtil.checkId(taskDto.getCustomer().getId())) {
             throw new AccessDeniedException("You cannot change other people's data");
@@ -71,7 +71,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Task with ID {} not found", id);
-                    return new MyBadRequestExseption("Task with ID " + id + " not found");
+                    return new MyBadRequestException("Task with ID " + id + " not found");
                 });
         return entityMapper.fromEntityToDto(task, TaskDto.class);
     }
@@ -92,7 +92,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Task with ID {} not found", id);
-                    return new MyBadRequestExseption("Task with ID " + id + " not found");
+                    return new MyBadRequestException("Task with ID " + id + " not found");
                 });
         if (!principalUtil.checkId(task.getCustomer().getId())) {
             throw new AccessDeniedException("You cannot delete other people's data");
