@@ -26,8 +26,4 @@ public class PrincipalUtil {
         return id.equals(getCurrentUserId());
     }
 
-    public void updatePrincipal(Credential credential) {
-        manager.authenticate(
-                new UsernamePasswordAuthenticationToken(credential.getEmail(), credential.getPassword()));
-    }
 }
