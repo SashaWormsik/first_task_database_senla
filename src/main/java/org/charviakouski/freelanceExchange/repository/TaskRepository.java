@@ -23,8 +23,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "(SELECT ts.id FROM Task ts " +
             "JOIN ts.categories c " +
             "JOIN ts.status st " +
-            "WHERE (upper(ts.title) LIKE upper(concat('%', :title, '%')) OR ts.title IS null) " +
-            "AND (c.name IN :categ_name OR c.name IS null) " +
+            "WHERE (upper(ts.title) LIKE upper(concat('%', :title, '%')) OR :title IS NULL ) " +
+            "AND (c.name IN :categ_name OR :categ_name IS NULL ) " +
             "AND st.status = 'ACTUAL')")
     Page<Task> findAllByTitleAndCategory(@Param("title") String title, @Param("categ_name") List<String> categoriesName, Pageable pageable);
 
