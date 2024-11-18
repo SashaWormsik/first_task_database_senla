@@ -37,7 +37,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     public FeedBackDto insert(FeedBackDto feedBackDto) {
         log.info("Insert new Feedback to {}", feedBackDto.getAddressee().getId());
         UserInfo userInfo = userInfoRepository.findById(principalUtil.getCurrentUserId())
-                .orElseThrow(() -> new ServiceException("User not found with ID " + principalUtil.getCurrentUserId())); // TODO serex
+                .orElseThrow(() -> new ServiceException("User not found with ID " + principalUtil.getCurrentUserId()));
         Feedback feedback = entityMapper.fromDtoToEntity(feedBackDto, Feedback.class);
         feedback.setSender(userInfo);
         feedback.setCreateDate(new Date());

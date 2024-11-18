@@ -20,7 +20,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -130,7 +129,7 @@ public class TaskRepositoryImplTest {
     @Transactional
     public void findAllByTitleAndCategory_WithoutTitleAndCategoryTest() {
         Pageable pageable = PageRequest.of(0, 10);
-        long actualTotalElement= taskRepository
+        long actualTotalElement = taskRepository
                 .findAllByTitleAndCategory(null, null, pageable)
                 .getTotalElements();
         Assertions.assertEquals(2, actualTotalElement);

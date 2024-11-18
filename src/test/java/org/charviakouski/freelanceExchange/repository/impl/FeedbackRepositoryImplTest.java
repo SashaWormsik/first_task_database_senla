@@ -5,7 +5,6 @@ import org.charviakouski.freelanceExchange.model.entity.Feedback;
 import org.charviakouski.freelanceExchange.model.entity.UserInfo;
 import org.charviakouski.freelanceExchange.repository.FeedbackRepository;
 import org.charviakouski.freelanceExchange.repository.UserInfoRepository;
-import org.hibernate.PropertyValueException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

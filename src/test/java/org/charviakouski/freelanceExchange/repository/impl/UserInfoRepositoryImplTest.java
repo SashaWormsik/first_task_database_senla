@@ -66,7 +66,7 @@ public class UserInfoRepositoryImplTest {
         roleRepository.save(ROLE_ADMIN);
         USER.setCredential(CREDENTIAL);
         userInfoRepository.save(USER);
-        NEW_USER.setCredential(CREDENTIAL);
+        NEW_USER.setCredential(NEW_CREDENTIAL);
         userInfoRepository.save(NEW_USER);
     }
 
@@ -83,11 +83,11 @@ public class UserInfoRepositoryImplTest {
     public void findAllUserInfoByNameContainingIgnoreCaseAndCredential_Role_NameInTest() {
         Pageable pageable = PageRequest.of(0, 10);
         List<String> roles = List.of("ADMIN");
-        UserInfo actualUserInfo = userInfoRepository
+        List<UserInfo> userInfoList = userInfoRepository
                 .findAllUserInfoByNameContainingIgnoreCaseAndCredential_Role_NameIn("NI", roles, pageable)
-                .getContent()
-                .getFirst();
-        Assertions.assertEquals(USER, actualUserInfo);
+                .getContent();
+        Assertions.assertEquals(1, userInfoList.size());
+        Assertions.assertEquals(USER, userInfoList.getFirst());
     }
 
     @AfterEach

@@ -29,24 +29,6 @@ import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 public class UserInfoServiceImplTest {
 
-    @Mock
-    private UserInfoRepository userInfoRepository;
-    @Mock
-    private CredentialRepository credentialRepository;
-
-    @Mock
-    private PrincipalUtil principalUtil;
-
-
-    @Spy
-    private EntityMapper entityMapper;
-
-    @Spy
-    private PasswordEncoder passwordEncoder;
-
-    @InjectMocks
-    private UserInfoServiceImpl userInfoServiceImpl;
-
     private static final UserInfo ONE = UserInfo.builder()
             .id(1L)
             .name("Alex")
@@ -66,7 +48,6 @@ public class UserInfoServiceImplTest {
                             .build())
                     .build())
             .build();
-
     private static final UserInfo TWO = UserInfo.builder()
             .id(2L)
             .name("Sasha")
@@ -86,7 +67,18 @@ public class UserInfoServiceImplTest {
                             .build())
                     .build())
             .build();
-
+    @Mock
+    private UserInfoRepository userInfoRepository;
+    @Mock
+    private CredentialRepository credentialRepository;
+    @Mock
+    private PrincipalUtil principalUtil;
+    @Spy
+    private EntityMapper entityMapper;
+    @Spy
+    private PasswordEncoder passwordEncoder;
+    @InjectMocks
+    private UserInfoServiceImpl userInfoServiceImpl;
 
     @Test
     public void whenGetById_thenReturnUserInfo() {
@@ -118,7 +110,7 @@ public class UserInfoServiceImplTest {
         Assertions.assertEquals(userInfoDtoList.size(), 2);
         Mockito.verify(userInfoRepository, Mockito.times(1))
                 .findAllUserInfoByNameContainingIgnoreCaseAndCredential_Role_NameIn(Mockito.anyString(), Mockito.anyList(), Mockito.any(Pageable.class));
-        ;
+
     }
 
     @Test
