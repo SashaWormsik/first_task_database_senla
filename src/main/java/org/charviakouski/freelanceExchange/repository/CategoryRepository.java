@@ -1,6 +1,8 @@
 package org.charviakouski.freelanceExchange.repository;
 
 import org.charviakouski.freelanceExchange.model.entity.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CategoryRepository extends CrudRepository<Long, Category> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+
 }

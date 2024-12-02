@@ -3,9 +3,15 @@ package org.charviakouski.freelanceExchange.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
@@ -17,6 +23,25 @@ public class ExceptionHandlers {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException exception) {
+        log.error(exception.getMessage(), exception);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException exception) {
+        log.error(exception.getMessage(), exception);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(MyBadRequestException.class)
+
+    public ResponseEntity<?> handleMyBadRequestExceptionException(MyBadRequestException exception) {
+        log.error(exception.getMessage(), exception);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception exception) {
         log.error(exception.getMessage(), exception);
@@ -25,9 +50,13 @@ public class ExceptionHandlers {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        StringBuilder errorMessage = new StringBuilder();
-        exception.getBindingResult().getAllErrors().forEach(error -> errorMessage.append(error.getDefaultMessage()).append(System.lineSeparator()));
+        Map<String, String> errors = new HashMap<>();
+        exception.getBindingResult().getAllErrors().forEach((error) -> {
+            String errorMessage = error.getDefaultMessage();
+            String fieldName = ((FieldError) error).getField();
+            errors.put(fieldName, errorMessage);
+        });
         log.error(exception.getMessage(), exception);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage.toString());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }

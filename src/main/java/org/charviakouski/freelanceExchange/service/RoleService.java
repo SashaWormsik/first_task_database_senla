@@ -11,7 +11,7 @@ public interface RoleService {
 
     RoleDto insert(RoleDto roleDto);
 
-    RoleDto update(RoleDto roleDto);
+    RoleDto update(long id, RoleDto roleDto);
 
     boolean delete(Long id);
 }

@@ -11,7 +11,7 @@ public interface ResponseStatusService {
 
     ResponseStatusDto insert(ResponseStatusDto responseStatusDto);
 
-    ResponseStatusDto update(ResponseStatusDto responseStatusDto);
+    ResponseStatusDto update(long id, ResponseStatusDto responseStatusDto);
 
     boolean delete(Long id);
 }

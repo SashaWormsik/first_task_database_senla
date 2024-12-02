@@ -15,7 +15,8 @@ import java.util.List;
 @Table(name = "user_info")
 public class UserInfo {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_info_id_seq")
+    @SequenceGenerator(name = "user_info_id_seq", sequenceName = "user_info_id_seq")
     private Long id;
 
     @Column(name = "name", length = 100)
@@ -33,7 +34,7 @@ public class UserInfo {
     @Column(name = "description", length = 500)
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "userInfo", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private Credential credential;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "executor", cascade = CascadeType.ALL)

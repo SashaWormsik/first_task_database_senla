@@ -23,3 +23,27 @@ databaseChangeLog:
       file: changelogs/homework-2/yaml/11.create-index.yaml
   - include:
       file: changelogs/homework-2/yaml/12.change-column-type-credential-id.yaml
+  - include:
+      file: changelogs/homework-2/yaml/13.change-credential-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/14.insert-data-into-role-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/15.insert-data-into-category-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/16.insert-data-into-response_status-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/17.insert-data-into-task_status-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/18.insert-data-into-user_info-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/19.insert-data-into-credential-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/20.insert-data-into-task-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/21.insert-data-into-feedback-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/22.insert-data-into-response-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/23.insert-data-into-task_category-table.yaml
+  - include:
+      file: changelogs/homework-2/yaml/24.create-alert-sequence.yaml

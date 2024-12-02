@@ -1,15 +1,31 @@
 package org.charviakouski.freelanceExchange.repository;
 
 import org.charviakouski.freelanceExchange.model.entity.Task;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
-public interface TaskRepository extends CrudRepository<Long, Task> {
-    List<Task> getAllTasksByTitle(String title);
+public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    List<Task> getAllTasksByPrice(BigDecimal price);
+    Page<Task> findAllByCustomerIdAndStatusStatusIn(Long customer_id, List<String> status, Pageable pageable);
 
-    Optional<Task> getTaskByIdGraph(Long id);
+    @Query("SELECT t FROM Task t " +
+            "WHERE (upper(t.title) LIKE upper(concat('%', :title, '%'))OR t.title IS null) " +
+            "AND t.status.status = 'ACTUAL'")
+    Page<Task> findAllTasksByTitle(@Param("title") String title, Pageable pageable);
+
+    @Query("SELECT t FROM Task t " +
+            "WHERE t.id IN " +
+            "(SELECT ts.id FROM Task ts " +
+            "JOIN ts.categories c " +
+            "JOIN ts.status st " +
+            "WHERE (upper(ts.title) LIKE upper(concat('%', :title, '%')) OR :title IS NULL ) " +
+            "AND (c.name IN :categ_name OR :categ_name IS NULL ) " +
+            "AND st.status = 'ACTUAL')")
+    Page<Task> findAllByTitleAndCategory(@Param("title") String title, @Param("categ_name") List<String> categoriesName, Pageable pageable);
+
 }

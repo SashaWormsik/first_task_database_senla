@@ -1,45 +1,50 @@
 package org.charviakouski.freelanceExchange.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.charviakouski.freelanceExchange.model.dto.CredentialDto;
 import org.charviakouski.freelanceExchange.service.CredentialService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/credentials")
 @RequiredArgsConstructor
+@Validated
 public class CredentialController {
 
     private final CredentialService credentialService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public List<CredentialDto> getAll() {
-        return credentialService.getAll();
+    public Page<CredentialDto> getAll(@RequestParam(name = "page", defaultValue = "1") int page,
+                                      @RequestParam(name = "size", defaultValue = "2") int size,
+                                      @RequestParam(name = "sort", defaultValue = "email")
+                                      @Pattern(regexp = "active|create_date|email") String sort) {
+        return credentialService.getAll(page, size, sort);
     }
 
     @GetMapping(value = "/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
     public CredentialDto getById(@PathVariable long id) {
         return credentialService.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
-    public CredentialDto insert(@RequestBody CredentialDto credentialDto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public CredentialDto insert(@Valid @RequestBody CredentialDto credentialDto) {
         return credentialService.insert(credentialDto);
     }
 
     @PutMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
-    public CredentialDto update(@PathVariable long id, @RequestBody CredentialDto credentialDto) {
-        credentialDto.setId(id);
-        return credentialService.update(credentialDto);
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CUSTOMER', 'EXECUTOR'})")
+    public CredentialDto update(@PathVariable long id, @Valid @RequestBody CredentialDto credentialDto) {
+        return credentialService.update(id, credentialDto);
     }
 
     @DeleteMapping(value = "/{id}")

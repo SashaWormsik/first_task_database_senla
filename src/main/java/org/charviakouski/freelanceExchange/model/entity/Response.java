@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -17,14 +16,16 @@ import java.util.Date;
 public class Response {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "response_id_seq")
+    @SequenceGenerator(name = "response_id_seq", sequenceName = "response_id_seq")
     private Long id;
 
     @Column(name = "suggested_price", precision = 10, scale = 2)
     private BigDecimal suggestedPrice;
 
     @Column(name = "suggested_date")
-    private LocalDateTime suggestedDate;
+    @Temporal(TemporalType.DATE)
+    private Date suggestedDate;
 
     @Column(name = "create_date", nullable = false)
     @Temporal(TemporalType.DATE)

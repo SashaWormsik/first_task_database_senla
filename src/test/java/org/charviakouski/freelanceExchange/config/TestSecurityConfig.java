@@ -1,11 +1,11 @@
 package org.charviakouski.freelanceExchange.config;
 
 import org.charviakouski.freelanceExchange.security.JwtConfigurer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,12 +20,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity(proxyTargetClass = true)
 @Configuration
 public class TestSecurityConfig {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private JwtConfigurer jwtConfigurer;
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final JwtConfigurer jwtConfigurer;
+
+
+    public TestSecurityConfig(UserDetailsService userDetailsService, JwtConfigurer jwtConfigurer) {
+        this.userDetailsService = userDetailsService;
+        this.jwtConfigurer = jwtConfigurer;
+    }
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -37,9 +39,12 @@ public class TestSecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Autowired
-    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(getPasswordEncoder());
+        return authProvider;
     }
 
     @Bean
@@ -50,7 +55,7 @@ public class TestSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/authentication").permitAll()
+                .requestMatchers("/", "/sign-in", "/sign-up").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(jwtConfigurer);

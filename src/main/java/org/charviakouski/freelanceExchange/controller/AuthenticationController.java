@@ -1,22 +1,30 @@
 package org.charviakouski.freelanceExchange.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.charviakouski.freelanceExchange.model.dto.UserInfoDto;
 import org.charviakouski.freelanceExchange.model.dto.authentication.AuthenticationRequestDto;
+import org.charviakouski.freelanceExchange.model.dto.authentication.RegistrationRequestDto;
 import org.charviakouski.freelanceExchange.service.AuthenticationService;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping("/authentication")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    @PostMapping
-    public Map<Object, Object> login(@RequestBody AuthenticationRequestDto requestDto) {
+    @PostMapping("/sign-in")
+    public Map<Object, Object> login(@Valid @RequestBody AuthenticationRequestDto requestDto) {
         return authenticationService.login(requestDto);
+    }
+
+    @PostMapping("/sign-up")
+    public UserInfoDto registration(@Valid @RequestBody RegistrationRequestDto requestDto) {
+        return authenticationService.createNewUser(requestDto);
     }
 }

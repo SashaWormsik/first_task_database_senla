@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.ServiceException;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.model.dto.TaskStatusDto;
 import org.charviakouski.freelanceExchange.model.entity.TaskStatus;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -25,32 +24,37 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 
     @Override
     public TaskStatusDto insert(TaskStatusDto taskStatusDto) {
-        log.info("insert new TaskStatus with status {}", taskStatusDto.getStatus());
+        log.info("Insert new TaskStatus with status {}", taskStatusDto.getStatus());
         TaskStatus taskStatus = entityMapper.fromDtoToEntity(taskStatusDto, TaskStatus.class);
-        return entityMapper.fromEntityToDto(taskStatusRepository.create(taskStatus), TaskStatusDto.class);
+        return entityMapper.fromEntityToDto(taskStatusRepository.save(taskStatus), TaskStatusDto.class);
     }
 
     @Override
-    public TaskStatusDto update(TaskStatusDto taskStatusDto) {
-        log.info("update TaskStatus with status {}", taskStatusDto.getStatus());
+    public TaskStatusDto update(long id, TaskStatusDto taskStatusDto) {
+        log.info("Update TaskStatus with ID {}", id);
+        if (!taskStatusRepository.existsById(id)) {
+            log.info("TaskStatus with ID {} does not exist", id);
+            throw new MyBadRequestException("TaskStatus with ID " + id + " does not exist");
+        }
         TaskStatus taskStatus = entityMapper.fromDtoToEntity(taskStatusDto, TaskStatus.class);
-        return entityMapper.fromEntityToDto(taskStatusRepository.update(taskStatus), TaskStatusDto.class);
+        return entityMapper.fromEntityToDto(taskStatusRepository.save(taskStatus), TaskStatusDto.class);
     }
 
     @Override
     public TaskStatusDto getById(Long id) {
-        Optional<TaskStatus> optionalTaskStatus = taskStatusRepository.getById(id);
-        if (optionalTaskStatus.isEmpty()) {
-            log.info("taskStatus with ID {} not found", id);
-            throw new ServiceException("TaskStatus not found");
-        }
-        return entityMapper.fromEntityToDto(optionalTaskStatus.get(), TaskStatusDto.class);
+        log.info("Get TaskStatus with ID {}", id);
+        TaskStatus taskStatus = taskStatusRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("TaskStatus with ID {} not found", id);
+                    return new MyBadRequestException("TaskStatus not found");
+                });
+        return entityMapper.fromEntityToDto(taskStatus, TaskStatusDto.class);
     }
 
     @Override
     public List<TaskStatusDto> getAll() {
         log.info("get ALL taskStatus");
-        return taskStatusRepository.getAll().stream()
+        return taskStatusRepository.findAll().stream()
                 .map(taskStatus -> entityMapper.fromEntityToDto(taskStatus, TaskStatusDto.class))
                 .toList();
     }
@@ -58,6 +62,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     @Override
     public boolean delete(Long id) {
         log.info("delete taskStatus with ID {}", id);
-        return taskStatusRepository.delete(id);
+        taskStatusRepository.deleteById(id);
+        return taskStatusRepository.existsById(id);
     }
 }

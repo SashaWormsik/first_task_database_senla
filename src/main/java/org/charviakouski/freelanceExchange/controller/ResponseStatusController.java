@@ -38,8 +38,7 @@ public class ResponseStatusController {
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseStatusDto update(@PathVariable long id, @RequestBody ResponseStatusDto responseStatusDto) {
-        responseStatusDto.setId(id);
-        return responseStatusService.update(responseStatusDto);
+        return responseStatusService.update(id, responseStatusDto);
     }
 
     @DeleteMapping(value = "/{id}")

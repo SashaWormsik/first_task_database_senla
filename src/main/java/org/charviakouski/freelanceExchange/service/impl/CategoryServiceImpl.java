@@ -2,17 +2,18 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.ServiceException;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.model.dto.CategoryDto;
 import org.charviakouski.freelanceExchange.model.entity.Category;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
 import org.charviakouski.freelanceExchange.repository.CategoryRepository;
 import org.charviakouski.freelanceExchange.service.CategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -26,39 +27,46 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto insert(CategoryDto categoryDto) {
-        log.info("insert new Category with name {}", categoryDto.getName());
+        log.info("Insert new Category with name {}", categoryDto.getName());
         Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
-        return entityMapper.fromEntityToDto(categoryRepository.create(category), CategoryDto.class);
+        return entityMapper.fromEntityToDto(categoryRepository.save(category), CategoryDto.class);
     }
 
     @Override
-    public CategoryDto update(CategoryDto categoryDto) {
-        log.info("update UserInfo with ID {}", categoryDto.getId());
+    public CategoryDto update(Long id, CategoryDto categoryDto) {
+        log.info("Update Category with ID {}", categoryDto.getId());
+        if (!categoryRepository.existsById(id)) {
+            log.info("Category with ID {} does not exist", id);
+            throw new MyBadRequestException("Category with ID " + id + " does not exist");
+        }
         Category category = entityMapper.fromDtoToEntity(categoryDto, Category.class);
-        return entityMapper.fromEntityToDto(categoryRepository.update(category), CategoryDto.class);
+        return entityMapper.fromEntityToDto(categoryRepository.save(category), CategoryDto.class);
     }
 
     @Override
     public CategoryDto getById(Long id) {
-        Optional<Category> optionalCategory = categoryRepository.getById(id);
-        if (optionalCategory.isEmpty()) {
-            log.info("category with ID {} not found", id);
-            throw new ServiceException("Category not found");
-        }
-        return entityMapper.fromEntityToDto(optionalCategory.get(), CategoryDto.class);
+        log.info("Get Category with ID {}", id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("Category with ID {} not found", id);
+                    return new MyBadRequestException("Category with ID " + id + " not found");
+                });
+        return entityMapper.fromEntityToDto(category, CategoryDto.class);
     }
 
     @Override
-    public List<CategoryDto> getAll() {
-        log.info("get ALL category");
-        return categoryRepository.getAll().stream()
-                .map(category -> entityMapper.fromEntityToDto(category, CategoryDto.class))
-                .toList();
+    public Page<CategoryDto> getAll(int page, int size, String sort) {
+        log.info("Get ALL category");
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
+        return categoryRepository
+                .findAll(pageable)
+                .map(category -> entityMapper.fromEntityToDto(category, CategoryDto.class));
     }
 
     @Override
     public boolean delete(Long id) {
-        log.info("delete category with ID {}", id);
-        return categoryRepository.delete(id);
+        log.info("Delete category with ID {}", id);
+        categoryRepository.deleteById(id);
+        return !categoryRepository.existsById(id);
     }
 }

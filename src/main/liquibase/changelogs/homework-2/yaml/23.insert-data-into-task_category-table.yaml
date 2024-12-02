@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 23
+      author: charviakouski
+      changes:
+        - insert:
+            tableName: task_category
+            columns:
+              - column:
+                  name: category_id
+                  value: "-4"
+              - column:
+                  name: task_id
+                  value: "-1"
+        - insert:
+            tableName: task_category
+            columns:
+              - column:
+                  name: category_id
+                  value: "-3"
+              - column:
+                  name: task_id
+                  value: "-1"
+        - insert:
+            tableName: task_category
+            columns:
+              - column:
+                  name: category_id
+                  value: "-2"
+              - column:
+                  name: task_id
+                  value: "-1"
+        - insert:
+            tableName: task_category
+            columns:
+              - column:
+                  name: category_id
+                  value: "-2"
+              - column:
+                  name: task_id
+                  value: "-2"
+        - insert:
+            tableName: task_category
+            columns:
+              - column:
+                  name: category_id
+                  value: "-1"
+              - column:
+                  name: task_id
+                  value: "-2"
+        - insert:
+            tableName: task_category
+            columns:
+              - column:
+                  name: category_id
+                  value: "-5"
+              - column:
+                  name: task_id
+                  value: "-3"
+        - insert:
+            tableName: task_category
+            columns:
+              - column:
+                  name: category_id
+                  value: "-6"
+              - column:
+                  name: task_id
+                  value: "-3"

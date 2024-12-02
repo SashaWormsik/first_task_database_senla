@@ -38,8 +38,7 @@ public class TaskStatusController {
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public TaskStatusDto update(@PathVariable long id, @RequestBody TaskStatusDto taskStatusDto) {
-        taskStatusDto.setId(id);
-        return taskStatusService.update(taskStatusDto);
+        return taskStatusService.update(id, taskStatusDto);
     }
 
     @DeleteMapping(value = "/{id}")

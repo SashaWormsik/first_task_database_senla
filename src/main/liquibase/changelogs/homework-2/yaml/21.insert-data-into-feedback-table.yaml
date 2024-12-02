@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: 21
+      author: charviakouski
+      changes:
+        - insert:
+            tableName: feedback
+            columns:
+              - column:
+                  name: id
+                  value: "-1"
+              - column:
+                  name: create_date
+                  value: "2024-10-10"
+              - column:
+                  name: content
+                  value: "The company sets goals clearly. No problem with payment"
+              - column:
+                  name: addressee_id
+                  value: "-5"
+              - column:
+                  name: sender_id
+                  value: "-1"
+        - insert:
+            tableName: feedback
+            columns:
+              - column:
+                  name: id
+                  value: "-2"
+              - column:
+                  name: create_date
+                  value: "2024-10-11"
+              - column:
+                  name: content
+                  value: "Nice good team"
+              - column:
+                  name: addressee_id
+                  value: "-6"
+              - column:
+                  name: sender_id
+                  value: "-1"
+        - insert:
+            tableName: feedback
+            columns:
+              - column:
+                  name: id
+                  value: "-3"
+              - column:
+                  name: create_date
+                  value: "2024-10-11"
+              - column:
+                  name: content
+                  value: "It was a pleasure to work together"
+              - column:
+                  name: addressee_id
+                  value: "-5"
+              - column:
+                  name: sender_id
+                  value: "-3"

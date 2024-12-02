@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 public class TaskStatusDto {
+
     private Long id;
     private String status;
 }

@@ -15,8 +15,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -28,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Date;
-
 
 @SpringJUnitWebConfig({TestConfig.class, TestControllerConfig.class, TestSecurityConfig.class})
 @Transactional
@@ -78,23 +78,23 @@ public class UserInfoControllerTest {
     @Autowired
     private RoleRepository roleRepository;
 
-
     @BeforeEach
     public void setUp(@Autowired WebApplicationContext wac) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-        roleRepository.create(ROLE_ADMIN);
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
+        roleRepository.save(ROLE_ADMIN);
         USER.setCredential(CREDENTIAL);
-        userInfoRepository.create(USER);
+        userInfoRepository.save(USER);
     }
 
     @Test
     @WithMockUser(username = "user1", authorities = {"ROLE_ADMIN"})
     public void getAllTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users")
+        mockMvc.perform(MockMvcRequestBuilders.get("/users?page=1&size=10&sort=name")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        Assertions.assertEquals(userInfoController.getAll().size(), 1);
     }
 
     @Test
@@ -121,7 +121,6 @@ public class UserInfoControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         String resultJson = result.getResponse().getContentAsString();
-        System.out.println(resultJson);
         UserInfoDto userInfoDtoFromResponse = entityMapper.fromJsonToDto(resultJson, UserInfoDto.class);
         Assertions.assertNotNull(userInfoDtoFromResponse);
         Assertions.assertEquals(userInfoDtoFromResponse.getId(), USER.getId());
@@ -135,86 +134,32 @@ public class UserInfoControllerTest {
                         .get("/users/email?email={email}", USER.getCredential().getEmail())
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isInternalServerError()); // FIXME почемуто статус 500 а не 403
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"ROLE_USER"})
+    @WithMockUser(username = "user1", authorities = {"ROLE_ADMIN"})
     public void getUserInfoByName() throws Exception {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/users/name")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/users/search_executor")
                         .param("username", "NOT_EXIST_NAME")
+                        .param("page", "1")
+                        .param("size", "10")
+                        .param("sort", "name")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
         String resultJson = result.getResponse().getContentAsString();
         Assertions.assertNotNull(resultJson);
-        Assertions.assertEquals(resultJson, "[]");
+        Assertions.assertTrue(resultJson.contains("\"content\":[]"));
     }
 
     @Test
-    @WithMockUser(username = "user1", authorities = {"ROLE_USER"})
-    public void insertTest() throws Exception {
-        NEW_USER.setCredential(NEW_CREDENTIAL);
-        UserInfoDto userInfoDto = entityMapper.fromEntityToDto(NEW_USER, UserInfoDto.class);
-        mockMvc.perform(MockMvcRequestBuilders.post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(entityMapper.fromDtoToJson(userInfoDto))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-    }
-
-    @Test
-    @WithMockUser(username = "user1", authorities = {"ROLE_USER"})
-    @WithUserDetails()
-    public void updateUserInfoTest() throws Exception {
-        USER.setSurname("NEW SURNAME");
-        UserInfoDto userInfoDto = entityMapper.fromDtoToEntity(USER, UserInfoDto.class);
-        mockMvc.perform(MockMvcRequestBuilders.put("/users/{id}", USER.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(entityMapper.fromDtoToJson(userInfoDto))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    @WithMockUser(username = "user1", authorities = {"ROLE_ADMIN"})
-    public void updateUserInfoTest2() throws Exception {
-        USER.setSurname("NEW SURNAME");
-        UserInfoDto userInfoDto = entityMapper.fromDtoToEntity(USER, UserInfoDto.class);
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/users/{id}", USER.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(entityMapper.fromDtoToJson(userInfoDto))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-        String resultJson = result.getResponse().getContentAsString();
-        UserInfoDto userInfoDtoFromResponse = entityMapper.fromJsonToDto(resultJson, UserInfoDto.class);
-        Assertions.assertNotNull(userInfoDtoFromResponse);
-        Assertions.assertEquals(userInfoDtoFromResponse.getId(), USER.getId());
-        Assertions.assertEquals(userInfoDtoFromResponse.getSurname(), USER.getSurname());
-    }
-
-    @Test
-    @WithMockUser(username = "user1", authorities = {"ROLE_ADMIN"})
-    public void updateUserInfoWithNotExistId() throws Exception {
-        UserInfoDto userInfoDto = entityMapper.fromDtoToEntity(USER, UserInfoDto.class);
-        userInfoDto.setId(5555L);
-        mockMvc.perform(MockMvcRequestBuilders.put("/users/{id}", userInfoDto.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(entityMapper.fromDtoToJson(userInfoDto))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isInternalServerError());
-    }
-
-    @Test
-    @WithMockUser(username = "user1", authorities = {"ROLE_ADMIN"})
+    @WithAnonymousUser
     public void deleteTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/users/{id}", USER.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
+
 }

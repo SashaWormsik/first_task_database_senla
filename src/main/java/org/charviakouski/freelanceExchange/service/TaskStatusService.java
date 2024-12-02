@@ -11,7 +11,7 @@ public interface TaskStatusService {
 
     TaskStatusDto insert(TaskStatusDto taskStatusDto);
 
-    TaskStatusDto update(TaskStatusDto taskStatusDto);
+    TaskStatusDto update(long id, TaskStatusDto taskStatusDto);
 
     boolean delete(Long id);
 }

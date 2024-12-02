@@ -15,7 +15,8 @@ import java.util.List;
 public class TaskStatus {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_status_id_seq")
+    @SequenceGenerator(name = "task_status_id_seq", sequenceName = "task_status_id_seq")
     private Long id;
 
     @Column(name = "status", length = 100, unique = true, nullable = false)

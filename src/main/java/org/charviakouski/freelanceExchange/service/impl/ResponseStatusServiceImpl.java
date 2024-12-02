@@ -2,7 +2,7 @@ package org.charviakouski.freelanceExchange.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.charviakouski.freelanceExchange.exception.ServiceException;
+import org.charviakouski.freelanceExchange.exception.MyBadRequestException;
 import org.charviakouski.freelanceExchange.model.dto.ResponseStatusDto;
 import org.charviakouski.freelanceExchange.model.entity.ResponseStatus;
 import org.charviakouski.freelanceExchange.model.mapper.EntityMapper;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -25,39 +24,45 @@ public class ResponseStatusServiceImpl implements ResponseStatusService {
 
     @Override
     public ResponseStatusDto insert(ResponseStatusDto responseStatusDto) {
-        log.info("insert new ResponseStatus with status {}", responseStatusDto.getStatus());
+        log.info("Insert new ResponseStatus with status {}", responseStatusDto.getStatus());
         ResponseStatus responseStatus = entityMapper.fromDtoToEntity(responseStatusDto, ResponseStatus.class);
-        return entityMapper.fromEntityToDto(responseStatusRepository.create(responseStatus), ResponseStatusDto.class);
+        return entityMapper.fromEntityToDto(responseStatusRepository.save(responseStatus), ResponseStatusDto.class);
     }
 
     @Override
-    public ResponseStatusDto update(ResponseStatusDto responseStatusDto) {
-        log.info("update ResponseStatus with status {}", responseStatusDto.getStatus());
+    public ResponseStatusDto update(long id, ResponseStatusDto responseStatusDto) {
+        log.info("Update ResponseStatus with ID {}", id);
+        if (!responseStatusRepository.existsById(id)) {
+            log.info("ResponseStatus with ID {} does not exist", id);
+            throw new MyBadRequestException("ResponseStatus with ID " + id + " does not exist");
+        }
         ResponseStatus responseStatus = entityMapper.fromDtoToEntity(responseStatusDto, ResponseStatus.class);
-        return entityMapper.fromEntityToDto(responseStatusRepository.update(responseStatus), ResponseStatusDto.class);
+        return entityMapper.fromEntityToDto(responseStatusRepository.save(responseStatus), ResponseStatusDto.class);
     }
 
     @Override
     public ResponseStatusDto getById(Long id) {
-        Optional<ResponseStatus> optionalResponseStatus = responseStatusRepository.getById(id);
-        if (optionalResponseStatus.isEmpty()) {
-            log.info("responseStatus with ID {} not found", id);
-            throw new ServiceException("ResponseStatus not found");
-        }
-        return entityMapper.fromEntityToDto(optionalResponseStatus.get(), ResponseStatusDto.class);
+        log.info("Get ResponseStatus with ID {}", id);
+        ResponseStatus responseStatus = responseStatusRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("ResponseStatus with ID {} not found", id);
+                    return new MyBadRequestException("ResponseStatus not found");
+                });
+        return entityMapper.fromEntityToDto(responseStatus, ResponseStatusDto.class);
     }
 
     @Override
     public List<ResponseStatusDto> getAll() {
-        log.info("get ALL responseStatus");
-        return responseStatusRepository.getAll().stream()
+        log.info("Get ALL ResponseStatus");
+        return responseStatusRepository.findAll().stream()
                 .map(responseStatus -> entityMapper.fromEntityToDto(responseStatus, ResponseStatusDto.class))
                 .toList();
     }
 
     @Override
     public boolean delete(Long id) {
-        log.info("delete responseStatus with ID {}", id);
-        return responseStatusRepository.delete(id);
+        log.info("Delete responseStatus with ID {}", id);
+        responseStatusRepository.deleteById(id);
+        return responseStatusRepository.existsById(id);
     }
 }
